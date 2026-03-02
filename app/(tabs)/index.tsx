@@ -110,8 +110,10 @@ export default function ChatroomListScreen() {
 
   const [pickerModalVisible, setPickerModalVisible] = useState(false);
   const [pickerType, setPickerType] = useState<'region' | 'province'>('region');
+  const [joiningProvince, setJoiningProvince] = useState<string | null>(null);
 
   const ensureProvinceChatroom = async (province: string, regionHint?: string) => {
+    if (joiningProvince) return;
     const memberId = profile?.id || user?.id;
 
     if (!memberId) {
@@ -129,6 +131,8 @@ export default function ChatroomListScreen() {
       router.push(`/chatroom/${existingRoom.id}` as any);
       return;
     }
+
+    setJoiningProvince(province);
 
     try {
       const finalRoomName = `${province} Community`;
@@ -153,6 +157,8 @@ export default function ChatroomListScreen() {
       router.push(`/chatroom/${data.id}` as any);
     } catch {
       Alert.alert('Error', 'Unable to join this province right now. Please try again.');
+    } finally {
+      setJoiningProvince(null);
     }
   };
 
@@ -198,6 +204,11 @@ export default function ChatroomListScreen() {
     setPickerModalVisible(false);
   };
 
+  const quickJoinProvinces = useMemo(
+    () => (selectedRegion === 'All Regions' ? [] : (PHILIPPINES_REGIONS[selectedRegion] || []).slice(0, 6)),
+    [selectedRegion],
+  );
+
   const handleProvinceSelect = (province: string) => {
     setSelectedProvince(province);
     setPickerModalVisible(false);
@@ -205,13 +216,7 @@ export default function ChatroomListScreen() {
     if (province === 'All Provinces') return;
 
     const region = selectedRegion === 'All Regions' ? PROVINCE_TO_REGION[province.toLowerCase()] : selectedRegion;
-    Alert.alert('Join Chatroom', `Do you want to join ${province}?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Join',
-        onPress: () => ensureProvinceChatroom(province, region),
-      },
-    ]);
+    ensureProvinceChatroom(province, region);
   };
 
   const renderChatroom = ({ item, index }: { item: ChatroomItem; index: number }) => {
@@ -298,6 +303,26 @@ export default function ChatroomListScreen() {
           ))}
         </ScrollView>
 
+        <View style={styles.quickJoinWrap}>
+          <Text style={styles.quickJoinTitle}>Quick join a province</Text>
+          {selectedRegion === 'All Regions' ? (
+            <Text style={styles.quickJoinHint}>Select a region first, then tap a province to join instantly.</Text>
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickJoinRow}>
+              {quickJoinProvinces.map((province) => (
+                <TouchableOpacity
+                  key={province}
+                  style={styles.quickJoinChip}
+                  onPress={() => handleProvinceSelect(province)}
+                  disabled={joiningProvince !== null}
+                >
+                  <Text style={styles.quickJoinChipText}>{province}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
+        </View>
+
         <View style={styles.filterRow}>
           <TouchableOpacity style={styles.filterBtn} onPress={() => openPicker('region')}>
             <Text style={styles.filterLabel}>Region</Text>
@@ -313,6 +338,19 @@ export default function ChatroomListScreen() {
             <Text style={styles.filterValue} numberOfLines={1}>{selectedProvince}</Text>
           </TouchableOpacity>
         </View>
+
+
+        {selectedProvince !== 'All Provinces' ? (
+          <View style={styles.joinActionWrap}>
+            <Button
+              variant="primary"
+              onPress={() => ensureProvinceChatroom(selectedProvince, selectedRegion === 'All Regions' ? undefined : selectedRegion)}
+              disabled={joiningProvince !== null}
+            >
+              {joiningProvince === selectedProvince ? 'Joining province...' : `Join ${selectedProvince}`}
+            </Button>
+          </View>
+        ) : null}
 
         {hasActiveFilters ? (
           <View style={styles.activeFilterRow}>
@@ -493,6 +531,27 @@ const styles = StyleSheet.create({
   filterBtnDisabled: { opacity: 0.55 },
   filterLabel: { ...typography.tiny, color: colors.textTertiary },
   filterValue: { ...typography.smallBold, color: colors.text, marginTop: 2 },
+  quickJoinWrap: {
+    paddingHorizontal: spacing.md,
+    marginTop: spacing.sm,
+    gap: spacing.xs,
+  },
+  quickJoinTitle: { ...typography.smallBold, color: colors.text },
+  quickJoinHint: { ...typography.caption, color: colors.textSecondary },
+  quickJoinRow: { gap: spacing.sm, paddingVertical: 2 },
+  quickJoinChip: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.backgroundSecondary,
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  quickJoinChipText: { ...typography.smallBold, color: colors.text },
+  joinActionWrap: {
+    paddingHorizontal: spacing.md,
+    marginTop: spacing.sm,
+  },
   activeFilterRow: {
     paddingHorizontal: spacing.md,
     marginTop: spacing.sm,
