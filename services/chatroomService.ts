@@ -82,23 +82,42 @@ export const chatroomService = {
   },
 
   async joinChatroom(chatroomId: string, userId: string): Promise<ChatroomMember | null> {
-    // First check if already a member
-    const { data: existing } = await supabase
-      .from('chatroom_members')
-      .select('*')
-      .eq('chatroom_id', chatroomId)
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (existing) return existing;
-
+    // Step 1: Try to insert as new member
     const { data, error } = await supabase
       .from('chatroom_members')
       .insert([{ chatroom_id: chatroomId, user_id: userId, role: 'member' }])
       .select()
       .single();
 
+    if (!error && data) {
+      return data;
+    }
+
+    // Step 2: If insert failed (likely unique constraint = already a member), fetch existing
     if (error) {
+      const isDuplicate = error.code === '23505' || error.message?.includes('duplicate') || error.message?.includes('unique');
+      if (isDuplicate) {
+        // Already a member — fetch and return the existing membership
+        const { data: existing } = await supabase
+          .from('chatroom_members')
+          .select('*')
+          .eq('chatroom_id', chatroomId)
+          .eq('user_id', userId)
+          .maybeSingle();
+        
+        if (existing) return existing;
+        
+        // If RLS blocks the SELECT, return a synthetic membership object
+        // so the chatroom screen doesn't throw an error
+        return {
+          id: 'existing',
+          chatroom_id: chatroomId,
+          user_id: userId,
+          role: 'member',
+          joined_at: new Date().toISOString(),
+        } as ChatroomMember;
+      }
+      
       console.error('Error joining chatroom:', error);
       return null;
     }

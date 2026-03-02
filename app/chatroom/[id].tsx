@@ -43,8 +43,12 @@ export default function ChatroomScreen() {
       try {
         await markRoomVisited(id as string);
 
+        // Try to join — if it fails, still try to load the room
+        // (user might already be a member but RLS filtered the upsert result)
         const joined = await chatroomService.joinChatroom(id as string, profile.id);
-        if (!joined) throw new Error('Unable to join this chatroom.');
+        if (!joined) {
+          console.warn('joinChatroom returned null — attempting to load room anyway');
+        }
 
         const roomData = await chatroomService.getChatroomById(id as string);
         if (!roomData) throw new Error('Unable to load chatroom details.');

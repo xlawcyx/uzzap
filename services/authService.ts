@@ -14,6 +14,32 @@ export const authService = {
       return null;
     }
 
+    // If profile doesn't exist yet (trigger may have failed), create one
+    if (!data) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user && user.id === userId) {
+        const username = user.user_metadata?.username || user.email?.split('@')[0] || `user_${Date.now()}`;
+        const displayName = user.user_metadata?.display_name || user.email?.split('@')[0] || 'User';
+        
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .upsert([{
+            id: userId,
+            username,
+            display_name: displayName,
+            avatar_url: user.user_metadata?.avatar_url || null,
+          }], { onConflict: 'id' })
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('Error auto-creating profile:', createError);
+          return null;
+        }
+        return newProfile;
+      }
+    }
+
     return data ?? null;
   },
 
