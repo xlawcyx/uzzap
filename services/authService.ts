@@ -33,20 +33,33 @@ export const authService = {
   },
 
   async updateProfile(userId: string, updates: Partial<Profile>): Promise<Profile> {
+    // Try update first
     const { data, error } = await supabase
       .from('profiles')
       .update(updates)
       .eq('id', userId)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('Error updating profile:', error);
       throw new Error(error.message || 'Unable to update profile');
     }
 
+    // If no row existed yet, upsert to create it
     if (!data) {
-      throw new Error('Profile update succeeded but no profile data was returned');
+      const { data: upserted, error: upsertError } = await supabase
+        .from('profiles')
+        .upsert({ id: userId, ...updates })
+        .select()
+        .single();
+
+      if (upsertError) {
+        console.error('Error upserting profile:', upsertError);
+        throw new Error(upsertError.message || 'Unable to create profile');
+      }
+
+      return upserted;
     }
 
     return data;

@@ -3,29 +3,13 @@ import { Chatroom, ChatroomMember, Profile } from '../types/database.types';
 
 export const chatroomService = {
   async getChatrooms(type?: 'public' | 'private' | 'direct' | 'discovery'): Promise<Chatroom[]> {
-    const buildQuery = (chatroomType?: 'public' | 'private' | 'direct' | 'discovery') => {
-      let query = supabase.from('chatrooms').select('*');
+    let query = supabase.from('chatrooms').select('*');
 
-      if (chatroomType) {
-        query = query.eq('type', chatroomType);
-      }
-
-      return query.order('last_activity_at', { ascending: false });
-    };
-
-    let { data, error } = await buildQuery(type);
-
-    if (error?.code === '42P17' && !type) {
-      // Fallback for environments with recursive RLS policies on membership checks.
-      const fallback = await supabase
-        .from('chatrooms')
-        .select('*')
-        .in('type', ['public', 'discovery'])
-        .order('last_activity_at', { ascending: false });
-
-      data = fallback.data;
-      error = fallback.error;
+    if (type) {
+      query = query.eq('type', type);
     }
+
+    const { data, error } = await query.order('last_activity_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching chatrooms:', error);
