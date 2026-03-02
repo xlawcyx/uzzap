@@ -219,6 +219,13 @@ export default function ProfileScreen() {
                 <Text style={styles.settingText}>Settings & App Controls</Text>
                 <Ionicons name="chevron-forward" size={20} color={colors.border} />
               </TouchableOpacity>
+              <TouchableOpacity style={styles.settingItem} onPress={() => router.push('/settings/about' as Href)}>
+                <View style={styles.settingIconContainer}>
+                  <Ionicons name="information-circle-outline" size={20} color={colors.success} />
+                </View>
+                <Text style={styles.settingText}>About</Text>
+                <Ionicons name="chevron-forward" size={20} color={colors.border} />
+              </TouchableOpacity>
               <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
                 <View style={[styles.settingIconContainer, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
                   <Ionicons name="log-out-outline" size={20} color={colors.error} />
