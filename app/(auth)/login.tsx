@@ -15,7 +15,9 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !password) {
       Alert.alert('Missing details', 'Please enter your email and password to continue.');
       return;
     }
@@ -23,7 +25,7 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: normalizedEmail,
         password,
       });
 

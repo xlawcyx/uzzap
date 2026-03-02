@@ -15,14 +15,16 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleSendReset = async () => {
-    if (!email) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
       Alert.alert('Email required', 'Enter the email linked to your account.');
       return;
     }
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail);
       if (error) throw error;
       Alert.alert('Email sent', 'Check your inbox for the password reset link.');
       router.replace('/(auth)/account-recovery-status' as any);

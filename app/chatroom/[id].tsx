@@ -224,10 +224,12 @@ export default function ChatroomScreen() {
         {!isMe && <Avatar source={item.sender?.avatar_url ? { uri: item.sender.avatar_url } : undefined} size="sm" style={styles.messageAvatar} />}
         <View style={[styles.messageBubble, isMe ? styles.myMessageBubble : styles.theirMessageBubble]}>
           {!isMe && <Text style={styles.messageUser}>{item.sender?.display_name || 'Anonymous'}</Text>}
-          {item.type === 'image' && item.metadata?.imageUrl ? (
+          {item.is_deleted ? (
+            <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>Message deleted</Text>
+          ) : item.type === 'image' && item.metadata?.imageUrl ? (
             <Image source={{ uri: item.metadata.imageUrl }} style={styles.messageImage} contentFit="cover" />
           ) : (
-            <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>{item.is_deleted ? 'Message deleted' : item.content}</Text>
+            <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>{item.content}</Text>
           )}
           <Text style={styles.messageTime}>
             {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
