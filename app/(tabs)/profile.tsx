@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, RefreshControl } from 'react-native';
 import { colors, spacing, typography, borderRadius, shadows } from '@/constants/design';
 import { Card, Avatar, Container, Button, Input } from '@/components/ui';
@@ -16,6 +16,11 @@ export default function ProfileScreen() {
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
   const [statusMessage, setStatusMessage] = useState(profile?.status_message || '');
   const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    setDisplayName(profile?.display_name || '');
+    setStatusMessage(profile?.status_message || '');
+  }, [profile?.display_name, profile?.status_message]);
 
   const handleUpdateProfile = async () => {
     if (!displayName) {
@@ -40,7 +45,7 @@ export default function ProfileScreen() {
   };
 
   const handleUpdateAvatar = async () => {
-    if (!profile) return;
+    if (!profile || updating) return;
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
       Alert.alert('Permission needed', 'Please allow photo access to update your avatar.');
@@ -48,17 +53,18 @@ export default function ProfileScreen() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
     });
 
-    if (result.canceled || !result.assets[0]?.uri) return;
+    const asset = result.assets?.[0];
+    if (result.canceled || !asset?.uri) return;
 
     setUpdating(true);
     try {
-      const response = await fetch(result.assets[0].uri);
+      const response = await fetch(asset.uri);
       const blob = await response.blob();
       const path = `avatars/${profile.id}-${Date.now()}.jpg`;
 
@@ -102,7 +108,7 @@ export default function ProfileScreen() {
         <Animated.View entering={FadeIn.duration(800)} style={styles.header}>
           <View style={styles.avatarContainer}>
             <Avatar source={profile?.avatar_url ? { uri: profile.avatar_url } : undefined} size="xl" />
-            <TouchableOpacity style={styles.editAvatarBtn} onPress={handleUpdateAvatar}>
+            <TouchableOpacity style={styles.editAvatarBtn} onPress={handleUpdateAvatar} disabled={updating}>
               <Ionicons name="camera" size={20} color={colors.text} />
             </TouchableOpacity>
           </View>
@@ -115,7 +121,16 @@ export default function ProfileScreen() {
             <Card variant="elevated" style={styles.infoCard}>
               <Card.Header style={styles.cardHeader}>
                 <Text style={styles.cardTitle}>Profile Information</Text>
-                <TouchableOpacity onPress={() => setEditing(!editing)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (editing) {
+                      setDisplayName(profile?.display_name || '');
+                      setStatusMessage(profile?.status_message || '');
+                    }
+                    setEditing(!editing);
+                  }}
+                  disabled={updating}
+                >
                   <Text style={styles.editBtnText}>{editing ? 'Cancel' : 'Edit'}</Text>
                 </TouchableOpacity>
               </Card.Header>
