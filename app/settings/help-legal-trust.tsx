@@ -16,6 +16,7 @@ const helpItems: SettingsLink[] = [
   { title: 'Contact support / ticket submission', icon: 'mail-outline', href: '/settings/contact-support' as Href },
   { title: 'In-app feedback / feature requests', icon: 'bulb-outline', href: '/settings/feedback' as Href },
   { title: 'Changelog / What’s new', icon: 'sparkles-outline', href: '/settings/changelog' as Href },
+  { title: 'About this app', icon: 'information-circle-outline', href: '/settings/about' as Href },
 ];
 
 const legalItems: SettingsLink[] = [
