@@ -31,8 +31,8 @@ export default function ProfileScreen() {
     setUpdating(true);
     try {
       await updateProfile({
-        display_name: displayName,
-        status_message: statusMessage,
+        display_name: displayName.trim(),
+        status_message: statusMessage.trim() || null,
       });
 
       setEditing(false);
@@ -113,7 +113,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           </View>
           <Text style={styles.userName}>{profile?.display_name || 'Buddy'}</Text>
-          <Text style={styles.userRegion}>{profile?.region || 'International'}</Text>
+          <Text style={styles.userRegion}>{profile?.status_message || profile?.region || 'No status message'}</Text>
         </Animated.View>
 
         <View style={styles.content}>

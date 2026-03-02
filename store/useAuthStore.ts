@@ -60,12 +60,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   updateProfile: async (updates) => {
     const { user } = get();
-    if (!user) return;
+    if (!user) {
+      throw new Error('Not authenticated');
+    }
 
     const updatedProfile = await authService.updateProfile(user.id, updates);
-    if (updatedProfile) {
-      set({ profile: updatedProfile });
-    }
+    set({ profile: updatedProfile });
   },
 
   signOut: async () => {

@@ -32,7 +32,7 @@ export const authService = {
     return data;
   },
 
-  async updateProfile(userId: string, updates: Partial<Profile>): Promise<Profile | null> {
+  async updateProfile(userId: string, updates: Partial<Profile>): Promise<Profile> {
     const { data, error } = await supabase
       .from('profiles')
       .update(updates)
@@ -42,7 +42,11 @@ export const authService = {
 
     if (error) {
       console.error('Error updating profile:', error);
-      return null;
+      throw new Error(error.message || 'Unable to update profile');
+    }
+
+    if (!data) {
+      throw new Error('Profile update succeeded but no profile data was returned');
     }
 
     return data;
