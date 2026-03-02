@@ -21,7 +21,11 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    if (!email || !password || !displayName || !username || !confirmPassword) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedUsername = username.trim().toLowerCase();
+    const normalizedDisplayName = displayName.trim();
+
+    if (!normalizedEmail || !password || !normalizedDisplayName || !normalizedUsername || !confirmPassword) {
       Alert.alert('Incomplete form', 'Please fill in all required fields.');
       return;
     }
@@ -42,7 +46,7 @@ export default function RegisterScreen() {
         data: { user },
         error: signUpError,
       } = await supabase.auth.signUp({
-        email,
+        email: normalizedEmail,
         password,
       });
 
@@ -51,10 +55,10 @@ export default function RegisterScreen() {
 
       const { error: profileError } = await supabase.from('profiles').insert({
         id: user.id,
-        username: username.toLowerCase(),
-        display_name: displayName,
+        username: normalizedUsername,
+        display_name: normalizedDisplayName,
         region,
-        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
+        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${normalizedUsername}`,
       });
 
       if (profileError) throw profileError;
