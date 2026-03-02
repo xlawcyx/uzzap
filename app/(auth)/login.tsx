@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
@@ -48,7 +48,7 @@ export default function LoginScreen() {
             style={styles.heroCard}
           >
             <View style={styles.logoCircle}>
-              <Text style={styles.logoText}>U</Text>
+              <Image source={require('@/assets/images/icon.png')} style={styles.logoImage} resizeMode="contain" />
             </View>
             <Text style={styles.title}>Welcome Back</Text>
             <Text style={styles.subtitle}>Sign in and continue chatting with your buddies.</Text>
@@ -144,10 +144,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.md,
   },
-  logoText: {
-    ...typography.h1,
-    color: colors.text,
-    fontSize: 36,
+  logoImage: {
+    width: 58,
+    height: 58,
   },
   title: {
     ...typography.h2,
