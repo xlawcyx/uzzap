@@ -12,7 +12,7 @@ import { messageService } from '@/services/messageService';
 import { chatroomService } from '@/services/chatroomService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import { markRoomVisited } from '@/lib/chatroomDiscovery';
+import { markRoomVisited } from '@/lib/chatroomHistory';
 
 export default function ChatroomScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -258,9 +258,6 @@ export default function ChatroomScreen() {
           headerTitleStyle: { ...typography.h4, color: colors.text },
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: spacing.md }}>
-              <TouchableOpacity onPress={() => router.push(`/chatroom/experience/${id}` as any)}>
-                <Ionicons name="grid-outline" size={22} color={colors.text} />
-              </TouchableOpacity>
               <TouchableOpacity onPress={() => Alert.alert('Room Info', room?.description)}>
                 <Ionicons name="information-circle-outline" size={24} color={colors.text} />
               </TouchableOpacity>
@@ -289,14 +286,6 @@ export default function ChatroomScreen() {
               <Text style={styles.roomMetaText}>#{roomRegion} • {room?.member_count || 0} members • {messages.length} messages</Text>
               <Text style={styles.detailAbout}>{room?.description || 'No room description yet.'}</Text>
               <Text style={styles.detailAdmins}>Language: {room?.language || 'Not specified'}</Text>
-              <View style={styles.detailActions}>
-                <TouchableOpacity style={styles.detailActionBtn} onPress={() => router.push(`/chatrooms/members/${id}` as any)}><Text style={styles.detailActionText}>Members</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.detailActionBtn} onPress={() => router.push(`/chatrooms/edit/${id}` as any)}><Text style={styles.detailActionText}>Edit Settings</Text></TouchableOpacity>
-              </View>
-              <TouchableOpacity style={styles.experienceBtn} onPress={() => router.push(`/chatroom/experience/${id}` as any)}>
-                <Ionicons name="sparkles-outline" size={16} color={colors.white} />
-                <Text style={styles.experienceBtnText}>Messaging Experience</Text>
-              </TouchableOpacity>
             </View>
           }
           ListEmptyComponent={
@@ -366,28 +355,6 @@ const styles = StyleSheet.create({
   detailAbout: { ...typography.caption, color: colors.textSecondary, marginTop: spacing.xs },
   detailRule: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
   detailAdmins: { ...typography.smallBold, color: colors.accent, marginTop: spacing.sm },
-  detailActions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm },
-  detailActionBtn: {
-    flex: 1,
-    borderRadius: borderRadius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.backgroundTertiary,
-    alignItems: 'center',
-    paddingVertical: spacing.xs,
-  },
-  detailActionText: { ...typography.smallBold, color: colors.text },
-  experienceBtn: {
-    marginTop: spacing.sm,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    paddingVertical: spacing.xs,
-  },
-  experienceBtnText: { ...typography.smallBold, color: colors.white },
   roomMetaText: {
     ...typography.small,
     color: colors.textTertiary,
