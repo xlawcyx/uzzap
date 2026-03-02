@@ -7,14 +7,14 @@ export const authService = {
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('Error fetching profile:', error);
       return null;
     }
 
-    return data;
+    return data ?? null;
   },
 
   async createProfile(profile: Partial<Profile>): Promise<Profile | null> {
