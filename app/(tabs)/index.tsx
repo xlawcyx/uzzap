@@ -101,7 +101,7 @@ const parseRoomLocation = (room: ChatroomItem) => {
 
 export default function ChatroomListScreen() {
   const router = useRouter();
-  const { profile } = useAuthStore();
+  const { user, profile } = useAuthStore();
   const { chatrooms, fetchChatrooms, isLoading } = useChatStore();
 
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
@@ -112,7 +112,9 @@ export default function ChatroomListScreen() {
   const [pickerType, setPickerType] = useState<'region' | 'province'>('region');
 
   const ensureProvinceChatroom = async (province: string, regionHint?: string) => {
-    if (!profile) {
+    const memberId = profile?.id || user?.id;
+
+    if (!memberId) {
       Alert.alert('Login required', 'Please log in to join a provincial chatroom.');
       return;
     }
@@ -140,7 +142,7 @@ export default function ChatroomListScreen() {
           region,
           province,
           category: 'Lifestyle',
-          created_by: profile.id,
+          created_by: memberId,
         })
         .select()
         .single();
