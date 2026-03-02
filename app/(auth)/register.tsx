@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
@@ -86,6 +86,9 @@ export default function RegisterScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.heroCard}
           >
+            <View style={styles.logoCircle}>
+              <Image source={require('@/assets/images/icon.png')} style={styles.logoImage} resizeMode="contain" />
+            </View>
             <Text style={styles.title}>Create your account</Text>
             <Text style={styles.subtitle}>Set up your profile and join the Uzzap community.</Text>
           </LinearGradient>
@@ -215,6 +218,19 @@ const styles = StyleSheet.create({
     borderColor: withOpacity(colors.primary, 0.2),
     paddingVertical: spacing.lg,
     paddingHorizontal: spacing.lg,
+  },
+  logoCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: withOpacity(colors.primary, 0.25),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  logoImage: {
+    width: 58,
+    height: 58,
   },
   title: {
     ...typography.h2,
