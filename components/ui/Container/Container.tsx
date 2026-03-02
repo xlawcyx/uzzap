@@ -38,7 +38,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, spacing } from '@/constants/design';
+import { spacing } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import type { ContainerProps } from './Container.types';
 
 export function Container({
@@ -47,15 +48,17 @@ export function Container({
   edges = ['top', 'bottom'],
   padding,
   center = false,
-  backgroundColor = colors.background,
+  backgroundColor,
   style,
   testID,
 }: ContainerProps) {
+  const { colors: themeColors } = useAppTheme();
+
   const containerStyle = [
     styles.container,
     padding && { padding: spacing[padding] },
     center && styles.center,
-    { backgroundColor },
+    { backgroundColor: backgroundColor ?? themeColors.background },
     style,
   ];
 
