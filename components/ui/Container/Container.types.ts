@@ -40,7 +40,7 @@ export interface ContainerProps {
 
   /**
    * Background color
-   * @default colors.background
+   * @default active theme background color
    */
   backgroundColor?: string;
 
