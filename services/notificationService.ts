@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
 // Lazy-load expo-notifications to avoid crash in Expo Go (SDK 53+)
 let Notifications: typeof import('expo-notifications') | null = null;
@@ -33,7 +34,16 @@ export const notificationService = {
       return;
     }
 
-    const projectId = 'your-project-id-here'; // Ideally this should be from Constants.expoConfig.extra.eas.projectId
+    const projectId =
+      Constants.easConfig?.projectId ?? Constants.expoConfig?.extra?.eas?.projectId;
+
+    if (!projectId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(projectId)) {
+      console.warn(
+        'Push notifications are not configured: missing a valid EAS projectId in app config.'
+      );
+      return;
+    }
+
     const token = (await Notif.getExpoPushTokenAsync({ projectId })).data;
     console.log(token);
 
