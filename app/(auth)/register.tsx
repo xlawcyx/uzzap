@@ -53,17 +53,18 @@ export default function RegisterScreen() {
       if (signUpError) throw signUpError;
       if (!user) throw new Error('Failed to create user');
 
-      const { error: profileError } = await supabase.from('profiles').insert({
+      const { error: profileError } = await supabase.from('profiles').upsert({
         id: user.id,
         username: normalizedUsername,
         display_name: normalizedDisplayName,
         region,
         avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${normalizedUsername}`,
-      });
+      }, { onConflict: 'id' });
 
       if (profileError) throw profileError;
 
-      Alert.alert('Success', 'Account created successfully! Please verify your email to continue.', [{ text: 'Continue', onPress: () => router.replace('/(auth)/email-verification' as any) }]);
+      // Auto-confirm is enabled — user is logged in immediately
+      // The auth state listener in _layout.tsx will redirect to (tabs)
     } catch (error: any) {
       Alert.alert('Registration Failed', error.message || 'Check your details and try again.');
     } finally {
