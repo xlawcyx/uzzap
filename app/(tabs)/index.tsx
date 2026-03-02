@@ -101,7 +101,7 @@ const parseRoomLocation = (room: ChatroomItem) => {
 
 export default function ChatroomListScreen() {
   const router = useRouter();
-  const { user, profile } = useAuthStore();
+  const { user } = useAuthStore();
   const { chatrooms, fetchChatrooms, isLoading } = useChatStore();
 
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
@@ -293,11 +293,6 @@ export default function ChatroomListScreen() {
         </View>
 
         <View style={styles.searchWrap}>
-          <TouchableOpacity style={styles.discoveryBtn} onPress={() => router.push('/chatrooms/discover' as any)}>
-            <Ionicons name="compass-outline" size={18} color={colors.text} />
-            <Text style={styles.discoveryBtnText}>Open Discovery & Growth</Text>
-          </TouchableOpacity>
-
           <View style={styles.filterSummaryRow}>
             <View style={styles.resultsPill}>
               <Ionicons name="layers-outline" size={14} color={colors.accent} />
@@ -487,19 +482,6 @@ const styles = StyleSheet.create({
   statValue: { ...typography.h4, color: colors.accent },
   statLabel: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
   searchWrap: { paddingHorizontal: spacing.md, marginBottom: spacing.sm },
-  discoveryBtn: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.backgroundSecondary,
-    borderRadius: borderRadius.md,
-    marginBottom: spacing.sm,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  discoveryBtnText: { ...typography.smallBold, color: colors.text },
   filterSummaryRow: {
     marginBottom: spacing.sm,
     flexDirection: 'row',

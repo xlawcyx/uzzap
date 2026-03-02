@@ -86,16 +86,6 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)/invite-friends" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="chatroom/[id]" />
-          <Stack.Screen name="chatroom/experience/[id]" />
-          <Stack.Screen name="chatrooms/discover" />
-          <Stack.Screen name="chatrooms/recent" />
-          <Stack.Screen name="chatrooms/search" />
-          <Stack.Screen name="chatrooms/saved" />
-          <Stack.Screen name="chatrooms/categories" />
-          <Stack.Screen name="chatrooms/join-requests" />
-          <Stack.Screen name="chatrooms/create" />
-          <Stack.Screen name="chatrooms/members/[id]" />
-          <Stack.Screen name="chatrooms/edit/[id]" />
           <Stack.Screen name="profile/[id]" />
           <Stack.Screen name="settings/help-legal-trust" />
           <Stack.Screen name="settings/app-controls" />
