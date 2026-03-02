@@ -114,14 +114,18 @@ export default function ChatroomListScreen() {
 
   const ensureProvinceChatroom = async (province: string, regionHint?: string) => {
     if (joiningProvince) return;
-    const memberId = profile?.id || user?.id;
 
-    if (!memberId) {
+    // Use the Supabase auth user ID (auth.uid()) for RLS compliance
+    const authUserId = user?.id;
+
+    if (!authUserId) {
       Alert.alert('Login required', 'Please log in to join a provincial chatroom.');
       return;
     }
 
     const region = regionHint || PROVINCE_TO_REGION[province.toLowerCase()] || 'Uncategorized';
+
+    // Check in local state first
     const existingRoom = (chatrooms as ChatroomItem[]).find((room) => {
       const location = parseRoomLocation(room);
       return location.province.toLowerCase() === province.toLowerCase() && location.region === region;
@@ -132,30 +136,55 @@ export default function ChatroomListScreen() {
       return;
     }
 
+    // Also check Supabase directly in case store is stale
+    const { data: dbRoom } = await supabase
+      .from('chatrooms')
+      .select('id')
+      .eq('province', province)
+      .eq('region', region)
+      .maybeSingle();
+
+    if (dbRoom) {
+      await fetchChatrooms();
+      router.push(`/chatroom/${dbRoom.id}` as any);
+      return;
+    }
+
     setJoiningProvince(province);
 
     try {
       const finalRoomName = `${province} Community`;
+      const slug = `${province.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-community-${Date.now()}`;
+
       const { data, error } = await supabase
         .from('chatrooms')
         .insert({
           name: finalRoomName,
-          slug: `${finalRoomName.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-')}-${Date.now()}`,
-          description: `${region} > ${province} Community chatroom`,
+          slug,
+          description: `${region} > ${province}: Local community chatroom`,
           type: 'public',
           region,
           province,
-          category: 'Lifestyle',
-          created_by: memberId,
+          category: 'Community',
+          created_by: authUserId,
         })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Chatroom insert error:', error);
+        throw error;
+      }
+
+      // Add creator as admin member
+      await supabase
+        .from('chatroom_members')
+        .insert({ chatroom_id: data.id, user_id: authUserId, role: 'admin' });
 
       await fetchChatrooms();
       router.push(`/chatroom/${data.id}` as any);
-    } catch {
+    } catch (err: any) {
+      console.error('ensureProvinceChatroom error:', err);
       Alert.alert('Error', 'Unable to join this province right now. Please try again.');
     } finally {
       setJoiningProvince(null);

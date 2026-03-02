@@ -82,9 +82,19 @@ export const chatroomService = {
   },
 
   async joinChatroom(chatroomId: string, userId: string): Promise<ChatroomMember | null> {
+    // First check if already a member
+    const { data: existing } = await supabase
+      .from('chatroom_members')
+      .select('*')
+      .eq('chatroom_id', chatroomId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (existing) return existing;
+
     const { data, error } = await supabase
       .from('chatroom_members')
-      .upsert([{ chatroom_id: chatroomId, user_id: userId }])
+      .insert([{ chatroom_id: chatroomId, user_id: userId, role: 'member' }])
       .select()
       .single();
 
@@ -224,10 +234,11 @@ export const chatroomService = {
       return null;
     }
 
-    // Add creator as admin member
-    await supabase.from('chatroom_members').insert([
-      { chatroom_id: data.id, user_id: params.userId, role: 'admin' }
-    ]);
+    // Add creator as admin member (ignore if already exists)
+    await supabase.from('chatroom_members').upsert(
+      [{ chatroom_id: data.id, user_id: params.userId, role: 'admin' }],
+      { onConflict: 'chatroom_id,user_id' }
+    );
 
     return data;
   },
