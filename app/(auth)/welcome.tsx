@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Container, Button } from '@/components/ui';
-import { borderRadius, colors, spacing, typography, withOpacity, shadows } from '@/constants/design';
+import { borderRadius, colors, spacing, typography, withOpacity } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { ONBOARDING_SLIDES } from '@/constants/onboardingData';
 import Animated, { FadeIn, FadeInUp, FadeOut } from 'react-native-reanimated';
@@ -13,7 +13,7 @@ const { width } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const { colors: themeColors, isDark } = useAppTheme();
+  const { colors: themeColors } = useAppTheme();
   const [index, setIndex] = useState(0);
   const slide = ONBOARDING_SLIDES[index];
   const isLast = index === ONBOARDING_SLIDES.length - 1;
@@ -29,91 +29,60 @@ export default function WelcomeScreen() {
   return (
     <Container style={styles.container} backgroundColor={themeColors.background}>
       <LinearGradient
-        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
+        colors={[themeColors.gradientStart, themeColors.background]}
         style={StyleSheet.absoluteFillObject}
       />
-      
-      {/* Decorative Blur Circles */}
-      <View style={[styles.blurCircle, { top: -50, right: -50, backgroundColor: withOpacity(colors.primary, 0.15) }]} />
-      <View style={[styles.blurCircle, { bottom: 100, left: -100, backgroundColor: withOpacity(colors.accent, 0.1) }]} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Skip */}
-        <Animated.View entering={FadeIn.delay(300)}>
-          <TouchableOpacity
-            onPress={() => router.replace('/(auth)/login' as any)}
-            style={[styles.skipBtn, { backgroundColor: withOpacity(themeColors.backgroundTertiary, 0.5), borderColor: themeColors.border }]}
-          >
-            <Text style={[styles.skipText, { color: themeColors.textSecondary }]}>Skip</Text>
-            <Ionicons name="chevron-forward" size={14} color={themeColors.textTertiary} />
-          </TouchableOpacity>
-        </Animated.View>
+        <TouchableOpacity
+          onPress={() => router.replace('/(auth)/login' as any)}
+          style={[styles.skipBtn, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}
+        >
+          <Text style={[styles.skipText, { color: themeColors.textTertiary }]}>Skip</Text>
+          <Ionicons name="chevron-forward" size={14} color={themeColors.textTertiary} />
+        </TouchableOpacity>
 
         {/* Icon area */}
-        <Animated.View key={index} entering={FadeIn.duration(600)} style={styles.iconSection}>
+        <Animated.View key={index} entering={FadeIn.duration(500)} style={styles.iconSection}>
           <LinearGradient
             colors={[withOpacity(themeColors.bubbleMe, 0.18), withOpacity(themeColors.bubbleMe, 0.04)]}
             style={styles.heroIconWrap}
           >
-            <Ionicons name={slide.icon as any} size={64} color={colors.primary} />
+            <Ionicons name={slide.icon as any} size={52} color={colors.primary} />
           </LinearGradient>
 
-          {/* Decorative Animated Rings */}
-          <Animated.View entering={FadeIn.delay(200)} style={[styles.ring, styles.ring1, { borderColor: withOpacity(colors.primary, 0.15) }]} />
-          <Animated.View entering={FadeIn.delay(400)} style={[styles.ring, styles.ring2, { borderColor: withOpacity(colors.primary, 0.08) }]} />
+          {/* Decorative rings */}
+          <View style={styles.ring1} />
+          <View style={styles.ring2} />
         </Animated.View>
 
         {/* Text */}
-        <View style={styles.textSection}>
-          <Animated.Text 
-            key={`title-${index}`} 
-            entering={FadeInUp.duration(600)} 
-            style={[styles.title, { color: themeColors.text }]}
-          >
-            {slide.title}
-          </Animated.Text>
-          <Animated.Text 
-            key={`desc-${index}`} 
-            entering={FadeInUp.delay(100).duration(600)} 
-            style={[styles.subtitle, { color: themeColors.textSecondary }]}
-          >
-            {slide.description}
-          </Animated.Text>
-        </View>
+        <Animated.View key={`text-${index}`} entering={FadeInUp.delay(100).duration(450)} style={styles.textSection}>
+          <Text style={[styles.title, { color: themeColors.text }]}>{slide.title}</Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>{slide.description}</Text>
+        </Animated.View>
 
         {/* Dots */}
         <View style={styles.dotsRow}>
           {ONBOARDING_SLIDES.map((_, dotIndex) => (
-            <TouchableOpacity key={dotIndex} onPress={() => setIndex(dotIndex)} activeOpacity={0.7}>
-              <View 
-                style={[
-                  styles.dot, 
-                  { backgroundColor: themeColors.border }, 
-                  index === dotIndex && [styles.dotActive, { backgroundColor: colors.primary }]
-                ]} 
-              />
+            <TouchableOpacity key={dotIndex} onPress={() => setIndex(dotIndex)}>
+              <View style={[styles.dot, { backgroundColor: themeColors.border }, index === dotIndex && styles.dotActive]} />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* CTAs */}
         <View style={styles.ctaWrap}>
-          <Animated.View entering={FadeInUp.delay(200).duration(600)}>
-            <Button variant="primary" size="lg" onPress={next} style={styles.mainBtn}>
-              {isLast ? 'Get Started' : 'Continue'}
-            </Button>
-          </Animated.View>
-          
-          <Animated.View entering={FadeInUp.delay(300).duration(600)}>
-            <TouchableOpacity
-              style={styles.ghostBtn}
-              onPress={() => router.push('/(auth)/login' as any)}
-            >
-              <Text style={[styles.ghostBtnText, { color: themeColors.textTertiary }]}>
-                Already have an account? <Text style={{ color: colors.primary }}>Log in</Text>
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
+          <Button variant="primary" size="lg" onPress={next}>
+            {isLast ? 'Start Setup' : 'Next'}
+          </Button>
+          <TouchableOpacity
+            style={styles.ghostBtn}
+            onPress={() => router.push('/(auth)/register' as any)}
+          >
+            <Text style={[styles.ghostBtnText, { color: themeColors.textTertiary }]}>I already have an account</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </Container>
@@ -121,30 +90,20 @@ export default function WelcomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  blurCircle: {
-    position: 'absolute',
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    opacity: 0.5,
-  },
+  container: {},
   content: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.xxl,
     paddingBottom: spacing.xl,
-    justifyContent: 'space-between',
   },
   skipBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    gap: 4,
+    gap: 2,
     paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
     borderRadius: borderRadius.full,
     borderWidth: 1,
   },
@@ -153,44 +112,46 @@ const styles = StyleSheet.create({
   iconSection: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: spacing.xxxl,
+    marginVertical: spacing.xxl,
     position: 'relative',
   },
   heroIconWrap: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: withOpacity(colors.primary, 0.4),
+    borderColor: withOpacity(colors.primary, 0.35),
     zIndex: 2,
-    ...shadows.glow,
-  },
-  ring: {
-    position: 'absolute',
-    borderRadius: 999,
-    borderWidth: 1,
   },
   ring1: {
-    width: 200,
-    height: 200,
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.12),
   },
   ring2: {
-    width: 260,
-    height: 260,
+    position: 'absolute',
+    width: 190,
+    height: 190,
+    borderRadius: 95,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.06),
   },
 
-  textSection: { alignItems: 'center', gap: spacing.md, marginBottom: spacing.xl },
+  textSection: { alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xl },
   title: {
-    ...typography.display,
+    ...typography.h1,
     textAlign: 'center',
-    lineHeight: 48,
+    letterSpacing: -0.5,
   },
   subtitle: {
     ...typography.body,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 26,
     paddingHorizontal: spacing.md,
   },
 
@@ -198,27 +159,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: spacing.sm,
-    marginBottom: spacing.xxl,
+    marginBottom: spacing.xl,
   },
   dot: {
     width: 8,
     height: 8,
     borderRadius: borderRadius.full,
-    opacity: 0.5,
   },
   dotActive: {
-    width: 32,
-    opacity: 1,
+    width: 28,
+    backgroundColor: colors.primary,
   },
 
-  ctaWrap: { gap: spacing.sm },
-  mainBtn: {
-    height: 56,
-    borderRadius: borderRadius.xl,
-  },
+  ctaWrap: { gap: spacing.md },
   ghostBtn: {
     alignItems: 'center',
-    padding: spacing.md,
+    padding: spacing.sm,
   },
   ghostBtnText: {
     ...typography.captionBold,

@@ -4,41 +4,41 @@ import { useAppSettingsStore } from '@/store/useAppSettingsStore';
 
 const lightColors = {
   // Backgrounds
-  background: '#F8F7FF',
+  background: '#F5F7FA',
   backgroundSecondary: '#FFFFFF',
-  backgroundTertiary: '#F1F0FB',
-  backgroundElevated: '#EBE9F9',
+  backgroundTertiary: '#EAEEF3',
+  backgroundElevated: '#F0F2F5',
   backgroundCard: '#FFFFFF',
 
   // Text
-  text: '#1A1A1E',
-  textSecondary: '#636366',
-  textTertiary: '#8E8E93',
-  textDisabled: '#C7C7CC',
+  text: '#0F172A',
+  textSecondary: '#475569',
+  textTertiary: '#94A3B8',
+  textDisabled: '#CBD5E1',
   textInverse: '#FFFFFF',
 
   // Borders
-  border: '#E5E5EA',
-  borderMuted: '#F2F2F7',
-  borderAccent: 'rgba(139, 92, 246, 0.4)',
+  border: '#DDE2EA',
+  borderMuted: '#E8ECF1',
+  borderAccent: 'rgba(62, 207, 142, 0.4)',
 
   // Options
-  optionActiveBackground: '#F5F3FF',
-  optionActiveText: '#8B5CF6',
+  optionActiveBackground: '#D1FAE5',
+  optionActiveText: '#065F46',
 
   // Chat bubbles
-  bubbleMe: '#8B5CF6',
+  bubbleMe: '#3ECF8E',
   bubbleMeText: '#FFFFFF',
-  bubbleThem: '#E5E5EA',
-  bubbleThemText: '#1A1A1E',
+  bubbleThem: '#EAEEF3',
+  bubbleThemText: '#0F172A',
 
   // Overlays
   overlay: 'rgba(0, 0, 0, 0.4)',
 
   // Gradient stops for profile header
-  gradientStart: '#DDD6FE',
-  gradientMid: '#EDE9FE',
-  gradientEnd: '#F8F7FF',
+  gradientStart: '#D6F5E8',
+  gradientMid: '#EAF7F0',
+  gradientEnd: '#F5F7FA',
 };
 
 const darkColors = {
@@ -75,8 +75,8 @@ const darkColors = {
   overlay: 'rgba(0, 0, 0, 0.65)',
 
   // Gradient stops for profile header
-  gradientStart: '#1E1B4B',
-  gradientMid: '#111111',
+  gradientStart: '#1A2E23',
+  gradientMid: '#121E19',
   gradientEnd: colors.background,
 };
 

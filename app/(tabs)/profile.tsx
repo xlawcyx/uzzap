@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet, View, Text, TouchableOpacity,
-  ScrollView, Alert, RefreshControl, ActivityIndicator,
+  ScrollView, Alert, RefreshControl,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, spacing, typography, borderRadius, shadows, withOpacity } from '@/constants/design';
@@ -24,14 +24,10 @@ type SettingItem = {
   danger?: boolean;
 };
 
-const gradients = {
-  profileHeader: ['#8A2BE2', '#4B0082', '#1A1A2E'], // Electric Violet palette
-};
-
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, profile, updateProfile, signOut, isLoading } = useAuthStore();
-  const { colors: themeColors, isDark } = useAppTheme();
+  const { colors: themeColors } = useAppTheme();
   const [editing, setEditing] = useState(false);
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
   const [statusMessage, setStatusMessage] = useState(profile?.status_message || '');
@@ -138,14 +134,8 @@ export default function ProfileScreen() {
 
   return (
     <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <LinearGradient
-        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
-        style={StyleSheet.absoluteFillObject}
-      />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
@@ -155,143 +145,192 @@ export default function ProfileScreen() {
         }
       >
         {/* Hero Header */}
-        <Animated.View entering={FadeIn.duration(800)}>
+        <Animated.View entering={FadeIn.duration(600)}>
           <LinearGradient
-            colors={gradients.profileHeader}
+            colors={[themeColors.gradientStart, themeColors.gradientMid, themeColors.gradientEnd]}
             style={styles.header}
           >
             <View style={styles.avatarContainer}>
               <Avatar
                 source={profile?.avatar_url ? { uri: profile.avatar_url } : undefined}
-                size="xxl"
+                size="xl"
                 style={styles.avatar}
               />
               <TouchableOpacity
-                style={[styles.editAvatarBtn, { backgroundColor: colors.primary, borderColor: themeColors.background }]}
+                style={[styles.editAvatarBtn, { borderColor: themeColors.background }]}
                 onPress={handleUpdateAvatar}
                 disabled={updating}
               >
                 {updating
-                  ? <ActivityIndicator size="small" color="#FFF" />
-                  : <Ionicons name="camera" size={20} color="#FFF" />
+                  ? <View style={styles.avatarLoadingDot} />
+                  : <Ionicons name="camera" size={16} color={themeColors.textInverse} />
                 }
               </TouchableOpacity>
             </View>
 
             <Text style={[styles.userName, { color: themeColors.text }]}>{profile?.display_name || 'Buddy'}</Text>
-            <Text style={[styles.userHandle, { color: colors.primary }]}>@{profile?.username || 'username'}</Text>
-            
             {profile?.status_message ? (
-              <View style={[styles.statusBubble, { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.1)' }]}>
-                <Text style={[styles.userStatus, { color: themeColors.textSecondary }]}>{profile.status_message}</Text>
-              </View>
+              <Text style={[styles.userStatus, { color: themeColors.textSecondary }]}>"{profile.status_message}"</Text>
             ) : null}
+
+            <View style={styles.userMeta}>
+              <View style={[styles.metaBadge, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}>
+                <Ionicons name="at" size={12} color={themeColors.textTertiary} />
+                <Text style={[styles.metaText, { color: themeColors.textTertiary }]}>{profile?.username || 'no-username'}</Text>
+              </View>
+              {profile?.region ? (
+                <View style={[styles.metaBadge, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}>
+                  <Ionicons name="location-outline" size={12} color={themeColors.textTertiary} />
+                  <Text style={[styles.metaText, { color: themeColors.textTertiary }]}>{profile.region}</Text>
+                </View>
+              ) : null}
+            </View>
 
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: themeColors.text }]}>2024</Text>
+                <Text style={[styles.statValue, { color: colors.primary }]}>
+                  {profile?.created_at ? new Date(profile.created_at).getFullYear() : '—'}
+                </Text>
                 <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Joined</Text>
               </View>
-              <View style={[styles.statDivider, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
+              <View style={[styles.statDivider, { backgroundColor: withOpacity(colors.primary, 0.2) }]} />
               <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: themeColors.text }]}>12</Text>
-                <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Buddies</Text>
-              </View>
-              <View style={[styles.statDivider, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
-              <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: themeColors.text }]}>5</Text>
-                <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Groups</Text>
+                <Text style={[styles.statValue, { color: colors.primary }]}>{user?.email?.split('@')[0]?.length || 0}</Text>
+                <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>ID Length</Text>
               </View>
             </View>
           </LinearGradient>
         </Animated.View>
 
         <View style={styles.content}>
-          {/* Action Buttons */}
-          <View style={styles.quickActions}>
-            <TouchableOpacity 
-              style={[styles.actionBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}
-              onPress={() => setEditing(true)}
-            >
-              <Ionicons name="create-outline" size={20} color={colors.primary} />
-              <Text style={[styles.actionBtnText, { color: themeColors.text }]}>Edit Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.actionBtn, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}
-              onPress={() => router.push('/settings/appearance')}
-            >
-              <Ionicons name="color-palette-outline" size={20} color={colors.primary} />
-              <Text style={[styles.actionBtnText, { color: themeColors.text }]}>Appearance</Text>
-            </TouchableOpacity>
-          </View>
-
-          {editing && (
-            <Animated.View entering={FadeInUp} style={[styles.editCard, { backgroundColor: themeColors.backgroundElevated, borderColor: themeColors.border }]}>
-              <View style={styles.cardHeader}>
-                <Text style={[styles.cardTitle, { color: themeColors.text }]}>Edit Profile</Text>
-                <TouchableOpacity onPress={() => setEditing(false)}>
-                  <Ionicons name="close" size={24} color={themeColors.textTertiary} />
+          {/* Profile Info Card */}
+          <Animated.View entering={FadeInUp.delay(150).duration(500)}>
+            <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
+              <Card.Header style={styles.cardHeader}>
+                <View style={styles.cardTitleRow}>
+                  <Ionicons name="person-circle-outline" size={18} color={colors.primary} />
+                  <Text style={[styles.cardTitle, { color: themeColors.text }]}>Profile Information</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (editing) {
+                      setDisplayName(profile?.display_name || '');
+                      setStatusMessage(profile?.status_message || '');
+                    }
+                    setEditing(!editing);
+                  }}
+                  disabled={updating}
+                  style={styles.editBtn}
+                >
+                  <Text style={styles.editBtnText}>{editing ? 'Cancel' : 'Edit'}</Text>
                 </TouchableOpacity>
-              </View>
-              <Input
-                label="Display Name"
-                value={displayName}
-                onChangeText={setDisplayName}
-                placeholder="Enter display name"
-              />
-              <View style={{ height: spacing.md }} />
-              <Input
-                label="Status Message"
-                value={statusMessage}
-                onChangeText={setStatusMessage}
-                placeholder="What's on your mind?"
-                multiline
-              />
-              <Button
-                variant="primary"
-                onPress={handleUpdateProfile}
-                loading={updating}
-                style={styles.saveBtn}
-              >
-                Save Changes
-              </Button>
-            </Animated.View>
-          )}
+              </Card.Header>
+              <Card.Content>
+                {editing ? (
+                  <View style={styles.form}>
+                    <Input
+                      label="Display Name"
+                      value={displayName}
+                      onChangeText={setDisplayName}
+                      placeholder="Enter display name"
+                      leftIcon={<Ionicons name="person-outline" size={18} color={themeColors.textTertiary} />}
+                    />
+                    <View style={{ height: spacing.md }} />
+                    <Input
+                      label="Status Message"
+                      value={statusMessage}
+                      onChangeText={setStatusMessage}
+                      placeholder="What's on your mind?"
+                      multiline
+                      leftIcon={<Ionicons name="chatbubble-outline" size={18} color={themeColors.textTertiary} />}
+                    />
+                    <Button
+                      variant="primary"
+                      onPress={handleUpdateProfile}
+                      loading={updating}
+                      style={styles.saveBtn}
+                    >
+                      Save Changes
+                    </Button>
+                  </View>
+                ) : (
+                  <View style={styles.infoList}>
+                    <View style={styles.infoItem}>
+                      <View style={[styles.infoIcon, { backgroundColor: withOpacity(colors.info, 0.12) }]}>
+                        <Ionicons name="mail-outline" size={16} color={colors.info} />
+                      </View>
+                      <View style={styles.infoTextContainer}>
+                        <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Email</Text>
+                        <Text style={[styles.infoValue, { color: themeColors.text }]}>{user?.email}</Text>
+                      </View>
+                    </View>
+                    <View style={[styles.infoDivider, { backgroundColor: themeColors.borderMuted }]} />
+                    <View style={styles.infoItem}>
+                      <View style={[styles.infoIcon, { backgroundColor: withOpacity(colors.primary, 0.12) }]}>
+                        <Ionicons name="chatbubble-outline" size={16} color={colors.primary} />
+                      </View>
+                      <View style={styles.infoTextContainer}>
+                        <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Status</Text>
+                        <Text style={[styles.infoValue, { color: themeColors.text }]}>{profile?.status_message || 'No status message'}</Text>
+                      </View>
+                    </View>
+                    <View style={[styles.infoDivider, { backgroundColor: themeColors.borderMuted }]} />
+                    <View style={styles.infoItem}>
+                      <View style={[styles.infoIcon, { backgroundColor: withOpacity(colors.warning, 0.12) }]}>
+                        <Ionicons name="calendar-outline" size={16} color={colors.warning} />
+                      </View>
+                      <View style={styles.infoTextContainer}>
+                        <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Member Since</Text>
+                        <Text style={[styles.infoValue, { color: themeColors.text }]}>
+                          {profile?.created_at
+                            ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric', day: 'numeric' })
+                            : 'Unknown'}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+              </Card.Content>
+            </Card>
+          </Animated.View>
 
           {/* Settings Groups */}
-          <Text style={[styles.sectionHeader, { color: themeColors.textTertiary }]}>Settings</Text>
           {settingGroups.map((group, groupIndex) => (
-            <View key={groupIndex} style={styles.settingsGroup}>
-              {group.map((item, index) => (
-                <TouchableOpacity
-                  key={item.label}
-                  style={[
-                    styles.settingItem, 
-                    { 
-                      backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                      borderColor: themeColors.border 
-                    },
-                    index === 0 && styles.settingItemFirst,
-                    index === group.length - 1 && styles.settingItemLast
-                  ]}
-                  onPress={item.route ? () => router.push(item.route as Href) : item.onPress}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.settingIconContainer, { backgroundColor: item.bgColor }]}>
-                    <Ionicons name={item.icon as any} size={20} color={item.color} />
-                  </View>
-                  <Text style={[styles.settingText, { color: themeColors.text }]}>
-                    {item.label}
-                  </Text>
-                  <Ionicons name="chevron-forward" size={18} color={themeColors.textTertiary} />
-                </TouchableOpacity>
-              ))}
-            </View>
+            <Animated.View key={groupIndex} entering={FadeInUp.delay(250 + groupIndex * 100).duration(500)}>
+              <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
+                <Card.Content style={styles.settingsGroupContent}>
+                  {group.map((item, index) => (
+                    <React.Fragment key={item.label}>
+                      {index > 0 && <View style={[styles.settingDivider, { backgroundColor: themeColors.borderMuted }]} />}
+                      <TouchableOpacity
+                        style={styles.settingItem}
+                        onPress={item.route ? () => router.push(item.route as Href) : item.onPress}
+                        activeOpacity={0.7}
+                      >
+                        <View style={[styles.settingIconContainer, { backgroundColor: item.bgColor }]}>
+                          <Ionicons name={item.icon as any} size={18} color={item.color} />
+                        </View>
+                        <Text style={[styles.settingText, { color: themeColors.text }, item.danger && { color: colors.error }]}>
+                          {item.label}
+                        </Text>
+                        <Ionicons name="chevron-forward" size={16} color={themeColors.textTertiary} />
+                      </TouchableOpacity>
+                    </React.Fragment>
+                  ))}
+                </Card.Content>
+              </Card>
+            </Animated.View>
           ))}
 
-          <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Sign Out</Text>
-          </TouchableOpacity>
+          {/* Logout */}
+          <Animated.View entering={FadeInUp.delay(550).duration(500)}>
+            <TouchableOpacity style={[styles.logoutBtn, { borderColor: withOpacity(colors.error, 0.25), backgroundColor: withOpacity(colors.error, 0.06) }]} onPress={handleLogout} activeOpacity={0.8}>
+              <Ionicons name="log-out-outline" size={20} color={colors.error} />
+              <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <View style={{ height: spacing.xl }} />
         </View>
       </ScrollView>
     </Container>
@@ -299,131 +338,156 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { backgroundColor: colors.background },
   centered: { justifyContent: 'center', alignItems: 'center' },
   loadingText: { ...typography.body, color: colors.textSecondary },
 
   // Header
   header: {
     alignItems: 'center',
-    paddingTop: spacing.xxxl,
+    paddingTop: spacing.xl,
     paddingBottom: spacing.xxl,
     paddingHorizontal: spacing.lg,
-    borderBottomLeftRadius: borderRadius.xxxl,
-    borderBottomRightRadius: borderRadius.xxxl,
   },
-  avatarContainer: { position: 'relative', marginBottom: spacing.lg },
+  avatarContainer: { position: 'relative', marginBottom: spacing.md },
   avatar: {
-    borderWidth: 4,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 3,
+    borderColor: withOpacity(colors.primary, 0.4),
   },
   editAvatarBtn: {
     position: 'absolute',
-    bottom: 4,
-    right: 4,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    bottom: 2,
+    right: 2,
+    backgroundColor: colors.primary,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 3,
+    borderWidth: 2,
+    borderColor: colors.background,
     ...shadows.md,
   },
-  userName: { ...typography.h2, textAlign: 'center' },
-  userHandle: { ...typography.bodyBold, marginTop: 2 },
-  statusBubble: {
-    marginTop: spacing.md,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: 8,
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
+  avatarLoadingDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.textInverse,
   },
-  userStatus: { ...typography.caption, fontStyle: 'italic' },
+  userName: { ...typography.h2, color: colors.text, textAlign: 'center' },
+  userStatus: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    fontStyle: 'italic',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  userMeta: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  metaBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.backgroundTertiary,
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  metaText: { ...typography.small, color: colors.textTertiary },
   statsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
+    backgroundColor: withOpacity(colors.primary, 0.08),
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.15),
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
     gap: spacing.xl,
   },
   statItem: { alignItems: 'center' },
-  statValue: { ...typography.h3 },
-  statLabel: { ...typography.tinyBold, textTransform: 'uppercase', letterSpacing: 1, marginTop: 2 },
-  statDivider: { width: 1, height: 24 },
+  statValue: { ...typography.h4, color: colors.primary },
+  statLabel: { ...typography.tiny, color: colors.textTertiary, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },
+  statDivider: { width: 1, height: 32, backgroundColor: withOpacity(colors.primary, 0.2) },
 
   // Content
-  content: { padding: spacing.lg },
-  quickActions: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    marginBottom: spacing.xl,
-  },
-  actionBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    height: 50,
-    borderRadius: borderRadius.xl,
-  },
-  actionBtnText: { ...typography.smallBold },
-
-  editCard: {
-    padding: spacing.lg,
-    borderRadius: borderRadius.xxl,
+  content: { padding: spacing.md, gap: spacing.md },
+  card: { backgroundColor: colors.backgroundSecondary, borderWidth: 1, borderColor: colors.border },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  cardTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  cardTitle: { ...typography.captionBold, color: colors.text, textTransform: 'uppercase', letterSpacing: 0.5, fontSize: 13 },
+  editBtn: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: borderRadius.md,
+    backgroundColor: withOpacity(colors.primary, 0.1),
     borderWidth: 1,
-    marginBottom: spacing.xl,
-    ...shadows.lg,
+    borderColor: withOpacity(colors.primary, 0.2),
   },
-  cardHeader: {
+  editBtnText: { ...typography.smallBold, color: colors.primary },
+
+  // Info list
+  infoList: { gap: 0 },
+  infoItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing.md,
+    gap: spacing.md,
+    paddingVertical: spacing.sm,
   },
-  cardTitle: { ...typography.h4 },
+  infoDivider: { height: 1, backgroundColor: colors.borderMuted, marginVertical: 2 },
+  infoIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoTextContainer: { flex: 1 },
+  infoLabel: { ...typography.tiny, color: colors.textTertiary, textTransform: 'uppercase', letterSpacing: 0.5 },
+  infoValue: { ...typography.caption, color: colors.text, marginTop: 3 },
+
+  // Form
+  form: { width: '100%', gap: 0 },
   saveBtn: { marginTop: spacing.lg },
 
-  sectionHeader: {
-    ...typography.tinyBold,
-    textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginBottom: spacing.sm,
-    marginLeft: spacing.xs,
-  },
-  settingsGroup: {
-    marginBottom: spacing.xl,
-    gap: 2,
-  },
+  // Settings
+  settingsGroupContent: { paddingVertical: 0, paddingHorizontal: 0 },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.md,
     gap: spacing.md,
-    borderWidth: 1,
   },
-  settingItemFirst: {
-    borderTopLeftRadius: borderRadius.xl,
-    borderTopRightRadius: borderRadius.xl,
-  },
-  settingItemLast: {
-    borderBottomLeftRadius: borderRadius.xl,
-    borderBottomRightRadius: borderRadius.xl,
-  },
+  settingDivider: { height: 1, backgroundColor: colors.borderMuted, marginHorizontal: spacing.md },
   settingIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: 36,
+    height: 36,
+    borderRadius: borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  settingText: { ...typography.body, flex: 1 },
+  settingText: { ...typography.body, color: colors.text, flex: 1, fontSize: 15 },
 
+  // Logout
   logoutBtn: {
-    marginTop: spacing.md,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
     padding: spacing.md,
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.error, 0.25),
+    backgroundColor: withOpacity(colors.error, 0.06),
   },
   logoutText: { ...typography.bodyBold, color: colors.error },
 });

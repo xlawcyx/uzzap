@@ -11,7 +11,6 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useAuthStore } from '@/store/useAuthStore';
 import { buddyService } from '@/services/buddyService';
 import { chatroomService } from '@/services/chatroomService';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export default function BuddiesScreen() {
   const router = useRouter();
@@ -91,94 +90,50 @@ export default function BuddiesScreen() {
   };
 
   const renderBuddy = ({ item, index }: { item: any; index: number }) => (
-    <Animated.View entering={FadeInUp.delay(index * 50).duration(500)}>
-      <TouchableOpacity 
-        style={[
-          styles.buddyCard, 
-          { 
-            backgroundColor: isDark ? 'rgba(28, 28, 30, 0.4)' : 'rgba(255, 255, 255, 0.8)', 
-            borderColor: themeColors.border 
-          }
-        ]}
-        onPress={() => router.push(`/profile/${item.id}`)}
-        activeOpacity={0.8}
-      >
-        <Avatar source={{ uri: item.avatar_url }} size="lg" />
-        <View style={styles.buddyInfo}>
-          <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.display_name || 'Buddy'}</Text>
-          <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]} numberOfLines={1}>
-            {item.status_message || 'Online'}
-          </Text>
-        </View>
-        <View style={styles.buddyActions}>
-          <TouchableOpacity 
-            style={[styles.actionIcon, { backgroundColor: withOpacity(colors.primary, 0.1) }]} 
-            onPress={() => handleStartDirectChat(item.id)}
-          >
-            <Ionicons name="chatbubble" size={20} color={colors.primary} />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
+    <Animated.View entering={FadeInUp.delay(index * 100).duration(500)}>
+      <Card variant="elevated" style={[styles.buddyCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]}>
+        <Card.Content style={styles.buddyContent}>
+          <Avatar source={{ uri: item.avatar_url }} size="md" />
+          <View style={styles.buddyInfo}>
+            <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.display_name || 'User'}</Text>
+            <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]} numberOfLines={1}>
+              {item.status_message || 'Online'}
+            </Text>
+          </View>
+          <View style={styles.buddyActions}>
+            <TouchableOpacity style={[styles.actionIcon, { backgroundColor: withOpacity(colors.primary, 0.1), borderColor: withOpacity(colors.primary, 0.2) }]} onPress={() => handleStartDirectChat(item.id)}>
+              <Ionicons name="chatbubble-outline" size={22} color={colors.accent} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.actionIcon, { backgroundColor: withOpacity(colors.primary, 0.1), borderColor: withOpacity(colors.primary, 0.2) }]} onPress={() => router.push(`/profile/${item.id}`)}>
+              <Ionicons name="person-outline" size={22} color={themeColors.textSecondary} />
+            </TouchableOpacity>
+          </View>
+        </Card.Content>
+      </Card>
     </Animated.View>
   );
 
   const renderSearchResult = ({ item, index }: { item: any; index: number }) => (
-    <Animated.View entering={FadeInUp.delay(index * 50).duration(500)}>
-      <TouchableOpacity 
-        style={[
-          styles.buddyCard, 
-          { 
-            backgroundColor: isDark ? 'rgba(28, 28, 30, 0.4)' : 'rgba(255, 255, 255, 0.8)', 
-            borderColor: themeColors.border 
-          }
-        ]}
-        onPress={() => router.push(`/profile/${item.id}`)}
-        activeOpacity={0.8}
-      >
-        <Avatar source={{ uri: item.avatar_url }} size="lg" />
-        <View style={styles.buddyInfo}>
-          <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.display_name || 'Buddy'}</Text>
-          <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]} numberOfLines={1}>{item.region || 'Philippines'}</Text>
-        </View>
-        {item.id !== profile?.id && (
-          <Button
-            variant="primary"
-            size="sm"
-            onPress={() => handleAddBuddy(item.id)}
-            style={styles.addBtn}
-          >
-            Add
-          </Button>
-        )}
-      </TouchableOpacity>
-    </Animated.View>
-  );
-
-  const renderRequest = ({ item, index }: { item: any; index: number }) => (
-    <Animated.View entering={FadeInUp.delay(index * 50).duration(500)}>
-      <View 
-        style={[
-          styles.buddyCard, 
-          { 
-            backgroundColor: isDark ? 'rgba(28, 28, 30, 0.4)' : 'rgba(255, 255, 255, 0.8)', 
-            borderColor: themeColors.border 
-          }
-        ]}
-      >
-        <Avatar source={{ uri: item.sender?.avatar_url }} size="lg" />
-        <View style={styles.buddyInfo}>
-          <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.sender?.display_name || 'Buddy'}</Text>
-          <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]}>Wants to be your buddy</Text>
-        </View>
-        <View style={styles.requestActions}>
-          <TouchableOpacity onPress={() => handleAcceptRequest(item.id, item.sender_id)} style={[styles.requestBtn, { backgroundColor: colors.primary }]}>
-            <Ionicons name="checkmark" size={20} color="#FFF" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeclineRequest(item.id)} style={[styles.requestBtn, { backgroundColor: themeColors.backgroundTertiary }]}>
-            <Ionicons name="close" size={20} color={themeColors.textSecondary} />
-          </TouchableOpacity>
-        </View>
-      </View>
+    <Animated.View entering={FadeInUp.delay(index * 100).duration(500)}>
+      <Card variant="elevated" style={[styles.buddyCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]}>
+        <Card.Content style={styles.buddyContent}>
+          <Avatar source={{ uri: item.avatar_url }} size="md" />
+          <View style={styles.buddyInfo}>
+            <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.display_name || 'User'}</Text>
+            <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]} numberOfLines={1}>{item.region}</Text>
+          </View>
+          {item.id !== profile?.id && (
+            <Button
+              variant="primary"
+              size="sm"
+              onPress={() => handleAddBuddy(item.id)}
+              style={styles.addBtn}
+            >
+              Add
+            </Button>
+          )}
+        </Card.Content>
+      </Card>
     </Animated.View>
   );
 
@@ -190,46 +145,71 @@ export default function BuddiesScreen() {
         : renderRequest({ item, index })
   );
 
-  return (
-    <Container style={styles.container} safeArea edges={['top']}>
-      <LinearGradient
-        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
-        style={StyleSheet.absoluteFillObject}
-      />
+  const renderRequest = ({ item, index }: { item: any; index: number }) => (
+    <Animated.View entering={FadeInUp.delay(index * 100).duration(500)}>
+      <Card variant="elevated" style={[styles.buddyCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]}>
+        <Card.Content style={styles.buddyContent}>
+          <Avatar source={{ uri: item.sender?.avatar_url }} size="md" />
+          <View style={styles.buddyInfo}>
+            <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.sender?.display_name || item.sender?.username || 'User'}</Text>
+            <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]}>Sent you a buddy request</Text>
+          </View>
+          <View style={styles.requestActions}>
+            <Button variant="primary" size="sm" onPress={() => handleAcceptRequest(item.id, item.sender_id)}>Accept</Button>
+            <Button variant="ghost" size="sm" onPress={() => handleDeclineRequest(item.id)}>Decline</Button>
+          </View>
+        </Card.Content>
+      </Card>
+    </Animated.View>
+  );
 
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: themeColors.text }]}>Buddies</Text>
-        
-        <View style={[styles.tabsContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
-          {['My Buddies', 'Find Buddies', 'Requests'].map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              onPress={() => setActiveTab(tab)}
-              style={[
-                styles.tab,
-                activeTab === tab && [styles.activeTab, { backgroundColor: themeColors.backgroundElevated }]
-              ]}
-            >
-              <Text style={[
-                styles.tabText, 
-                { color: themeColors.textSecondary },
-                activeTab === tab && { color: colors.primary }
-              ]}>
-                {tab === 'Requests' && buddyRequests?.length ? `${tab} (${buddyRequests.length})` : tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
+  return (
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <View style={[styles.header, { backgroundColor: themeColors.background, borderBottomColor: themeColors.border }]}>
+        <View style={[styles.summaryCard, { backgroundColor: themeColors.backgroundCard }]}>
+          <Text style={[styles.summaryTitle, { color: themeColors.text }]}>Your buddy hub</Text>
+          <Text style={[styles.summarySubtitle, { color: themeColors.textSecondary }]}>Manage connections, discover new people, and never miss a request.</Text>
+          <View style={styles.summaryStats}>
+            <View style={[styles.summaryStatItem, { backgroundColor: isDark ? withOpacity(colors.primary, 0.1) : themeColors.backgroundTertiary, borderColor: isDark ? withOpacity(colors.primary, 0.2) : themeColors.border }]}>
+              <Text style={[styles.summaryStatValue, { color: colors.primary }]}>{buddies?.length || 0}</Text>
+              <Text style={[styles.summaryStatLabel, { color: themeColors.textTertiary }]}>Buddies</Text>
+            </View>
+            <View style={[styles.summaryStatItem, { backgroundColor: isDark ? withOpacity(colors.primary, 0.1) : themeColors.backgroundTertiary, borderColor: isDark ? withOpacity(colors.primary, 0.2) : themeColors.border }]}>
+              <Text style={[styles.summaryStatValue, { color: colors.primary }]}>{buddyRequests?.length || 0}</Text>
+              <Text style={[styles.summaryStatLabel, { color: themeColors.textTertiary }]}>Requests</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.tabs}>
+          <TouchableOpacity
+            onPress={() => setActiveTab('My Buddies')}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'My Buddies' && [styles.activeTab, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]]}
+          >
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'My Buddies' && [styles.activeTabText, { color: colors.textInverse }]]}>My Buddies</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveTab('Find Buddies')}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Find Buddies' && [styles.activeTab, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]]}
+          >
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Find Buddies' && [styles.activeTabText, { color: colors.textInverse }]]}>Find Buddies</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveTab('Requests')}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Requests' && [styles.activeTab, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]]}
+          >
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Requests' && [styles.activeTabText, { color: colors.textInverse }]]}>Requests</Text>
+          </TouchableOpacity>
         </View>
 
         {activeTab === 'Find Buddies' && (
-          <View style={styles.searchSection}>
+          <View style={styles.searchBar}>
             <Input
-              placeholder="Search by name or username..."
+              placeholder="Search buddies by name..."
               value={searchQuery}
               onChangeText={setSearchQuery}
-              leftIcon={<Ionicons name="search" size={20} color={colors.primary} />}
+              leftIcon={<Ionicons name="search" size={20} color={themeColors.textTertiary} />}
               clearable
-              containerStyle={styles.searchInput}
             />
           </View>
         )}
@@ -238,9 +218,8 @@ export default function BuddiesScreen() {
       <FlashList
         data={activeTab === 'My Buddies' ? buddies : activeTab === 'Find Buddies' ? searchResults : buddyRequests}
         renderItem={renderBuddyCard}
-        estimatedItemSize={100}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
         refreshControl={
           activeTab === 'My Buddies' ? (
             <RefreshControl refreshing={buddiesLoading} onRefresh={refetchBuddies} tintColor={colors.accent} />
@@ -277,88 +256,150 @@ export default function BuddiesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    gap: spacing.lg,
-    marginBottom: spacing.md,
+  container: {
+    backgroundColor: colors.background,
   },
-  title: { ...typography.h1 },
-  tabsContainer: {
+  header: {
+    backgroundColor: colors.background,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  summaryCard: {
+    margin: spacing.md,
+    marginBottom: spacing.sm,
+    padding: spacing.md,
+    borderRadius: borderRadius.xl,
+    backgroundColor: colors.backgroundCard,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.2),
+  },
+  summaryTitle: {
+    ...typography.h4,
+    color: colors.text,
+  },
+  summarySubtitle: {
+    ...typography.small,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+    lineHeight: 18,
+  },
+  summaryStats: {
     flexDirection: 'row',
-    padding: 4,
-    borderRadius: 14,
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  summaryStatItem: {
+    flex: 1,
+    backgroundColor: withOpacity(colors.primary, 0.06),
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.15),
+    borderRadius: borderRadius.md,
+    padding: spacing.sm,
+  },
+  summaryStatValue: {
+    ...typography.h4,
+    color: colors.primary,
+  },
+  summaryStatLabel: {
+    ...typography.tiny,
+    color: colors.textTertiary,
+    marginTop: 2,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  tabs: {
+    flexDirection: 'row',
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+    gap: spacing.xs,
   },
   tab: {
     flex: 1,
-    paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: 10,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.backgroundCard,
   },
   activeTab: {
-    ...shadows.sm,
+    backgroundColor: colors.primary,
+    borderColor: colors.primaryDark,
   },
-  tabText: { ...typography.smallBold },
-  searchSection: {
-    marginTop: -spacing.sm,
+  tabText: {
+    ...typography.smallBold,
+    color: colors.textTertiary,
+    fontSize: 11,
   },
-  searchInput: {
-    borderRadius: borderRadius.xl,
+  activeTabText: {
+    color: colors.textInverse,
+  },
+  searchBar: {
+    padding: spacing.md,
+    paddingTop: 0,
   },
   listContent: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: 100,
+    padding: spacing.md,
   },
   buddyCard: {
+    marginBottom: spacing.sm,
+    backgroundColor: colors.backgroundCard,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  buddyContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: spacing.md,
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    marginBottom: spacing.md,
-    ...shadows.sm,
+    gap: spacing.md,
   },
   buddyInfo: {
     flex: 1,
-    marginLeft: spacing.md,
   },
-  buddyName: { ...typography.h4 },
-  buddyStatus: { ...typography.caption, marginTop: 2 },
+  buddyName: {
+    ...typography.h4,
+    color: colors.text,
+  },
+  buddyStatus: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
   buddyActions: {
     flexDirection: 'row',
     gap: spacing.sm,
   },
-  actionIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addBtn: {
-    height: 36,
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.lg,
-  },
   requestActions: {
-    flexDirection: 'row',
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
-  requestBtn: {
+  actionIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    backgroundColor: withOpacity(colors.primary, 0.1),
     justifyContent: 'center',
     alignItems: 'center',
-    ...shadows.sm,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.2),
+  },
+  addBtn: {
+    paddingHorizontal: spacing.md,
   },
   emptyContainer: {
-    paddingTop: spacing.xxxxl,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.xs,
+    marginTop: 100,
   },
-  emptyTitle: { ...typography.h3, marginTop: spacing.md },
-  emptySubtitle: { ...typography.body, textAlign: 'center', opacity: 0.7, paddingHorizontal: spacing.xxl },
+  emptyTitle: {
+    ...typography.h3,
+    color: colors.text,
+    marginTop: spacing.lg,
+  },
+  emptySubtitle: {
+    ...typography.body,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.xs,
+    paddingHorizontal: spacing.xxl,
+  },
 });

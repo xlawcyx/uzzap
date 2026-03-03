@@ -214,21 +214,12 @@ export default function ChatroomScreen() {
 
   return (
     <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <LinearGradient
-        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
-        style={StyleSheet.absoluteFillObject}
-      />
-      
       <Stack.Screen
         options={{
           headerShown: true,
           title: '',
-          headerBackTitleVisible: false,
-          headerStyle: { 
-            backgroundColor: isDark ? 'rgba(10, 10, 11, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-          },
-          headerBlurEffect: isDark ? 'dark' : 'light',
-          headerTransparent: true,
+          headerBackTitle: 'Back',
+          headerStyle: { backgroundColor: themeColors.backgroundSecondary },
           headerTintColor: themeColors.text,
           headerTitle: () => (
             <ChatHeader 
@@ -243,8 +234,8 @@ export default function ChatroomScreen() {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 100 : 80 }}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         <FlashList
           ref={flatListRef}
@@ -264,18 +255,28 @@ export default function ChatroomScreen() {
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           estimatedItemSize={80}
           ListHeaderComponent={
-            <View style={styles.roomIntro}>
-              <View style={[styles.iconCircle, { backgroundColor: withOpacity(colors.primary, 0.1), borderColor: withOpacity(colors.primary, 0.2) }]}>
-                <Ionicons name="chatbubbles" size={32} color={colors.primary} />
-              </View>
-              <Text style={[styles.roomName, { color: themeColors.text }]}>{room?.name}</Text>
-              <Text style={[styles.roomMeta, { color: themeColors.textSecondary }]}>
-                #{roomRegion} Community • {room?.member_count || 0} members
-              </Text>
-              {room?.description ? (
-                <Text style={[styles.roomDesc, { color: themeColors.textTertiary }]}>{room.description}</Text>
-              ) : null}
-              <View style={styles.introDivider} />
+            <View style={[styles.detailCard, { borderColor: themeColors.borderAccent }]}>
+              <LinearGradient
+                colors={isDark ? ['rgba(62,207,142,0.12)', 'rgba(62,207,142,0.02)'] : ['#F0FDF4', '#FFFFFF']}
+                style={styles.detailCardGradient}
+              >
+                <View style={styles.detailRoomIcon}>
+                  <Ionicons name="location-sharp" size={18} color={colors.primary} />
+                </View>
+                <Text style={[styles.detailTitle, { color: themeColors.text }]}>{room?.name}</Text>
+                <Text style={[styles.roomMetaText, { color: themeColors.textTertiary }]}>
+                  #{roomRegion} • {room?.member_count || 0} members
+                </Text>
+                {room?.description ? (
+                  <Text style={[styles.detailAbout, { color: themeColors.textSecondary }]}>{room.description}</Text>
+                ) : null}
+                {room?.language ? (
+                  <View style={styles.langBadge}>
+                    <Ionicons name="globe-outline" size={12} color={colors.primary} />
+                    <Text style={styles.langBadgeText}>{room.language}</Text>
+                  </View>
+                ) : null}
+              </LinearGradient>
             </View>
           }
           ListEmptyComponent={
@@ -313,44 +314,6 @@ const styles = StyleSheet.create({
 
   // Message list
   messageList: { padding: spacing.md, paddingBottom: spacing.lg },
-
-  // Room Intro
-  roomIntro: {
-    alignItems: 'center',
-    paddingVertical: spacing.xxl,
-    gap: spacing.sm,
-  },
-  iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    ...shadows.glow,
-  },
-  roomName: {
-    ...typography.h2,
-    textAlign: 'center',
-  },
-  roomMeta: {
-    ...typography.smallBold,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  roomDesc: {
-    ...typography.caption,
-    textAlign: 'center',
-    paddingHorizontal: spacing.xxl,
-    lineHeight: 18,
-  },
-  introDivider: {
-    height: 1,
-    width: 100,
-    backgroundColor: colors.border,
-    marginTop: spacing.xl,
-    opacity: 0.5,
-  },
 
   // Detail card at top of chat
   detailCard: {

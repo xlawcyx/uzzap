@@ -28,9 +28,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   if (item.is_deleted) {
     return (
       <View style={[styles.wrapper, isMe ? styles.myWrapper : styles.theirWrapper]}>
-        <View style={[styles.bubble, isMe ? styles.myBubble : styles.theirBubble, { opacity: 0.5, backgroundColor: themeColors.backgroundElevated }]}>
+        <View style={[styles.bubble, isMe ? styles.myBubble : styles.theirBubble, { opacity: 0.6 }]}>
           <Text style={[styles.deletedText, { color: themeColors.textTertiary }]}>
-            Message deleted
+            This message was deleted
           </Text>
         </View>
       </View>
@@ -39,7 +39,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
   return (
     <Animated.View 
-      entering={FadeInUp.duration(400).springify()} 
+      entering={FadeInUp.duration(300).springify()} 
       layout={Layout.springify()}
       style={[styles.wrapper, isMe ? styles.myWrapper : styles.theirWrapper]}
     >
@@ -47,8 +47,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         onLongPress={() => isMe && onDelete?.(item.id)}
         onPress={() => onReply?.(item)}
         delayLongPress={300}
-        activeOpacity={0.9}
-        style={[styles.touchable, isMe && { flexDirection: 'row-reverse' }]}
+        activeOpacity={0.85}
+        style={styles.touchable}
       >
         {!isMe && (
           <Avatar
@@ -57,55 +57,40 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             style={styles.avatar}
           />
         )}
-        
         <View style={[
           styles.bubble,
           isMe ? styles.myBubble : styles.theirBubble,
-          { 
-            backgroundColor: isMe ? colors.primary : isDark ? 'rgba(45, 45, 50, 0.6)' : 'rgba(240, 240, 245, 0.8)',
-          },
-          isMe && shadows.md
+          { backgroundColor: isMe ? colors.bubbleMe : colors.bubbleThem },
+          !isMe && { borderColor: themeColors.border, borderWidth: 1 }
         ]}>
           {!isMe && (
-            <Text style={[styles.userName, { color: colors.primary }]}>{item.sender?.display_name || 'Buddy'}</Text>
+            <Text style={styles.userName}>{item.sender?.display_name || 'Anonymous'}</Text>
           )}
           
           {item.type === 'image' && item.metadata?.imageUrl ? (
-            <View style={styles.imageContainer}>
+            <View>
               <Image 
                 source={{ uri: item.metadata.imageUrl }} 
                 style={styles.image} 
                 contentFit="cover" 
-                transition={300}
+                transition={200}
               />
-              <View style={styles.imageOverlay}>
-                <Text style={[styles.time, { color: '#FFF', opacity: 0.8 }]}>
-                  {formatTime(item.created_at)}
-                </Text>
-              </View>
+              <Text style={[styles.time, isMe ? styles.myTime : styles.theirTime]}>
+                {formatTime(item.created_at)}
+              </Text>
             </View>
           ) : (
-            <View>
-              {item.reply_to_message && (
-                <View style={[styles.replyPreview, { backgroundColor: isMe ? 'rgba(255,255,255,0.15)' : isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
-                  <Text style={[styles.replyUser, { color: isMe ? '#FFF' : colors.primary }]} numberOfLines={1}>
-                    {item.reply_to_message.sender?.display_name || 'Buddy'}
-                  </Text>
-                  <Text style={[styles.replyText, { color: isMe ? 'rgba(255,255,255,0.8)' : themeColors.textSecondary }]} numberOfLines={1}>
-                    {item.reply_to_message.content}
-                  </Text>
-                </View>
-              )}
+            <>
               <Text style={[
                 styles.text,
-                { color: isMe ? '#FFF' : themeColors.text }
+                isMe ? styles.myText : styles.theirText,
               ]}>
                 {item.content}
               </Text>
               <Text style={[styles.time, isMe ? styles.myTime : styles.theirTime]}>
                 {formatTime(item.created_at)}
               </Text>
-            </View>
+            </>
           )}
         </View>
       </TouchableOpacity>
@@ -115,92 +100,76 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginBottom: spacing.md,
-    width: '100%',
+    flexDirection: 'row',
+    marginBottom: spacing.sm,
+    maxWidth: '85%',
   },
   myWrapper: {
-    alignItems: 'flex-end',
+    alignSelf: 'flex-end',
+    flexDirection: 'row-reverse',
   },
   theirWrapper: {
-    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
   },
   touchable: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    maxWidth: '85%',
   },
   avatar: {
-    marginRight: spacing.sm,
+    marginRight: spacing.xs,
     marginBottom: 2,
   },
   bubble: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: borderRadius.xl,
+    maxWidth: '100%',
   },
   myBubble: {
     borderBottomRightRadius: 4,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.2),
   },
   theirBubble: {
     borderBottomLeftRadius: 4,
+    marginLeft: spacing.xs,
   },
   userName: {
     ...typography.tinyBold,
-    marginBottom: 2,
-    fontSize: 11,
+    color: colors.primary,
+    marginBottom: 3,
+    letterSpacing: 0.2,
   },
   text: {
     ...typography.body,
     fontSize: 15,
-    lineHeight: 20,
+    lineHeight: 22,
+  },
+  myText: {
+    color: colors.bubbleMeText,
+  },
+  theirText: {
+    color: colors.bubbleThemText,
   },
   time: {
     ...typography.tiny,
-    marginTop: 2,
+    marginTop: 4,
     alignSelf: 'flex-end',
-    fontSize: 10,
   },
   myTime: {
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: withOpacity(colors.primary, 0.6),
   },
   theirTime: {
     color: colors.textTertiary,
   },
-  imageContainer: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    position: 'relative',
-  },
   image: {
     width: 240,
     height: 240,
-  },
-  imageOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    padding: 6,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderTopLeftRadius: 12,
-  },
-  replyPreview: {
-    padding: 8,
-    borderRadius: 12,
-    marginBottom: 6,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
-  },
-  replyUser: {
-    ...typography.tinyBold,
-    fontSize: 11,
-  },
-  replyText: {
-    ...typography.tiny,
-    fontSize: 12,
+    borderRadius: borderRadius.lg,
+    marginBottom: spacing.xs,
   },
   deletedText: {
     ...typography.caption,
     fontStyle: 'italic',
-    fontSize: 13,
   },
 });
