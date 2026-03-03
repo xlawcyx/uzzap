@@ -38,7 +38,7 @@ export function Button({
   testID,
   style,
 }: ButtonProps) {
-  const { colors: themeColors, isDark } = useAppTheme();
+  const { colors: themeColors } = useAppTheme();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -155,19 +155,6 @@ export function Button({
   );
 }
 
-function getSpinnerColor(variant: string): string {
-  switch (variant) {
-    case 'primary':
-    case 'danger':
-    case 'secondary':
-      return colors.white;
-    case 'outline':
-    case 'ghost':
-      return colors.primary;
-    default:
-      return colors.white;
-  }
-}
 
 const styles = StyleSheet.create({
   button: {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
-  StyleSheet, View, Text, TouchableOpacity,
+  StyleSheet, View, Text,
   KeyboardAvoidingView, Platform, ActivityIndicator, Alert,
 } from 'react-native';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { colors, spacing, typography, borderRadius, gradients, withOpacity } from '@/constants/design';
+import { colors, spacing, typography, borderRadius, withOpacity } from '@/constants/design';
 import { Container } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -210,7 +210,6 @@ export default function ChatroomScreen() {
     );
   }
 
-  const canSend = message.trim().length > 0 && !sending;
 
   return (
     <Container style={[styles.container, { backgroundColor: themeColors.background }]}>

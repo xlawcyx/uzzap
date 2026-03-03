@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,9 +7,8 @@ import { Container, Button } from '@/components/ui';
 import { borderRadius, colors, spacing, typography, withOpacity } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { ONBOARDING_SLIDES } from '@/constants/onboardingData';
-import Animated, { FadeIn, FadeInUp, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 
-const { width } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const router = useRouter();
