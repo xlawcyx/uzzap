@@ -236,7 +236,13 @@ export default function ChatroomListScreen() {
   };
 
   const quickJoinProvinces = useMemo(
-    () => (selectedRegion === 'All Regions' ? [] : (PHILIPPINES_REGIONS[selectedRegion] || []).slice(0, 6)),
+    () => {
+      if (selectedRegion === 'All Regions') {
+        return Object.values(PHILIPPINES_REGIONS).flat().slice(0, 8);
+      }
+
+      return (PHILIPPINES_REGIONS[selectedRegion] || []).slice(0, 8);
+    },
     [selectedRegion],
   );
 
@@ -362,35 +368,9 @@ export default function ChatroomListScreen() {
   return (
     <Container style={[styles.container, dynamicStyles.container]}>
       <View style={[styles.header, dynamicStyles.header]}>
-        <View style={[styles.hero, dynamicStyles.hero]}>
-          <Text style={[styles.heroTitle, dynamicStyles.heroTitle]}>Philippines Chatrooms</Text>
-          <Text style={[styles.heroSubtitle, dynamicStyles.heroSubtitle]}>Choose a region, pick a province, and join local conversations faster.</Text>
-          <View style={styles.heroStats}>
-            <View style={[styles.statCard, dynamicStyles.statCard]}>
-              <Text style={styles.statValue}>{Object.keys(PHILIPPINES_REGIONS).length}</Text>
-              <Text style={[styles.statLabel, dynamicStyles.statLabel]}>Regions</Text>
-            </View>
-            <View style={[styles.statCard, dynamicStyles.statCard]}>
-              <Text style={styles.statValue}>{filteredChatrooms.length}</Text>
-              <Text style={[styles.statLabel, dynamicStyles.statLabel]}>Matching rooms</Text>
-            </View>
-          </View>
-        </View>
+        <Text style={[styles.screenTitle, dynamicStyles.heroTitle]}>Chatrooms</Text>
 
         <View style={styles.searchWrap}>
-          <View style={styles.filterSummaryRow}>
-            <View style={[styles.resultsPill, dynamicStyles.resultsPill]}>
-              <Ionicons name="layers-outline" size={14} color={colors.accent} />
-              <Text style={[styles.resultsPillText, dynamicStyles.resultsPillText]}>{filteredChatrooms.length} rooms shown</Text>
-            </View>
-            {hasActiveFilters ? (
-              <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={clearAllFilters}>
-                <Ionicons name="refresh-outline" size={13} color={themeColors.textSecondary} />
-                <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Reset filters</Text>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-
           <Input
             placeholder="Search by room, region, or province"
             value={searchQuery}
@@ -399,83 +379,6 @@ export default function ChatroomListScreen() {
             clearable
           />
         </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.regionsContainer}>
-          {REGION_OPTIONS.map((region) => (
-            <TouchableOpacity
-              key={region}
-              onPress={() => applyRegion(region)}
-              style={[
-                styles.regionTab,
-                dynamicStyles.regionTab,
-                selectedRegion === region && styles.regionTabActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.regionTabText,
-                  dynamicStyles.regionTabText,
-                  selectedRegion === region && [styles.regionTabTextActive, { color: themeColors.textInverse }],
-                ]}
-              >
-                {region}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <View style={[styles.quickJoinWrap, dynamicStyles.quickJoinWrap]}>
-          <Text style={[styles.quickJoinTitle, dynamicStyles.quickJoinTitle]}>Quick join a province</Text>
-          {selectedRegion === 'All Regions' ? (
-            <Text style={[styles.quickJoinHint, dynamicStyles.quickJoinHint]}>Select a region first, then tap a province to join instantly.</Text>
-          ) : (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickJoinRow}>
-              {quickJoinProvinces.map((province) => (
-                <TouchableOpacity
-                  key={province}
-                  style={styles.quickJoinChip}
-                  onPress={() => handleProvinceSelect(province)}
-                  disabled={joiningProvince !== null}
-                >
-                  <Text style={[styles.quickJoinChipText, { color: colors.white }]}>{province}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
-        </View>
-
-        <View style={styles.filterRow}>
-          <TouchableOpacity style={[styles.filterBtn, dynamicStyles.filterBtn]} onPress={() => openPicker('region')}>
-            <Text style={[styles.filterLabel, dynamicStyles.filterLabel]}>Region</Text>
-            <Text style={[styles.filterValue, dynamicStyles.filterValue]} numberOfLines={1}>{selectedRegion}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.filterBtn,
-              dynamicStyles.filterBtn,
-              selectedRegion === 'All Regions' && styles.filterBtnDisabled,
-            ]}
-            onPress={() => openPicker('province')}
-            disabled={selectedRegion === 'All Regions'}
-          >
-            <Text style={[styles.filterLabel, dynamicStyles.filterLabel]}>Province</Text>
-            <Text style={[styles.filterValue, dynamicStyles.filterValue]} numberOfLines={1}>{selectedProvince}</Text>
-          </TouchableOpacity>
-        </View>
-
-
-        {selectedProvince !== 'All Provinces' ? (
-          <View style={styles.joinActionWrap}>
-            <Button
-              variant="primary"
-              onPress={() => ensureProvinceChatroom(selectedProvince, selectedRegion === 'All Regions' ? undefined : selectedRegion)}
-              disabled={joiningProvince !== null}
-            >
-              {joiningProvince === selectedProvince ? 'Joining province...' : `Join ${selectedProvince}`}
-            </Button>
-          </View>
-        ) : null}
 
         {hasActiveFilters ? (
           <View style={styles.activeFilterRow}>
@@ -496,8 +399,44 @@ export default function ChatroomListScreen() {
                 <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>“{searchQuery.trim()}”</Text>
               </View>
             ) : null}
+
+            <TouchableOpacity onPress={clearAllFilters} style={styles.clearFilterBtn}>
+              <Text style={[styles.clearFilterText, dynamicStyles.resetBtnText]}>Clear all</Text>
+            </TouchableOpacity>
           </View>
         ) : null}
+
+        <View style={[styles.quickJoinWrap, dynamicStyles.quickJoinWrap]}>
+          <Text style={[styles.quickJoinTitle, dynamicStyles.quickJoinTitle]}>Quick join</Text>
+          <Text style={[styles.quickJoinHint, dynamicStyles.quickJoinHint]}>
+            {selectedRegion === 'All Regions' ? 'Popular provinces across the Philippines.' : `Top provinces in ${selectedRegion}.`}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickJoinRow}>
+            {quickJoinProvinces.map((province) => (
+              <TouchableOpacity
+                key={province}
+                style={styles.quickJoinChip}
+                onPress={() => handleProvinceSelect(province)}
+                disabled={joiningProvince !== null}
+              >
+                <Text style={styles.quickJoinChipText}>{province}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        <View style={styles.resultsHeader}>
+          <View style={[styles.resultsPill, dynamicStyles.resultsPill]}>
+            <Ionicons name="layers-outline" size={14} color={colors.accent} />
+            <Text style={[styles.resultsPillText, dynamicStyles.resultsPillText]}>
+              {filteredChatrooms.length} {filteredChatrooms.length === 1 ? 'room found' : 'rooms found'}
+            </Text>
+          </View>
+          <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={() => openPicker('region')}>
+            <Ionicons name="options-outline" size={14} color={themeColors.textSecondary} />
+            <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Filter</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <FlashList
@@ -521,6 +460,18 @@ export default function ChatroomListScreen() {
           ) : null
         }
       />
+
+      {selectedProvince !== 'All Provinces' ? (
+        <View style={styles.stickyJoinWrap}>
+          <Button
+            variant="primary"
+            onPress={() => ensureProvinceChatroom(selectedProvince, selectedRegion === 'All Regions' ? undefined : selectedRegion)}
+            disabled={joiningProvince !== null}
+          >
+            {joiningProvince === selectedProvince ? 'Joining province...' : `Join ${selectedProvince}`}
+          </Button>
+        </View>
+      ) : null}
 
       <Modal visible={pickerModalVisible} animationType="fade" transparent onRequestClose={() => setPickerModalVisible(false)}>
         <View style={styles.pickerOverlay}>
@@ -559,6 +510,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+    gap: spacing.sm,
+  },
+  screenTitle: {
+    ...typography.h3,
+    color: colors.text,
+    fontWeight: '700',
+    paddingHorizontal: spacing.md,
   },
   hero: {
     marginHorizontal: spacing.md,
@@ -583,9 +541,10 @@ const styles = StyleSheet.create({
   },
   statValue: { ...typography.h4, color: colors.primary },
   statLabel: { ...typography.tiny, color: colors.textTertiary, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },
-  searchWrap: { paddingHorizontal: spacing.md, marginBottom: spacing.sm },
-  filterSummaryRow: {
-    marginBottom: spacing.sm,
+  searchWrap: { paddingHorizontal: spacing.md },
+  resultsHeader: {
+    paddingHorizontal: spacing.md,
+    marginTop: spacing.sm,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -661,6 +620,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   quickJoinChipText: { ...typography.smallBold, color: colors.primary },
+  clearFilterBtn: { paddingHorizontal: spacing.xs, paddingVertical: 6 },
+  clearFilterText: { ...typography.smallBold, color: colors.textSecondary },
   joinActionWrap: {
     paddingHorizontal: spacing.md,
     marginTop: spacing.sm,
@@ -681,7 +642,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   activeFilterText: { ...typography.smallBold, color: colors.primary },
-  listContent: { padding: spacing.md, paddingBottom: 100 },
+  listContent: { padding: spacing.md, paddingBottom: 140 },
+  stickyJoinWrap: {
+    position: 'absolute',
+    left: spacing.md,
+    right: spacing.md,
+    bottom: spacing.xl + 52,
+  },
   roomCard: {
     marginBottom: spacing.sm,
     backgroundColor: colors.backgroundCard,
