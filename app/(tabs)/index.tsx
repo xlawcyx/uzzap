@@ -60,6 +60,7 @@ const PHILIPPINES_REGIONS: Record<string, string[]> = {
 };
 
 const REGION_OPTIONS = ['All Regions', ...Object.keys(PHILIPPINES_REGIONS)];
+const ALL_PROVINCES = Object.values(PHILIPPINES_REGIONS).flat();
 
 const PROVINCE_TO_REGION = Object.entries(PHILIPPINES_REGIONS).reduce<Record<string, string>>((acc, [region, provinces]) => {
   provinces.forEach((province) => {
@@ -198,7 +199,7 @@ export default function ChatroomListScreen() {
   }, [fetchChatrooms]);
 
   const regionProvinces = useMemo(
-    () => ['All Provinces', ...(selectedRegion === 'All Regions' ? [] : PHILIPPINES_REGIONS[selectedRegion] || [])],
+    () => ['All Provinces', ...(selectedRegion === 'All Regions' ? ALL_PROVINCES : PHILIPPINES_REGIONS[selectedRegion] || [])],
     [selectedRegion],
   );
 
@@ -432,10 +433,16 @@ export default function ChatroomListScreen() {
               {filteredChatrooms.length} {filteredChatrooms.length === 1 ? 'room found' : 'rooms found'}
             </Text>
           </View>
-          <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={() => openPicker('region')}>
-            <Ionicons name="options-outline" size={14} color={themeColors.textSecondary} />
-            <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Filter</Text>
-          </TouchableOpacity>
+          <View style={styles.resultsActions}>
+            <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={() => openPicker('region')}>
+              <Ionicons name="options-outline" size={14} color={themeColors.textSecondary} />
+              <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Region</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={() => openPicker('province')}>
+              <Ionicons name="business-outline" size={14} color={themeColors.textSecondary} />
+              <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Province</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -562,6 +569,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   resultsPillText: { ...typography.smallBold, color: colors.textSecondary },
+  resultsActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   resetBtn: {
     flexDirection: 'row',
     alignItems: 'center',
