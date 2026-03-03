@@ -14,7 +14,7 @@ export default function AppearanceSettingsScreen() {
 
   return (
     <Container style={{ ...styles.container, backgroundColor: themeColors.background }}>
-      <Stack.Screen options={{ headerShown: true, title: 'Appearance' }} />
+      <Stack.Screen options={{ headerShown: true, title: 'Appearance', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
         <Card variant="elevated" style={{ ...styles.card, backgroundColor: themeColors.backgroundSecondary }}>
           <Card.Content>

@@ -4,35 +4,37 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import { Container, Card } from '@/components/ui';
 import { colors, spacing, typography, borderRadius } from '@/constants/design';
 import { useAppSettingsStore } from '@/store/useAppSettingsStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const fontScaleOptions = [0.9, 1.0, 1.2, 1.4];
 
 export default function AccessibilitySettingsScreen() {
   const { fontScale, setFontScale, highContrast, setHighContrast, reduceMotion, setReduceMotion } = useAppSettingsStore();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Accessibility' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Accessibility', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
-            <Text style={styles.subHeader}>Font size ({fontScale.toFixed(1)}x)</Text>
+            <Text style={[styles.subHeader, { color: themeColors.textSecondary }]}>Font size ({fontScale.toFixed(1)}x)</Text>
             {fontScaleOptions.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={[styles.option, fontScale === item && styles.optionActive]}
+                style={[styles.option, { borderColor: themeColors.border }, fontScale === item && styles.optionActive]}
                 onPress={() => setFontScale(item)}
               >
-                <Text style={styles.optionText}>{item.toFixed(1)}x</Text>
+                <Text style={[styles.optionText, { color: themeColors.text }]}>{item.toFixed(1)}x</Text>
               </TouchableOpacity>
             ))}
 
             <View style={styles.row}>
-              <Text style={styles.label}>High contrast mode</Text>
+              <Text style={[styles.label, { color: themeColors.text }]}>High contrast mode</Text>
               <Switch value={highContrast} onValueChange={setHighContrast} />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Reduce motion</Text>
+              <Text style={[styles.label, { color: themeColors.text }]}>Reduce motion</Text>
               <Switch value={reduceMotion} onValueChange={setReduceMotion} />
             </View>
           </Card.Content>

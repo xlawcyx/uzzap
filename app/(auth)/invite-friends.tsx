@@ -4,11 +4,13 @@ import { useRouter } from 'expo-router';
 
 import { Button, Card, Container } from '@/components/ui';
 import { colors, spacing, typography } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const REFERRAL_CODE = 'UZZAP-BUDDY-2026';
 
 export default function InviteFriendsScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
 
   const handleShare = async () => {
     await Share.share({
@@ -17,14 +19,14 @@ export default function InviteFriendsScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <View style={styles.content}>
-        <Text style={styles.title}>Invite friends</Text>
-        <Text style={styles.subtitle}>Grow your network faster by inviting friends with your referral code.</Text>
+        <Text style={[styles.title, { color: themeColors.text }]}>Invite friends</Text>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Grow your network faster by inviting friends with your referral code.</Text>
 
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={{ ...styles.card, backgroundColor: themeColors.backgroundSecondary }}>
           <Card.Content>
-            <Text style={styles.codeLabel}>Referral code</Text>
+            <Text style={[styles.codeLabel, { color: themeColors.textTertiary }]}>Referral code</Text>
             <Text style={styles.codeValue}>{REFERRAL_CODE}</Text>
           </Card.Content>
         </Card>

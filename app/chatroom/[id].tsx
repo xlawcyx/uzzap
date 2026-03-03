@@ -11,6 +11,7 @@ import { Container, Avatar } from '@/components/ui';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { useChatStore } from '@/store/useChatStore';
 import { messageService } from '@/services/messageService';
 import { chatroomService } from '@/services/chatroomService';
@@ -22,6 +23,7 @@ export default function ChatroomScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { profile } = useAuthStore();
+  const { colors: themeColors } = useAppTheme();
   const { messages: chatroomMessages, fetchMessages, subscribeToChatroom, setActiveChatroom, setTyping, typingUsers, leaveChatroom } = useChatStore();
   const [message, setMessage] = useState('');
   const [room, setRoom] = useState<any>(null);
@@ -217,25 +219,35 @@ export default function ChatroomScreen() {
             style={styles.messageAvatar}
           />
         )}
-        <View style={[styles.messageBubble, isMe ? styles.myMessageBubble : styles.theirMessageBubble]}>
+        <View style={[
+          styles.messageBubble,
+          isMe ? styles.myMessageBubble : styles.theirMessageBubble,
+          isMe
+            ? { backgroundColor: themeColors.bubbleMe }
+            : { backgroundColor: themeColors.bubbleThem, borderColor: themeColors.border },
+        ]}>
           {!isMe && (
             <Text style={styles.messageUser}>{item.sender?.display_name || 'Anonymous'}</Text>
           )}
           {item.is_deleted ? (
-            <Text style={styles.deletedText}>This message was deleted</Text>
+            <Text style={[styles.deletedText, { color: themeColors.textTertiary }]}>This message was deleted</Text>
           ) : item.type === 'image' && item.metadata?.imageUrl ? (
             <View>
               <Image source={{ uri: item.metadata.imageUrl }} style={styles.messageImage} contentFit="cover" />
-              <Text style={[styles.messageTime, isMe ? styles.myMessageTime : styles.theirMessageTime]}>
+              <Text style={[styles.messageTime, isMe ? styles.myMessageTime : styles.theirMessageTime, !isMe && { color: themeColors.textTertiary }]}>
                 {formatTime(item.created_at)}
               </Text>
             </View>
           ) : (
             <>
-              <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>
+              <Text style={[
+                styles.messageText,
+                isMe ? styles.myMessageText : styles.theirMessageText,
+                isMe ? { color: themeColors.bubbleMeText } : { color: themeColors.bubbleThemText },
+              ]}>
                 {item.content}
               </Text>
-              <Text style={[styles.messageTime, isMe ? styles.myMessageTime : styles.theirMessageTime]}>
+              <Text style={[styles.messageTime, isMe ? styles.myMessageTime : styles.theirMessageTime, !isMe && { color: themeColors.textTertiary }]}>
                 {formatTime(item.created_at)}
               </Text>
             </>
@@ -249,7 +261,7 @@ export default function ChatroomScreen() {
     return (
       <Container style={styles.centered}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading chatroom...</Text>
+        <Text style={[styles.loadingText, { color: themeColors.textSecondary }]}>Loading chatroom...</Text>
       </Container>
     );
   }
@@ -257,23 +269,23 @@ export default function ChatroomScreen() {
   const canSend = message.trim().length > 0 && !sending;
 
   return (
-    <Container style={styles.container}>
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
       <Stack.Screen
         options={{
           headerShown: true,
           title: '',
           headerBackTitle: 'Back',
-          headerStyle: { backgroundColor: colors.backgroundSecondary },
-          headerTintColor: colors.text,
+          headerStyle: { backgroundColor: themeColors.backgroundSecondary },
+          headerTintColor: themeColors.text,
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: spacing.md, alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => Alert.alert(room?.name, room?.description || 'No description')}
-                style={styles.headerIconBtn}
+                style={[styles.headerIconBtn, { backgroundColor: themeColors.backgroundTertiary }]}
               >
-                <Ionicons name="information-circle-outline" size={22} color={colors.textSecondary} />
+                <Ionicons name="information-circle-outline" size={22} color={themeColors.textSecondary} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleLeaveRoom} style={styles.headerIconBtn}>
+              <TouchableOpacity onPress={handleLeaveRoom} style={[styles.headerIconBtn, { backgroundColor: themeColors.backgroundTertiary }]}>
                 <Ionicons name="log-out-outline" size={22} color={colors.error} />
               </TouchableOpacity>
             </View>
@@ -284,8 +296,8 @@ export default function ChatroomScreen() {
                 <Ionicons name="location" size={14} color={colors.primary} />
               </View>
               <View>
-                <Text style={styles.headerRoomName} numberOfLines={1}>{room?.name}</Text>
-                <Text style={styles.headerRoomMeta}>{room?.member_count || 0} members • #{roomRegion}</Text>
+                <Text style={[styles.headerRoomName, { color: themeColors.text }]} numberOfLines={1}>{room?.name}</Text>
+                <Text style={[styles.headerRoomMeta, { color: themeColors.textTertiary }]}>{room?.member_count || 0} members • #{roomRegion}</Text>
               </View>
             </View>
           ),
@@ -312,12 +324,12 @@ export default function ChatroomScreen() {
                 <View style={styles.detailRoomIcon}>
                   <Ionicons name="location-sharp" size={18} color={colors.primary} />
                 </View>
-                <Text style={styles.detailTitle}>{room?.name}</Text>
-                <Text style={styles.roomMetaText}>
+                <Text style={[styles.detailTitle, { color: themeColors.text }]}>{room?.name}</Text>
+                <Text style={[styles.roomMetaText, { color: themeColors.textTertiary }]}>
                   #{roomRegion} • {room?.member_count || 0} members
                 </Text>
                 {room?.description ? (
-                  <Text style={styles.detailAbout}>{room.description}</Text>
+                  <Text style={[styles.detailAbout, { color: themeColors.textSecondary }]}>{room.description}</Text>
                 ) : null}
                 {room?.language ? (
                   <View style={styles.langBadge}>
@@ -333,8 +345,8 @@ export default function ChatroomScreen() {
               <View style={styles.emptyIconWrap}>
                 <Ionicons name="chatbubble-ellipses-outline" size={36} color={colors.primary} />
               </View>
-              <Text style={styles.emptyStateTitle}>No messages yet</Text>
-              <Text style={styles.emptyStateSub}>Be the first to break the ice! 👋</Text>
+              <Text style={[styles.emptyStateTitle, { color: themeColors.text }]}>No messages yet</Text>
+              <Text style={[styles.emptyStateSub, { color: themeColors.textSecondary }]}>Be the first to break the ice! 👋</Text>
             </View>
           }
         />
@@ -346,50 +358,50 @@ export default function ChatroomScreen() {
               <View style={[styles.typingDot, styles.typingDot2]} />
               <View style={[styles.typingDot, styles.typingDot3]} />
             </View>
-            <Text style={styles.typingText}>Someone is typing...</Text>
+            <Text style={[styles.typingText, { color: themeColors.textTertiary }]}>Someone is typing...</Text>
           </View>
         )}
 
         {replyTo && (
-          <View style={styles.replyBar}>
+          <View style={[styles.replyBar, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
             <View style={styles.replyBarAccent} />
             <View style={{ flex: 1 }}>
               <Text style={styles.replyLabel}>
                 Replying to {replyTo.sender?.display_name || 'message'}
               </Text>
-              <Text style={styles.replySnippet} numberOfLines={1}>{replyTo.content}</Text>
+              <Text style={[styles.replySnippet, { color: themeColors.textSecondary }]} numberOfLines={1}>{replyTo.content}</Text>
             </View>
             <TouchableOpacity onPress={() => setReplyTo(null)} style={styles.replyClose}>
-              <Ionicons name="close" size={16} color={colors.textTertiary} />
+              <Ionicons name="close" size={16} color={themeColors.textTertiary} />
             </TouchableOpacity>
           </View>
         )}
 
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { backgroundColor: themeColors.backgroundSecondary, borderTopColor: themeColors.border }]}>
           <TouchableOpacity
-            style={styles.mediaBtn}
+            style={[styles.mediaBtn, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}
             onPress={handleSendImage}
             disabled={sending}
           >
-            <Ionicons name="image-outline" size={22} color={sending ? colors.textDisabled : colors.textSecondary} />
+            <Ionicons name="image-outline" size={22} color={sending ? themeColors.textDisabled : themeColors.textSecondary} />
           </TouchableOpacity>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border, color: themeColors.text }]}
             placeholder="Type a message..."
-            placeholderTextColor={colors.textTertiary}
+            placeholderTextColor={themeColors.textTertiary}
             value={message}
             onChangeText={handleTyping}
             multiline
             maxLength={2000}
           />
           <TouchableOpacity
-            style={[styles.sendButton, canSend ? styles.sendButtonActive : styles.sendButtonDisabled]}
+            style={[styles.sendButton, canSend ? styles.sendButtonActive : [styles.sendButtonDisabled, { backgroundColor: themeColors.backgroundElevated, borderColor: themeColors.border }]]}
             onPress={handleSendMessage}
             disabled={!canSend}
           >
             {sending
               ? <ActivityIndicator size="small" color={colors.white} />
-              : <Ionicons name="send" size={18} color={canSend ? colors.white : colors.textTertiary} />
+              : <Ionicons name="send" size={18} color={canSend ? colors.white : themeColors.textTertiary} />
             }
           </TouchableOpacity>
         </View>

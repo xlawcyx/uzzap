@@ -8,6 +8,7 @@ import { Card, Container, Button, Input } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { useChatStore } from '@/store/useChatStore';
 
 type ChatroomItem = {
@@ -103,6 +104,7 @@ export default function ChatroomListScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
   const { chatrooms, fetchChatrooms, isLoading } = useChatStore();
+  const { colors: themeColors, isDark } = useAppTheme();
 
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
   const [selectedProvince, setSelectedProvince] = useState('All Provinces');
@@ -253,21 +255,21 @@ export default function ChatroomListScreen() {
 
     return (
       <Animated.View entering={FadeInUp.delay(index * 80).duration(450)}>
-        <Card variant="elevated" onPress={() => router.push(`/chatroom/${item.id}`)} style={styles.roomCard}>
+        <Card variant="elevated" onPress={() => router.push(`/chatroom/${item.id}`)} style={StyleSheet.flatten([styles.roomCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }])}>
           <Card.Content style={styles.roomContent}>
             <View style={styles.roomIcon}>
               <Ionicons name="location" size={20} color={colors.accent} />
             </View>
 
             <View style={styles.roomInfo}>
-              <Text style={styles.roomName}>{item.name}</Text>
+              <Text style={[styles.roomName, { color: themeColors.text }]}>{item.name}</Text>
               <Text style={styles.roomLocation}>{location.province} • {location.region}</Text>
-              <Text style={styles.roomDescription} numberOfLines={1}>
+              <Text style={[styles.roomDescription, { color: themeColors.textTertiary }]} numberOfLines={1}>
                 {item.description || 'Provincial community chatroom'}
               </Text>
             </View>
 
-            <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+            <Ionicons name="chevron-forward" size={18} color={themeColors.textTertiary} />
           </Card.Content>
         </Card>
       </Animated.View>
@@ -275,33 +277,33 @@ export default function ChatroomListScreen() {
   };
 
   return (
-    <Container style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.hero}>
-          <Text style={styles.heroTitle}>Philippines Chatrooms</Text>
-          <Text style={styles.heroSubtitle}>Choose a region, pick a province, and join local conversations faster.</Text>
+    <Container style={StyleSheet.flatten([styles.container, { backgroundColor: themeColors.background }])}>
+      <View style={[styles.header, { backgroundColor: themeColors.background, borderBottomColor: themeColors.border }]}>
+        <View style={[styles.hero, { backgroundColor: themeColors.backgroundCard }]}>
+          <Text style={[styles.heroTitle, { color: themeColors.text }]}>Philippines Chatrooms</Text>
+          <Text style={[styles.heroSubtitle, { color: themeColors.textSecondary }]}>Choose a region, pick a province, and join local conversations faster.</Text>
           <View style={styles.heroStats}>
             <View style={styles.statCard}>
               <Text style={styles.statValue}>{Object.keys(PHILIPPINES_REGIONS).length}</Text>
-              <Text style={styles.statLabel}>Regions</Text>
+              <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Regions</Text>
             </View>
             <View style={styles.statCard}>
               <Text style={styles.statValue}>{filteredChatrooms.length}</Text>
-              <Text style={styles.statLabel}>Matching rooms</Text>
+              <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Matching rooms</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.searchWrap}>
           <View style={styles.filterSummaryRow}>
-            <View style={styles.resultsPill}>
+            <View style={[styles.resultsPill, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }]}>
               <Ionicons name="layers-outline" size={14} color={colors.accent} />
-              <Text style={styles.resultsPillText}>{filteredChatrooms.length} rooms shown</Text>
+              <Text style={[styles.resultsPillText, { color: themeColors.textSecondary }]}>{filteredChatrooms.length} rooms shown</Text>
             </View>
             {hasActiveFilters ? (
-              <TouchableOpacity style={styles.resetBtn} onPress={clearAllFilters}>
-                <Ionicons name="refresh-outline" size={13} color={colors.textSecondary} />
-                <Text style={styles.resetBtnText}>Reset filters</Text>
+              <TouchableOpacity style={[styles.resetBtn, { borderColor: themeColors.border }]} onPress={clearAllFilters}>
+                <Ionicons name="refresh-outline" size={13} color={themeColors.textSecondary} />
+                <Text style={[styles.resetBtnText, { color: themeColors.textSecondary }]}>Reset filters</Text>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -310,7 +312,7 @@ export default function ChatroomListScreen() {
             placeholder="Search by room, region, or province"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            leftIcon={<Ionicons name="search" size={18} color={colors.textTertiary} />}
+            leftIcon={<Ionicons name="search" size={18} color={themeColors.textTertiary} />}
             clearable
           />
         </View>
@@ -320,17 +322,17 @@ export default function ChatroomListScreen() {
             <TouchableOpacity
               key={region}
               onPress={() => applyRegion(region)}
-              style={[styles.regionTab, selectedRegion === region && styles.regionTabActive]}
+              style={[styles.regionTab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, selectedRegion === region && styles.regionTabActive]}
             >
-              <Text style={[styles.regionTabText, selectedRegion === region && styles.regionTabTextActive]}>{region}</Text>
+              <Text style={[styles.regionTabText, { color: themeColors.textTertiary }, selectedRegion === region && [styles.regionTabTextActive, { color: themeColors.textInverse }]]}>{region}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
 
         <View style={styles.quickJoinWrap}>
-          <Text style={styles.quickJoinTitle}>Quick join a province</Text>
+          <Text style={[styles.quickJoinTitle, { color: themeColors.text }]}>Quick join a province</Text>
           {selectedRegion === 'All Regions' ? (
-            <Text style={styles.quickJoinHint}>Select a region first, then tap a province to join instantly.</Text>
+            <Text style={[styles.quickJoinHint, { color: themeColors.textSecondary }]}>Select a region first, then tap a province to join instantly.</Text>
           ) : (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickJoinRow}>
               {quickJoinProvinces.map((province) => (
@@ -348,18 +350,18 @@ export default function ChatroomListScreen() {
         </View>
 
         <View style={styles.filterRow}>
-          <TouchableOpacity style={styles.filterBtn} onPress={() => openPicker('region')}>
-            <Text style={styles.filterLabel}>Region</Text>
-            <Text style={styles.filterValue} numberOfLines={1}>{selectedRegion}</Text>
+          <TouchableOpacity style={[styles.filterBtn, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }]} onPress={() => openPicker('region')}>
+            <Text style={[styles.filterLabel, { color: themeColors.textTertiary }]}>Region</Text>
+            <Text style={[styles.filterValue, { color: themeColors.text }]} numberOfLines={1}>{selectedRegion}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterBtn, selectedRegion === 'All Regions' && styles.filterBtnDisabled]}
+            style={[styles.filterBtn, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, selectedRegion === 'All Regions' && styles.filterBtnDisabled]}
             onPress={() => openPicker('province')}
             disabled={selectedRegion === 'All Regions'}
           >
-            <Text style={styles.filterLabel}>Province</Text>
-            <Text style={styles.filterValue} numberOfLines={1}>{selectedProvince}</Text>
+            <Text style={[styles.filterLabel, { color: themeColors.textTertiary }]}>Province</Text>
+            <Text style={[styles.filterValue, { color: themeColors.text }]} numberOfLines={1}>{selectedProvince}</Text>
           </TouchableOpacity>
         </View>
 
@@ -408,9 +410,9 @@ export default function ChatroomListScreen() {
         ListEmptyComponent={
           !isLoading ? (
             <View style={styles.emptyContainer}>
-              <Ionicons name="map-outline" size={76} color={colors.border} />
-              <Text style={styles.emptyTitle}>No rooms in this filter yet</Text>
-              <Text style={styles.emptySubtitle}>Try another province to auto-create and join its chatroom.</Text>
+              <Ionicons name="map-outline" size={76} color={themeColors.border} />
+              <Text style={[styles.emptyTitle, { color: themeColors.text }]}>No rooms in this filter yet</Text>
+              <Text style={[styles.emptySubtitle, { color: themeColors.textSecondary }]}>Try another province to auto-create and join its chatroom.</Text>
               {hasActiveFilters ? (
                 <Button variant="ghost" onPress={clearAllFilters} style={styles.emptyGhostButton}>
                   Clear Filters
@@ -423,8 +425,8 @@ export default function ChatroomListScreen() {
 
       <Modal visible={pickerModalVisible} animationType="fade" transparent onRequestClose={() => setPickerModalVisible(false)}>
         <View style={styles.pickerOverlay}>
-          <View style={styles.pickerContent}>
-            <Text style={styles.pickerTitle}>{pickerType === 'region' ? 'Choose Region' : 'Choose Province'}</Text>
+          <View style={[styles.pickerContent, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
+            <Text style={[styles.pickerTitle, { color: themeColors.text }]}>{pickerType === 'region' ? 'Choose Region' : 'Choose Province'}</Text>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.pickerList}>
               {(pickerType === 'region' ? REGION_OPTIONS : regionProvinces).map((option) => (
                 <TouchableOpacity
@@ -436,9 +438,9 @@ export default function ChatroomListScreen() {
                       handleProvinceSelect(option);
                     }
                   }}
-                  style={styles.pickerItem}
+                  style={[styles.pickerItem, { borderBottomColor: themeColors.border }]}
                 >
-                  <Text style={styles.pickerText}>{option}</Text>
+                  <Text style={[styles.pickerText, { color: themeColors.text }]}>{option}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>

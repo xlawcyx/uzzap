@@ -9,6 +9,7 @@ import { Card, Avatar, Container, Button, Input } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { Href, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase';
@@ -26,6 +27,7 @@ type SettingItem = {
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, profile, updateProfile, signOut, isLoading } = useAuthStore();
+  const { colors: themeColors } = useAppTheme();
   const [editing, setEditing] = useState(false);
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
   const [statusMessage, setStatusMessage] = useState(profile?.status_message || '');
@@ -124,14 +126,14 @@ export default function ProfileScreen() {
 
   if (isLoading && !profile) {
     return (
-      <Container style={styles.centered}>
-        <Text style={styles.loadingText}>Loading Profile...</Text>
+      <Container style={[styles.centered, { backgroundColor: themeColors.background }]}>
+        <Text style={[styles.loadingText, { color: themeColors.textSecondary }]}>Loading Profile...</Text>
       </Container>
     );
   }
 
   return (
-    <Container style={styles.container}>
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -145,7 +147,7 @@ export default function ProfileScreen() {
         {/* Hero Header */}
         <Animated.View entering={FadeIn.duration(600)}>
           <LinearGradient
-            colors={['#1A2E23', '#121E19', colors.background]}
+            colors={[themeColors.gradientStart, themeColors.gradientMid, themeColors.gradientEnd]}
             style={styles.header}
           >
             <View style={styles.avatarContainer}>
@@ -155,31 +157,31 @@ export default function ProfileScreen() {
                 style={styles.avatar}
               />
               <TouchableOpacity
-                style={styles.editAvatarBtn}
+                style={[styles.editAvatarBtn, { borderColor: themeColors.background }]}
                 onPress={handleUpdateAvatar}
                 disabled={updating}
               >
                 {updating
                   ? <View style={styles.avatarLoadingDot} />
-                  : <Ionicons name="camera" size={16} color={colors.textInverse} />
+                  : <Ionicons name="camera" size={16} color={themeColors.textInverse} />
                 }
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.userName}>{profile?.display_name || 'Buddy'}</Text>
+            <Text style={[styles.userName, { color: themeColors.text }]}>{profile?.display_name || 'Buddy'}</Text>
             {profile?.status_message ? (
-              <Text style={styles.userStatus}>"{profile.status_message}"</Text>
+              <Text style={[styles.userStatus, { color: themeColors.textSecondary }]}>"{profile.status_message}"</Text>
             ) : null}
 
             <View style={styles.userMeta}>
-              <View style={styles.metaBadge}>
-                <Ionicons name="at" size={12} color={colors.textTertiary} />
-                <Text style={styles.metaText}>{profile?.username || 'no-username'}</Text>
+              <View style={[styles.metaBadge, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}>
+                <Ionicons name="at" size={12} color={themeColors.textTertiary} />
+                <Text style={[styles.metaText, { color: themeColors.textTertiary }]}>{profile?.username || 'no-username'}</Text>
               </View>
               {profile?.region ? (
-                <View style={styles.metaBadge}>
-                  <Ionicons name="location-outline" size={12} color={colors.textTertiary} />
-                  <Text style={styles.metaText}>{profile.region}</Text>
+                <View style={[styles.metaBadge, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}>
+                  <Ionicons name="location-outline" size={12} color={themeColors.textTertiary} />
+                  <Text style={[styles.metaText, { color: themeColors.textTertiary }]}>{profile.region}</Text>
                 </View>
               ) : null}
             </View>
@@ -189,12 +191,12 @@ export default function ProfileScreen() {
                 <Text style={styles.statValue}>
                   {profile?.created_at ? new Date(profile.created_at).getFullYear() : '—'}
                 </Text>
-                <Text style={styles.statLabel}>Joined</Text>
+                <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Joined</Text>
               </View>
               <View style={styles.statDivider} />
               <View style={styles.statItem}>
                 <Text style={styles.statValue}>{user?.email?.split('@')[0]?.length || 0}</Text>
-                <Text style={styles.statLabel}>ID Length</Text>
+                <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>ID Length</Text>
               </View>
             </View>
           </LinearGradient>
@@ -203,11 +205,11 @@ export default function ProfileScreen() {
         <View style={styles.content}>
           {/* Profile Info Card */}
           <Animated.View entering={FadeInUp.delay(150).duration(500)}>
-            <Card variant="elevated" style={styles.card}>
+            <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
               <Card.Header style={styles.cardHeader}>
                 <View style={styles.cardTitleRow}>
                   <Ionicons name="person-circle-outline" size={18} color={colors.primary} />
-                  <Text style={styles.cardTitle}>Profile Information</Text>
+                  <Text style={[styles.cardTitle, { color: themeColors.text }]}>Profile Information</Text>
                 </View>
                 <TouchableOpacity
                   onPress={() => {
@@ -231,7 +233,7 @@ export default function ProfileScreen() {
                       value={displayName}
                       onChangeText={setDisplayName}
                       placeholder="Enter display name"
-                      leftIcon={<Ionicons name="person-outline" size={18} color={colors.textTertiary} />}
+                      leftIcon={<Ionicons name="person-outline" size={18} color={themeColors.textTertiary} />}
                     />
                     <View style={{ height: spacing.md }} />
                     <Input
@@ -240,7 +242,7 @@ export default function ProfileScreen() {
                       onChangeText={setStatusMessage}
                       placeholder="What's on your mind?"
                       multiline
-                      leftIcon={<Ionicons name="chatbubble-outline" size={18} color={colors.textTertiary} />}
+                      leftIcon={<Ionicons name="chatbubble-outline" size={18} color={themeColors.textTertiary} />}
                     />
                     <Button
                       variant="primary"
@@ -258,28 +260,28 @@ export default function ProfileScreen() {
                         <Ionicons name="mail-outline" size={16} color={colors.info} />
                       </View>
                       <View style={styles.infoTextContainer}>
-                        <Text style={styles.infoLabel}>Email</Text>
-                        <Text style={styles.infoValue}>{user?.email}</Text>
+                        <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Email</Text>
+                        <Text style={[styles.infoValue, { color: themeColors.text }]}>{user?.email}</Text>
                       </View>
                     </View>
-                    <View style={styles.infoDivider} />
+                    <View style={[styles.infoDivider, { backgroundColor: themeColors.borderMuted }]} />
                     <View style={styles.infoItem}>
                       <View style={[styles.infoIcon, { backgroundColor: withOpacity(colors.primary, 0.12) }]}>
                         <Ionicons name="chatbubble-outline" size={16} color={colors.primary} />
                       </View>
                       <View style={styles.infoTextContainer}>
-                        <Text style={styles.infoLabel}>Status</Text>
-                        <Text style={styles.infoValue}>{profile?.status_message || 'No status message'}</Text>
+                        <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Status</Text>
+                        <Text style={[styles.infoValue, { color: themeColors.text }]}>{profile?.status_message || 'No status message'}</Text>
                       </View>
                     </View>
-                    <View style={styles.infoDivider} />
+                    <View style={[styles.infoDivider, { backgroundColor: themeColors.borderMuted }]} />
                     <View style={styles.infoItem}>
                       <View style={[styles.infoIcon, { backgroundColor: withOpacity(colors.warning, 0.12) }]}>
                         <Ionicons name="calendar-outline" size={16} color={colors.warning} />
                       </View>
                       <View style={styles.infoTextContainer}>
-                        <Text style={styles.infoLabel}>Member Since</Text>
-                        <Text style={styles.infoValue}>
+                        <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Member Since</Text>
+                        <Text style={[styles.infoValue, { color: themeColors.text }]}>
                           {profile?.created_at
                             ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric', day: 'numeric' })
                             : 'Unknown'}
@@ -295,11 +297,11 @@ export default function ProfileScreen() {
           {/* Settings Groups */}
           {settingGroups.map((group, groupIndex) => (
             <Animated.View key={groupIndex} entering={FadeInUp.delay(250 + groupIndex * 100).duration(500)}>
-              <Card variant="elevated" style={styles.card}>
+              <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
                 <Card.Content style={styles.settingsGroupContent}>
                   {group.map((item, index) => (
                     <React.Fragment key={item.label}>
-                      {index > 0 && <View style={styles.settingDivider} />}
+                      {index > 0 && <View style={[styles.settingDivider, { backgroundColor: themeColors.borderMuted }]} />}
                       <TouchableOpacity
                         style={styles.settingItem}
                         onPress={item.route ? () => router.push(item.route as Href) : item.onPress}
@@ -308,10 +310,10 @@ export default function ProfileScreen() {
                         <View style={[styles.settingIconContainer, { backgroundColor: item.bgColor }]}>
                           <Ionicons name={item.icon as any} size={18} color={item.color} />
                         </View>
-                        <Text style={[styles.settingText, item.danger && { color: colors.error }]}>
+                        <Text style={[styles.settingText, { color: themeColors.text }, item.danger && { color: colors.error }]}>
                           {item.label}
                         </Text>
-                        <Ionicons name="chevron-forward" size={16} color={colors.textTertiary} />
+                        <Ionicons name="chevron-forward" size={16} color={themeColors.textTertiary} />
                       </TouchableOpacity>
                     </React.Fragment>
                   ))}

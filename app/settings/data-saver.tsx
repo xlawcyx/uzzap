@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import { Container, Card } from '@/components/ui';
 import { colors, spacing, typography, borderRadius } from '@/constants/design';
 import { DownloadRule, useAppSettingsStore } from '@/store/useAppSettingsStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const downloadRules: { label: string; value: DownloadRule }[] = [
   { label: 'Always download', value: 'always' },
@@ -13,25 +14,26 @@ const downloadRules: { label: string; value: DownloadRule }[] = [
 
 export default function DataSaverSettingsScreen() {
   const { imageAutoplay, setImageAutoplay, mediaDownloadRule, setMediaDownloadRule } = useAppSettingsStore();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Data Saver' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Data Saver', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
             <View style={styles.row}>
-              <Text style={styles.label}>Image autoplay</Text>
+              <Text style={[styles.label, { color: themeColors.text }]}>Image autoplay</Text>
               <Switch value={imageAutoplay} onValueChange={setImageAutoplay} />
             </View>
-            <Text style={styles.subHeader}>Media download rule</Text>
+            <Text style={[styles.subHeader, { color: themeColors.textSecondary }]}>Media download rule</Text>
             {downloadRules.map((rule) => (
               <TouchableOpacity
                 key={rule.value}
-                style={[styles.option, mediaDownloadRule === rule.value && styles.optionActive]}
+                style={[styles.option, { borderColor: themeColors.border }, mediaDownloadRule === rule.value && styles.optionActive]}
                 onPress={() => setMediaDownloadRule(rule.value)}
               >
-                <Text style={styles.optionText}>{rule.label}</Text>
+                <Text style={[styles.optionText, { color: themeColors.text }]}>{rule.label}</Text>
               </TouchableOpacity>
             ))}
           </Card.Content>

@@ -5,10 +5,12 @@ import * as Location from 'expo-location';
 
 import { Button, Container } from '@/components/ui';
 import { borderRadius, colors, spacing, typography } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { PH_REGIONS } from '@/constants/onboardingData';
 
 export default function LocationSetupScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const [region, setRegion] = useState(Object.keys(PH_REGIONS)[0]);
   const [province, setProvince] = useState(PH_REGIONS[Object.keys(PH_REGIONS)[0]][0]);
   const [detecting, setDetecting] = useState(false);
@@ -47,16 +49,16 @@ export default function LocationSetupScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Confirm your location</Text>
-        <Text style={styles.subtitle}>We use this to suggest nearby chatrooms and local buddy communities.</Text>
+        <Text style={[styles.title, { color: themeColors.text }]}>Confirm your location</Text>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>We use this to suggest nearby chatrooms and local buddy communities.</Text>
 
         <Button variant="outline" onPress={handleDetect} loading={detecting}>
           Auto-detect location
         </Button>
 
-        <Text style={styles.label}>Region</Text>
+        <Text style={[styles.label, { color: themeColors.text }]}>Region</Text>
         <View style={styles.optionsWrap}>
           {Object.keys(PH_REGIONS).map((item) => (
             <TouchableOpacity
@@ -65,18 +67,18 @@ export default function LocationSetupScreen() {
                 setRegion(item);
                 setProvince(PH_REGIONS[item][0]);
               }}
-              style={[styles.option, item === region && styles.optionActive]}
+              style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === region && styles.optionActive]}
             >
-              <Text style={[styles.optionText, item === region && styles.optionTextActive]}>{item}</Text>
+              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === region && styles.optionTextActive]}>{item}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <Text style={styles.label}>Province / Area</Text>
+        <Text style={[styles.label, { color: themeColors.text }]}>Province / Area</Text>
         <View style={styles.optionsWrap}>
           {provinces.map((item) => (
-            <TouchableOpacity key={item} onPress={() => setProvince(item)} style={[styles.option, item === province && styles.optionActive]}>
-              <Text style={[styles.optionText, item === province && styles.optionTextActive]}>{item}</Text>
+            <TouchableOpacity key={item} onPress={() => setProvince(item)} style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === province && styles.optionActive]}>
+              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === province && styles.optionTextActive]}>{item}</Text>
             </TouchableOpacity>
           ))}
         </View>

@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { Container, Card } from '@/components/ui';
 import { colors, spacing, typography, borderRadius } from '@/constants/design';
 import { Ionicons } from '@expo/vector-icons';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 type LinkRow = {
   title: string;
@@ -25,27 +26,28 @@ const appControlItems: LinkRow[] = [
 
 export default function AppControlsSettingsScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Settings & App Controls' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Settings & App Controls', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <ScrollView contentContainerStyle={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
             {appControlItems.map((item, index) => (
               <TouchableOpacity
                 key={item.title}
-                style={[styles.row, index === appControlItems.length - 1 && styles.lastRow]}
+                style={[styles.row, { borderColor: themeColors.border }, index === appControlItems.length - 1 && styles.lastRow]}
                 onPress={() => router.push(item.route as any)}
               >
-                <View style={styles.iconWrap}>
+                <View style={[styles.iconWrap, { backgroundColor: themeColors.backgroundTertiary }]}>
                   <Ionicons name={item.icon} size={18} color={colors.accent} />
                 </View>
                 <View style={styles.rowText}>
-                  <Text style={styles.title}>{item.title}</Text>
-                  <Text style={styles.subtitle}>{item.subtitle}</Text>
+                  <Text style={[styles.title, { color: themeColors.text }]}>{item.title}</Text>
+                  <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>{item.subtitle}</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color={colors.border} />
+                <Ionicons name="chevron-forward" size={20} color={themeColors.border} />
               </TouchableOpacity>
             ))}
           </Card.Content>

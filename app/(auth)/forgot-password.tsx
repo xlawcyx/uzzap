@@ -8,9 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import { Button, Container, Input } from '@/components/ui';
 import { borderRadius, colors, shadows, spacing, typography, withOpacity } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -36,12 +38,12 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInUp.delay(120).duration(700)} style={styles.headerWrap}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color={colors.text} />
-            <Text style={styles.backText}>Back to login</Text>
+          <TouchableOpacity style={[styles.backButton, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={22} color={themeColors.text} />
+            <Text style={[styles.backText, { color: themeColors.text }]}>Back to login</Text>
           </TouchableOpacity>
 
           <LinearGradient
@@ -53,12 +55,12 @@ export default function ForgotPasswordScreen() {
             <View style={styles.iconBadge}>
               <Ionicons name="key-outline" size={24} color={colors.primaryLight} />
             </View>
-            <Text style={styles.title}>Forgot your password?</Text>
-            <Text style={styles.subtitle}>No worries. We&apos;ll send a reset link so you can securely get back in.</Text>
+            <Text style={[styles.title, { color: themeColors.text }]}>Forgot your password?</Text>
+            <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>No worries. We&apos;ll send a reset link so you can securely get back in.</Text>
           </LinearGradient>
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(280).duration(700)} style={styles.formCard}>
+        <Animated.View entering={FadeInUp.delay(280).duration(700)} style={[styles.formCard, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
           <Input
             label="Email Address"
             placeholder="name@example.com"
@@ -67,12 +69,12 @@ export default function ForgotPasswordScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             clearable
-            leftIcon={<Ionicons name="mail-outline" size={20} color={colors.textSecondary} />}
+            leftIcon={<Ionicons name="mail-outline" size={20} color={themeColors.textSecondary} />}
           />
 
           <View style={styles.tipRow}>
-            <Ionicons name="information-circle-outline" size={16} color={colors.textTertiary} />
-            <Text style={styles.tipText}>Use the email you used during registration.</Text>
+            <Ionicons name="information-circle-outline" size={16} color={themeColors.textTertiary} />
+            <Text style={[styles.tipText, { color: themeColors.textTertiary }]}>Use the email you used during registration.</Text>
           </View>
 
           <View style={styles.sendButton}>

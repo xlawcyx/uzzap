@@ -5,9 +5,11 @@ import { useRouter } from 'expo-router';
 import { Button, Container, Input } from '@/components/ui';
 import { supabase } from '@/lib/supabase';
 import { colors, spacing, typography } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function UsernameCheckScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const [username, setUsername] = useState('');
   const [checking, setChecking] = useState(false);
   const [available, setAvailable] = useState<boolean | null>(null);
@@ -23,10 +25,10 @@ export default function UsernameCheckScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <View style={styles.content}>
-        <Text style={styles.title}>Username availability checker</Text>
-        <Text style={styles.subtitle}>Reserve a handle that people can easily find and remember.</Text>
+        <Text style={[styles.title, { color: themeColors.text }]}>Username availability checker</Text>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Reserve a handle that people can easily find and remember.</Text>
 
         <Input
           label="Username"

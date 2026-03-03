@@ -4,26 +4,28 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Container, Card } from '@/components/ui';
 import { colors, spacing, typography, borderRadius } from '@/constants/design';
 import { AppLanguage, useAppSettingsStore } from '@/store/useAppSettingsStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const languages: AppLanguage[] = ['English', 'Filipino', 'Bisaya', 'Spanish'];
 
 export default function LanguageSettingsScreen() {
   const { language, setLanguage } = useAppSettingsStore();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Language' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Language', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
-            <Text style={styles.header}>App language</Text>
+            <Text style={[styles.header, { color: themeColors.text }]}>App language</Text>
             {languages.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={[styles.option, language === item && styles.optionActive]}
+                style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.background }, language === item && styles.optionActive]}
                 onPress={() => setLanguage(item)}
               >
-                <Text style={styles.optionText}>{item}</Text>
+                <Text style={[styles.optionText, { color: themeColors.text }]}>{item}</Text>
               </TouchableOpacity>
             ))}
           </Card.Content>

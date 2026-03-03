@@ -5,29 +5,31 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { Button, Card, Container } from '@/components/ui';
 import { colors, spacing, typography } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function AccountRecoveryStatusScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <View style={styles.content}>
-        <Text style={styles.title}>Account recovery status</Text>
-        <Text style={styles.subtitle}>Track your recovery request and next actions.</Text>
+        <Text style={[styles.title, { color: themeColors.text }]}>Account recovery status</Text>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Track your recovery request and next actions.</Text>
 
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={{ ...styles.card, backgroundColor: themeColors.backgroundSecondary }}>
           <Card.Content>
             <View style={styles.row}>
               <Ionicons name="checkmark-circle" size={20} color={colors.success} />
-              <Text style={styles.rowText}>Recovery request received</Text>
+              <Text style={[styles.rowText, { color: themeColors.text }]}>Recovery request received</Text>
             </View>
             <View style={styles.row}>
               <Ionicons name="time-outline" size={20} color={colors.warning} />
-              <Text style={styles.rowText}>Identity review in progress</Text>
+              <Text style={[styles.rowText, { color: themeColors.text }]}>Identity review in progress</Text>
             </View>
             <View style={styles.row}>
-              <Ionicons name="mail-outline" size={20} color={colors.textSecondary} />
-              <Text style={styles.rowText}>Estimated update: within 24 hours</Text>
+              <Ionicons name="mail-outline" size={20} color={themeColors.textSecondary} />
+              <Text style={[styles.rowText, { color: themeColors.text }]}>Estimated update: within 24 hours</Text>
             </View>
           </Card.Content>
         </Card>

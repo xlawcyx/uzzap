@@ -4,31 +4,33 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity, Alert } from 'react-n
 import { Container, Card, Button } from '@/components/ui';
 import { colors, spacing, typography, borderRadius } from '@/constants/design';
 import { useAppSettingsStore } from '@/store/useAppSettingsStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 const frequencies: ('daily' | 'weekly' | 'monthly')[] = ['daily', 'weekly', 'monthly'];
 
 export default function BackupExportScreen() {
   const { autoBackup, setAutoBackup, backupFrequency, setBackupFrequency } = useAppSettingsStore();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Backup & Export' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Backup & Export', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
             <View style={styles.row}>
-              <Text style={styles.label}>Auto-backup</Text>
+              <Text style={[styles.label, { color: themeColors.text }]}>Auto-backup</Text>
               <Switch value={autoBackup} onValueChange={setAutoBackup} />
             </View>
 
-            <Text style={styles.subHeader}>Backup frequency</Text>
+            <Text style={[styles.subHeader, { color: themeColors.textSecondary }]}>Backup frequency</Text>
             {frequencies.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={[styles.option, backupFrequency === item && styles.optionActive]}
+                style={[styles.option, { borderColor: themeColors.border }, backupFrequency === item && styles.optionActive]}
                 onPress={() => setBackupFrequency(item)}
               >
-                <Text style={styles.optionText}>{item[0].toUpperCase() + item.slice(1)}</Text>
+                <Text style={[styles.optionText, { color: themeColors.text }]}>{item[0].toUpperCase() + item.slice(1)}</Text>
               </TouchableOpacity>
             ))}
 

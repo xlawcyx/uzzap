@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, borderRadius, spacing, typography, withOpacity } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { Chatroom } from '@/types/database.types';
 
 type Props = {
@@ -12,22 +13,23 @@ type Props = {
 };
 
 export function DiscoveryRoomCard({ room, onPress, onSave, saved }: Props) {
+  const { colors: themeColors } = useAppTheme();
   const tags = room.tags || [];
   const about = room.description || 'No description yet.';
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+    <TouchableOpacity style={[styles.card, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.titleRow}>
         <View style={styles.roomIconWrap}>
           <Ionicons name="location-sharp" size={14} color={colors.primary} />
         </View>
-        <Text style={styles.name} numberOfLines={1}>{room.name}</Text>
+        <Text style={[styles.name, { color: themeColors.text }]} numberOfLines={1}>{room.name}</Text>
         {!!onSave && (
-          <TouchableOpacity onPress={onSave} style={styles.saveBtn}>
+          <TouchableOpacity onPress={onSave} style={[styles.saveBtn, { backgroundColor: themeColors.backgroundTertiary }]}>
             <Ionicons
               name={saved ? 'bookmark' : 'bookmark-outline'}
               size={18}
-              color={saved ? colors.primary : colors.textTertiary}
+              color={saved ? colors.primary : themeColors.textTertiary}
             />
           </TouchableOpacity>
         )}
@@ -36,7 +38,7 @@ export function DiscoveryRoomCard({ room, onPress, onSave, saved }: Props) {
       <Text style={styles.meta}>
         #{room.category || 'General'} • {room.region || 'Unknown region'} • {room.type}
       </Text>
-      <Text style={styles.about} numberOfLines={2}>{about}</Text>
+      <Text style={[styles.about, { color: themeColors.textSecondary }]} numberOfLines={2}>{about}</Text>
 
       <View style={styles.footer}>
         <View style={styles.membersBadge}>

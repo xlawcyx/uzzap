@@ -5,18 +5,20 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { Button, Container } from '@/components/ui';
 import { borderRadius, colors, spacing, typography, withOpacity } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function EmailVerificationPendingScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <View style={styles.content}>
         <View style={styles.iconWrap}>
           <Ionicons name="mail-unread-outline" size={42} color={colors.primary} />
         </View>
-        <Text style={styles.title}>Verify your email</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: themeColors.text }]}>Verify your email</Text>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>
           We sent a verification link to your inbox. Open it to activate your account and keep setup secure.
         </Text>
 

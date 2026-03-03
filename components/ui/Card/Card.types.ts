@@ -27,7 +27,7 @@ export interface CardProps {
   /**
    * Additional style overrides
    */
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 
   /**
    * Test ID for automated testing

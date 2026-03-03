@@ -4,12 +4,14 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import { colors, spacing, typography, borderRadius, shadows, withOpacity } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { Button, Input, Container } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,10 +38,10 @@ export default function LoginScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       {/* Background gradient */}
       <LinearGradient
-        colors={['#0E1A13', '#0E0E0E', '#0E0E0E']}
+        colors={[themeColors.gradientStart, themeColors.background, themeColors.background]}
         style={StyleSheet.absoluteFillObject}
       />
 
@@ -68,13 +70,13 @@ export default function LoginScreen() {
             <Text style={styles.heroBadgeText}>Uzzap Community</Text>
           </View>
 
-          <Text style={styles.title}>Welcome Back</Text>
-          <Text style={styles.subtitle}>Sign in and continue chatting with your buddies</Text>
+          <Text style={[styles.title, { color: themeColors.text }]}>Welcome Back</Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Sign in and continue chatting with your buddies</Text>
         </Animated.View>
 
         {/* Form */}
-        <Animated.View entering={FadeInUp.delay(250).duration(600)} style={styles.formCard}>
-          <Text style={styles.formTitle}>Sign in to your account</Text>
+        <Animated.View entering={FadeInUp.delay(250).duration(600)} style={[styles.formCard, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
+          <Text style={[styles.formTitle, { color: themeColors.textTertiary }]}>Sign in to your account</Text>
 
           <View style={styles.fieldGroup}>
             <Input
@@ -86,7 +88,7 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoComplete="email"
               clearable
-              leftIcon={<Ionicons name="mail-outline" size={18} color={colors.textTertiary} />}
+              leftIcon={<Ionicons name="mail-outline" size={18} color={themeColors.textTertiary} />}
             />
 
             <View style={styles.fieldSpacer} />
@@ -97,7 +99,7 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              leftIcon={<Ionicons name="lock-closed-outline" size={18} color={colors.textTertiary} />}
+              leftIcon={<Ionicons name="lock-closed-outline" size={18} color={themeColors.textTertiary} />}
             />
           </View>
 
@@ -119,13 +121,13 @@ export default function LoginScreen() {
           </Button>
 
           <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OR</Text>
-            <View style={styles.dividerLine} />
+            <View style={[styles.dividerLine, { backgroundColor: themeColors.border }]} />
+            <Text style={[styles.dividerText, { color: themeColors.textTertiary }]}>OR</Text>
+            <View style={[styles.dividerLine, { backgroundColor: themeColors.border }]} />
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don&apos;t have an account? </Text>
+            <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Don&apos;t have an account? </Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/register' as any)}>
               <Text style={styles.registerLink}>Create one →</Text>
             </TouchableOpacity>
@@ -137,8 +139,8 @@ export default function LoginScreen() {
             style={styles.onboardingLink}
             onPress={() => router.push('/(auth)/welcome' as any)}
           >
-            <Ionicons name="sparkles-outline" size={14} color={colors.textTertiary} />
-            <Text style={styles.onboardingLinkText}>New here? Take the guided setup</Text>
+            <Ionicons name="sparkles-outline" size={14} color={themeColors.textTertiary} />
+            <Text style={[styles.onboardingLinkText, { color: themeColors.textTertiary }]}>New here? Take the guided setup</Text>
           </TouchableOpacity>
         </Animated.View>
       </ScrollView>

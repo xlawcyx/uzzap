@@ -5,9 +5,11 @@ import { useRouter } from 'expo-router';
 import { Button, Container, Input } from '@/components/ui';
 import { useAuthStore } from '@/store/useAuthStore';
 import { colors, spacing, typography } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function CompleteProfileWizardScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const { updateProfile } = useAuthStore();
   const [displayName, setDisplayName] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
@@ -36,10 +38,10 @@ export default function CompleteProfileWizardScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Complete your profile</Text>
-        <Text style={styles.subtitle}>This helps buddies recognize you and start better conversations.</Text>
+        <Text style={[styles.title, { color: themeColors.text }]}>Complete your profile</Text>
+        <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>This helps buddies recognize you and start better conversations.</Text>
 
         <Input label="Display name" value={displayName} onChangeText={setDisplayName} placeholder="Your display name" />
         <Input label="Status message" value={statusMessage} onChangeText={setStatusMessage} placeholder="What are you up to?" />

@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import { colors, spacing, typography, borderRadius, shadows, withOpacity } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { Button, Input, Container } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -12,6 +13,7 @@ const REGIONS = ['Metro Manila', 'Luzon', 'Visayas', 'Mindanao', 'International'
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -73,12 +75,12 @@ export default function RegisterScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInUp.delay(150).duration(700)} style={styles.headerWrap}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color={colors.text} />
-            <Text style={styles.backText}>Back</Text>
+          <TouchableOpacity style={[styles.backButton, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={22} color={themeColors.text} />
+            <Text style={[styles.backText, { color: themeColors.text }]}>Back</Text>
           </TouchableOpacity>
 
           <LinearGradient
@@ -90,19 +92,19 @@ export default function RegisterScreen() {
             <View style={styles.logoCircle}>
               <Image source={require('@/assets/images/icon.png')} style={styles.logoImage} resizeMode="contain" />
             </View>
-            <Text style={styles.title}>Create your account</Text>
-            <Text style={styles.subtitle}>Set up your profile and join the Uzzap community.</Text>
+            <Text style={[styles.title, { color: themeColors.text }]}>Create your account</Text>
+            <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Set up your profile and join the Uzzap community.</Text>
           </LinearGradient>
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(300).duration(700)} style={styles.formCard}>
+        <Animated.View entering={FadeInUp.delay(300).duration(700)} style={[styles.formCard, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
           <Input
             label="Username"
             placeholder="Unique username"
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
-            leftIcon={<Ionicons name="at-outline" size={20} color={colors.textSecondary} />}
+            leftIcon={<Ionicons name="at-outline" size={20} color={themeColors.textSecondary} />}
           />
           <View style={styles.fieldSpacer} />
 
@@ -111,7 +113,7 @@ export default function RegisterScreen() {
             placeholder="What should we call you?"
             value={displayName}
             onChangeText={setDisplayName}
-            leftIcon={<Ionicons name="person-outline" size={20} color={colors.textSecondary} />}
+            leftIcon={<Ionicons name="person-outline" size={20} color={themeColors.textSecondary} />}
           />
           <View style={styles.fieldSpacer} />
 
@@ -123,7 +125,7 @@ export default function RegisterScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             clearable
-            leftIcon={<Ionicons name="mail-outline" size={20} color={colors.textSecondary} />}
+            leftIcon={<Ionicons name="mail-outline" size={20} color={themeColors.textSecondary} />}
           />
           <View style={styles.fieldSpacer} />
 
@@ -133,7 +135,7 @@ export default function RegisterScreen() {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            leftIcon={<Ionicons name="lock-closed-outline" size={20} color={colors.textSecondary} />}
+            leftIcon={<Ionicons name="lock-closed-outline" size={20} color={themeColors.textSecondary} />}
           />
           <View style={styles.fieldSpacer} />
 
@@ -143,26 +145,26 @@ export default function RegisterScreen() {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
-            leftIcon={<Ionicons name="shield-checkmark-outline" size={20} color={colors.textSecondary} />}
+            leftIcon={<Ionicons name="shield-checkmark-outline" size={20} color={themeColors.textSecondary} />}
           />
 
-          <Text style={styles.label}>Region</Text>
+          <Text style={[styles.label, { color: themeColors.textSecondary }]}>Region</Text>
           <View style={styles.regionsGrid}>
             {REGIONS.map((r) => (
               <TouchableOpacity
                 key={r}
                 onPress={() => setRegion(r)}
-                style={[styles.regionOption, region === r && styles.regionOptionActive]}
+                style={[styles.regionOption, { borderColor: themeColors.border, backgroundColor: themeColors.background }, region === r && styles.regionOptionActive]}
               >
-                <Text style={[styles.regionOptionText, region === r && styles.regionOptionTextActive]}>{r}</Text>
+                <Text style={[styles.regionOptionText, { color: themeColors.textSecondary }, region === r && styles.regionOptionTextActive]}>{r}</Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          <Text style={styles.helperText}>By creating an account, you agree to keep conversations respectful and authentic.</Text>
+          <Text style={[styles.helperText, { color: themeColors.textTertiary }]}>By creating an account, you agree to keep conversations respectful and authentic.</Text>
 
           <TouchableOpacity style={styles.guidedSetupLink} onPress={() => router.push('/(auth)/welcome' as any)}>
-            <Text style={styles.guidedSetupText}>Prefer step-by-step setup? Open onboarding wizard</Text>
+            <Text style={[styles.guidedSetupText, { color: themeColors.textTertiary }]}>Prefer step-by-step setup? Open onboarding wizard</Text>
           </TouchableOpacity>
 
           <View style={styles.registerButton}>
@@ -172,7 +174,7 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
+            <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Already have an account? </Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/login' as any)}>
               <Text style={styles.loginLink}>Sign in</Text>
             </TouchableOpacity>

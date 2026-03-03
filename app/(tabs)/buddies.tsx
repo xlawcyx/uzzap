@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, RefreshControl, Alert } from 
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { colors, spacing, typography, borderRadius, withOpacity, shadows } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { Card, Avatar, Container, Button, Input } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -15,6 +16,7 @@ export default function BuddiesScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { profile } = useAuthStore();
+  const { colors: themeColors, isDark } = useAppTheme();
   const [activeTab, setActiveTab] = useState('My Buddies');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -89,12 +91,12 @@ export default function BuddiesScreen() {
 
   const renderBuddy = ({ item, index }: { item: any; index: number }) => (
     <Animated.View entering={FadeInUp.delay(index * 100).duration(500)}>
-      <Card variant="elevated" style={styles.buddyCard}>
+      <Card variant="elevated" style={[styles.buddyCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]}>
         <Card.Content style={styles.buddyContent}>
           <Avatar source={{ uri: item.avatar_url }} size="md" />
           <View style={styles.buddyInfo}>
-            <Text style={styles.buddyName}>{item.display_name || 'User'}</Text>
-            <Text style={styles.buddyStatus} numberOfLines={1}>
+            <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.display_name || 'User'}</Text>
+            <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]} numberOfLines={1}>
               {item.status_message || 'Online'}
             </Text>
           </View>
@@ -103,7 +105,7 @@ export default function BuddiesScreen() {
               <Ionicons name="chatbubble-outline" size={22} color={colors.accent} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionIcon} onPress={() => router.push(`/profile/${item.id}`)}>
-              <Ionicons name="person-outline" size={22} color={colors.textSecondary} />
+              <Ionicons name="person-outline" size={22} color={themeColors.textSecondary} />
             </TouchableOpacity>
           </View>
         </Card.Content>
@@ -113,12 +115,12 @@ export default function BuddiesScreen() {
 
   const renderSearchResult = ({ item, index }: { item: any; index: number }) => (
     <Animated.View entering={FadeInUp.delay(index * 100).duration(500)}>
-      <Card variant="elevated" style={styles.buddyCard}>
+      <Card variant="elevated" style={[styles.buddyCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]}>
         <Card.Content style={styles.buddyContent}>
           <Avatar source={{ uri: item.avatar_url }} size="md" />
           <View style={styles.buddyInfo}>
-            <Text style={styles.buddyName}>{item.display_name || 'User'}</Text>
-            <Text style={styles.buddyStatus} numberOfLines={1}>{item.region}</Text>
+            <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.display_name || 'User'}</Text>
+            <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]} numberOfLines={1}>{item.region}</Text>
           </View>
           {item.id !== profile?.id && (
             <Button
@@ -145,12 +147,12 @@ export default function BuddiesScreen() {
 
   const renderRequest = ({ item, index }: { item: any; index: number }) => (
     <Animated.View entering={FadeInUp.delay(index * 100).duration(500)}>
-      <Card variant="elevated" style={styles.buddyCard}>
+      <Card variant="elevated" style={[styles.buddyCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }]}>
         <Card.Content style={styles.buddyContent}>
           <Avatar source={{ uri: item.sender?.avatar_url }} size="md" />
           <View style={styles.buddyInfo}>
-            <Text style={styles.buddyName}>{item.sender?.display_name || item.sender?.username || 'User'}</Text>
-            <Text style={styles.buddyStatus}>Sent you a buddy request</Text>
+            <Text style={[styles.buddyName, { color: themeColors.text }]}>{item.sender?.display_name || item.sender?.username || 'User'}</Text>
+            <Text style={[styles.buddyStatus, { color: themeColors.textSecondary }]}>Sent you a buddy request</Text>
           </View>
           <View style={styles.requestActions}>
             <Button variant="primary" size="sm" onPress={() => handleAcceptRequest(item.id, item.sender_id)}>Accept</Button>
@@ -162,19 +164,19 @@ export default function BuddiesScreen() {
   );
 
   return (
-    <Container style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryTitle}>Your buddy hub</Text>
-          <Text style={styles.summarySubtitle}>Manage connections, discover new people, and never miss a request.</Text>
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <View style={[styles.header, { backgroundColor: themeColors.background, borderBottomColor: themeColors.border }]}>
+        <View style={[styles.summaryCard, { backgroundColor: themeColors.backgroundCard }]}>
+          <Text style={[styles.summaryTitle, { color: themeColors.text }]}>Your buddy hub</Text>
+          <Text style={[styles.summarySubtitle, { color: themeColors.textSecondary }]}>Manage connections, discover new people, and never miss a request.</Text>
           <View style={styles.summaryStats}>
             <View style={styles.summaryStatItem}>
               <Text style={styles.summaryStatValue}>{buddies?.length || 0}</Text>
-              <Text style={styles.summaryStatLabel}>Buddies</Text>
+              <Text style={[styles.summaryStatLabel, { color: themeColors.textTertiary }]}>Buddies</Text>
             </View>
             <View style={styles.summaryStatItem}>
               <Text style={styles.summaryStatValue}>{buddyRequests?.length || 0}</Text>
-              <Text style={styles.summaryStatLabel}>Requests</Text>
+              <Text style={[styles.summaryStatLabel, { color: themeColors.textTertiary }]}>Requests</Text>
             </View>
           </View>
         </View>
@@ -182,21 +184,21 @@ export default function BuddiesScreen() {
         <View style={styles.tabs}>
           <TouchableOpacity
             onPress={() => setActiveTab('My Buddies')}
-            style={[styles.tab, activeTab === 'My Buddies' && styles.activeTab]}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'My Buddies' && styles.activeTab]}
           >
-            <Text style={[styles.tabText, activeTab === 'My Buddies' && styles.activeTabText]}>My Buddies</Text>
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'My Buddies' && styles.activeTabText]}>My Buddies</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab('Find Buddies')}
-            style={[styles.tab, activeTab === 'Find Buddies' && styles.activeTab]}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Find Buddies' && styles.activeTab]}
           >
-            <Text style={[styles.tabText, activeTab === 'Find Buddies' && styles.activeTabText]}>Find Buddies</Text>
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Find Buddies' && styles.activeTabText]}>Find Buddies</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab('Requests')}
-            style={[styles.tab, activeTab === 'Requests' && styles.activeTab]}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Requests' && styles.activeTab]}
           >
-            <Text style={[styles.tabText, activeTab === 'Requests' && styles.activeTabText]}>Requests</Text>
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Requests' && styles.activeTabText]}>Requests</Text>
           </TouchableOpacity>
         </View>
 
@@ -206,7 +208,7 @@ export default function BuddiesScreen() {
               placeholder="Search buddies by name..."
               value={searchQuery}
               onChangeText={setSearchQuery}
-              leftIcon={<Ionicons name="search" size={20} color={colors.textTertiary} />}
+              leftIcon={<Ionicons name="search" size={20} color={themeColors.textTertiary} />}
               clearable
             />
           </View>
@@ -233,12 +235,12 @@ export default function BuddiesScreen() {
                   activeTab === 'My Buddies' ? 'people-outline' : activeTab === 'Find Buddies' ? 'search-outline' : 'mail-outline'
                 }
                 size={80}
-                color={colors.border}
+                color={themeColors.border}
               />
-              <Text style={styles.emptyTitle}>
+              <Text style={[styles.emptyTitle, { color: themeColors.text }]}>
                 {activeTab === 'My Buddies' ? 'No buddies yet' : activeTab === 'Find Buddies' ? 'Search for buddies' : 'No requests'}
               </Text>
-              <Text style={styles.emptySubtitle}>
+              <Text style={[styles.emptySubtitle, { color: themeColors.textSecondary }]}>
                 {activeTab === 'My Buddies'
                   ? 'Start by finding new buddies and sending requests!'
                   : activeTab === 'Find Buddies'

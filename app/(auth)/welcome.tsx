@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Container, Button } from '@/components/ui';
 import { borderRadius, colors, spacing, typography, withOpacity } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { ONBOARDING_SLIDES } from '@/constants/onboardingData';
 import Animated, { FadeIn, FadeInUp, FadeOut } from 'react-native-reanimated';
 
@@ -12,6 +13,7 @@ const { width } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
   const [index, setIndex] = useState(0);
   const slide = ONBOARDING_SLIDES[index];
   const isLast = index === ONBOARDING_SLIDES.length - 1;
@@ -25,9 +27,9 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container style={styles.container} backgroundColor={themeColors.background}>
       <LinearGradient
-        colors={['#0E1A13', '#0E0E0E']}
+        colors={[themeColors.gradientStart, themeColors.background]}
         style={StyleSheet.absoluteFillObject}
       />
 
@@ -35,10 +37,10 @@ export default function WelcomeScreen() {
         {/* Skip */}
         <TouchableOpacity
           onPress={() => router.replace('/(auth)/login' as any)}
-          style={styles.skipBtn}
+          style={[styles.skipBtn, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}
         >
-          <Text style={styles.skipText}>Skip</Text>
-          <Ionicons name="chevron-forward" size={14} color={colors.textTertiary} />
+          <Text style={[styles.skipText, { color: themeColors.textTertiary }]}>Skip</Text>
+          <Ionicons name="chevron-forward" size={14} color={themeColors.textTertiary} />
         </TouchableOpacity>
 
         {/* Icon area */}
@@ -57,15 +59,15 @@ export default function WelcomeScreen() {
 
         {/* Text */}
         <Animated.View key={`text-${index}`} entering={FadeInUp.delay(100).duration(450)} style={styles.textSection}>
-          <Text style={styles.title}>{slide.title}</Text>
-          <Text style={styles.subtitle}>{slide.description}</Text>
+          <Text style={[styles.title, { color: themeColors.text }]}>{slide.title}</Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>{slide.description}</Text>
         </Animated.View>
 
         {/* Dots */}
         <View style={styles.dotsRow}>
           {ONBOARDING_SLIDES.map((_, dotIndex) => (
             <TouchableOpacity key={dotIndex} onPress={() => setIndex(dotIndex)}>
-              <View style={[styles.dot, index === dotIndex && styles.dotActive]} />
+              <View style={[styles.dot, { backgroundColor: themeColors.border }, index === dotIndex && styles.dotActive]} />
             </TouchableOpacity>
           ))}
         </View>
@@ -79,7 +81,7 @@ export default function WelcomeScreen() {
             style={styles.ghostBtn}
             onPress={() => router.push('/(auth)/register' as any)}
           >
-            <Text style={styles.ghostBtnText}>I already have an account</Text>
+            <Text style={[styles.ghostBtnText, { color: themeColors.textTertiary }]}>I already have an account</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

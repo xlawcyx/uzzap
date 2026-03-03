@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Container, Card } from '@/components/ui';
 import { colors, spacing, typography, borderRadius } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 type SettingsLink = {
   title: string;
@@ -28,32 +29,33 @@ const legalItems: SettingsLink[] = [
 
 export default function HelpLegalTrustScreen() {
   const router = useRouter();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Help, Legal & Trust' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Help, Legal & Trust', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
-            <Text style={styles.sectionTitle}>Help</Text>
+            <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Help</Text>
             {helpItems.map((item) => (
               <TouchableOpacity key={String(item.href)} style={styles.row} onPress={() => router.push(item.href)}>
                 <View style={styles.rowLeft}>
                   <Ionicons name={item.icon} size={18} color={colors.accent} />
-                  <Text style={styles.rowLabel}>{item.title}</Text>
+                  <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>{item.title}</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                <Ionicons name="chevron-forward" size={18} color={themeColors.textTertiary} />
               </TouchableOpacity>
             ))}
 
-            <Text style={[styles.sectionTitle, styles.sectionSpacing]}>Legal & Trust</Text>
+            <Text style={[styles.sectionTitle, styles.sectionSpacing, { color: themeColors.text }]}>Legal & Trust</Text>
             {legalItems.map((item) => (
               <TouchableOpacity key={String(item.href)} style={styles.row} onPress={() => router.push(item.href)}>
                 <View style={styles.rowLeft}>
                   <Ionicons name={item.icon} size={18} color={colors.primary} />
-                  <Text style={styles.rowLabel}>{item.title}</Text>
+                  <Text style={[styles.rowLabel, { color: themeColors.textSecondary }]}>{item.title}</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                <Ionicons name="chevron-forward" size={18} color={themeColors.textTertiary} />
               </TouchableOpacity>
             ))}
           </Card.Content>

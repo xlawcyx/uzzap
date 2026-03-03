@@ -6,6 +6,7 @@ import { colors, spacing, typography, borderRadius, shadows } from '@/constants/
 import { Container, Avatar, Card, Button } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { useAuthStore } from '@/store/useAuthStore';
 import { buddyService } from '@/services/buddyService';
 import { chatroomService } from '@/services/chatroomService';
@@ -15,6 +16,7 @@ export default function UserProfileScreen() {
   const { profile: currentUserProfile } = useAuthStore();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { colors: themeColors } = useAppTheme();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['profile', id],
@@ -69,12 +71,12 @@ export default function UserProfileScreen() {
   }
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Profile' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Profile', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Avatar source={profile?.avatar_url ? { uri: profile.avatar_url } : undefined} size="xl" />
-          <Text style={styles.userName}>{profile?.display_name || 'Buddy'}</Text>
+          <Text style={[styles.userName, { color: themeColors.text }]}>{profile?.display_name || 'Buddy'}</Text>
           <Text style={styles.userRegion}>{profile?.region || 'International'}</Text>
 
           {id !== currentUserProfile?.id && (
@@ -104,10 +106,10 @@ export default function UserProfileScreen() {
         </View>
 
         <View style={styles.content}>
-          <Card variant="elevated" style={styles.infoCard}>
+          <Card variant="elevated" style={[styles.infoCard, { backgroundColor: themeColors.backgroundSecondary }]}>
             <Card.Content>
-              <Text style={styles.infoLabel}>Status Message</Text>
-              <Text style={styles.infoValue}>
+              <Text style={[styles.infoLabel, { color: themeColors.textTertiary }]}>Status Message</Text>
+              <Text style={[styles.infoValue, { color: themeColors.text }]}>
                 {profile?.status_message || 'No status message set.'}
               </Text>
             </Card.Content>

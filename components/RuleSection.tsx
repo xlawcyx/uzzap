@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useAppTheme } from '@/hooks/useAppTheme';
+import { colors } from '@/constants/design';
 
 interface RuleSectionProps {
   title: string;
@@ -8,16 +10,18 @@ interface RuleSectionProps {
 }
 
 export function RuleSection({ title, rules }: RuleSectionProps) {
+  const { colors: themeColors } = useAppTheme();
+
   return (
     <Animated.View 
-      style={styles.section}
+      style={[styles.section, { backgroundColor: themeColors.backgroundSecondary }]}
       entering={FadeInDown.duration(400).delay(200)}
     >
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>{title}</Text>
       {rules.map((rule, index) => (
         <View key={index} style={styles.ruleContainer}>
-          <Text style={styles.bulletPoint}>•</Text>
-          <Text style={styles.ruleText}>{rule}</Text>
+          <Text style={[styles.bulletPoint, { color: colors.primary }]}>•</Text>
+          <Text style={[styles.ruleText, { color: themeColors.textSecondary }]}>{rule}</Text>
         </View>
       ))}
     </Animated.View>

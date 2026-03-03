@@ -5,26 +5,28 @@ import Constants from 'expo-constants';
 import { Container, Card, Button } from '@/components/ui';
 import { colors, spacing, typography } from '@/constants/design';
 import { useAppSettingsStore } from '@/store/useAppSettingsStore';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function DiagnosticsScreen() {
   const { diagnosticsMode, setDiagnosticsMode, crashReports, setCrashReports } = useAppSettingsStore();
+  const { colors: themeColors } = useAppTheme();
 
   return (
-    <Container style={styles.container}>
-      <Stack.Screen options={{ headerShown: true, title: 'Diagnostics' }} />
+    <Container style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Stack.Screen options={{ headerShown: true, title: 'Diagnostics', headerStyle: { backgroundColor: themeColors.backgroundSecondary }, headerTintColor: themeColors.text }} />
       <View style={styles.content}>
-        <Card variant="elevated" style={styles.card}>
+        <Card variant="elevated" style={[styles.card, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Card.Content>
-            <Text style={styles.title}>Support diagnostics</Text>
-            <Text style={styles.meta}>App version: {Constants.expoConfig?.version ?? 'unknown'}</Text>
-            <Text style={styles.meta}>Runtime: {Constants.executionEnvironment}</Text>
+            <Text style={[styles.title, { color: themeColors.text }]}>Support diagnostics</Text>
+            <Text style={[styles.meta, { color: themeColors.textSecondary }]}>App version: {Constants.expoConfig?.version ?? 'unknown'}</Text>
+            <Text style={[styles.meta, { color: themeColors.textSecondary }]}>Runtime: {Constants.executionEnvironment}</Text>
 
             <View style={styles.row}>
-              <Text style={styles.label}>Enable debug mode</Text>
+              <Text style={[styles.label, { color: themeColors.text }]}>Enable debug mode</Text>
               <Switch value={diagnosticsMode} onValueChange={setDiagnosticsMode} />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Share crash reports</Text>
+              <Text style={[styles.label, { color: themeColors.text }]}>Share crash reports</Text>
               <Switch value={crashReports} onValueChange={setCrashReports} />
             </View>
 
