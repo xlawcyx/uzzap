@@ -45,10 +45,10 @@ export function DiscoveryRoomCard({ room, onPress, onSave, saved }: Props) {
           <Ionicons name="people-outline" size={12} color={colors.primary} />
           <Text style={[styles.members, { color: themeColors.textSecondary }]}>{room.member_count.toLocaleString()} members</Text>
         </View>
-        <View style={styles.tagsRow}>
+        <View style={[styles.tagsRow, { borderColor: themeColors.border }]}>
           {tags.slice(0, 2).map((tag: string) => (
-            <View key={tag} style={styles.tag}>
-              <Text style={styles.tagText}>#{tag}</Text>
+            <View key={tag} style={[styles.tag, { backgroundColor: withOpacity(colors.primary, 0.08), borderColor: withOpacity(colors.primary, 0.2) }]}>
+              <Text style={[styles.tagText, { color: colors.primary }]}>#{tag}</Text>
             </View>
           ))}
         </View>

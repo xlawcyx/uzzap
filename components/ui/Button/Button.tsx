@@ -38,7 +38,7 @@ export function Button({
   testID,
   style,
 }: ButtonProps) {
-  const { colors: themeColors } = useAppTheme();
+  const { colors: themeColors, isDark } = useAppTheme();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -60,8 +60,45 @@ export function Button({
 
   const isDisabled = disabled || loading;
 
+  const variantStyles = {
+    primary: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+    },
+    secondary: {
+      backgroundColor: themeColors.backgroundTertiary,
+      borderColor: themeColors.border,
+    },
+    outline: {
+      backgroundColor: 'transparent',
+      borderColor: themeColors.border,
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+    },
+    danger: {
+      backgroundColor: colors.error,
+      borderColor: colors.error,
+    },
+  };
+
+  const textColors = {
+    primary: colors.white,
+    secondary: themeColors.text,
+    outline: themeColors.text,
+    ghost: colors.primary,
+    danger: colors.white,
+  };
+
   return (
-    <Animated.View style={[animatedStyle, fullWidth && styles.fullWidth, style]}>
+    <Animated.View
+      style={[
+        animatedStyle,
+        fullWidth && styles.fullWidth,
+        style,
+      ]}
+    >
       <TouchableOpacity
         onPress={handlePress}
         onPressIn={handlePressIn}
@@ -74,31 +111,33 @@ export function Button({
         testID={testID}
         style={[
           styles.button,
-          styles[`button_${variant}`],
+          variantStyles[variant],
           styles[`button_${size}`],
-          variant === 'outline' && { borderColor: themeColors.border },
           fullWidth && styles.buttonFullWidth,
           isDisabled && styles.buttonDisabled,
-          isDisabled && styles[`button_${variant}_disabled`],
         ]}
       >
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator color={getSpinnerColor(variant)} size="small" />
+            <ActivityIndicator
+              color={variant === 'outline' || variant === 'ghost' ? colors.primary : colors.white}
+              size={size === 'sm' ? 'small' : 'small'}
+            />
           </View>
         )}
 
-        {!loading && leftIcon && <View style={[styles.icon, styles.iconLeft]}>{leftIcon}</View>}
+        {!loading && leftIcon && (
+          <View style={[styles.icon, styles.iconLeft]}>
+            {leftIcon}
+          </View>
+        )}
 
         <Text
           style={[
             styles.text,
-            styles[`text_${variant}`],
+            { color: textColors[variant] },
             styles[`text_${size}`],
-            variant === 'outline' && { color: themeColors.text },
-            isDisabled && styles.textDisabled,
-            isDisabled && styles[`text_${variant}_disabled`],
-            isDisabled && (variant === 'outline' || variant === 'ghost') && { color: themeColors.textDisabled },
+            isDisabled && [styles.textDisabled, { color: themeColors.textDisabled }],
             loading && styles.textLoading,
           ]}
           numberOfLines={1}
@@ -106,7 +145,11 @@ export function Button({
           {children}
         </Text>
 
-        {!loading && rightIcon && <View style={[styles.icon, styles.iconRight]}>{rightIcon}</View>}
+        {!loading && rightIcon && (
+          <View style={[styles.icon, styles.iconRight]}>
+            {rightIcon}
+          </View>
+        )}
       </TouchableOpacity>
     </Animated.View>
   );

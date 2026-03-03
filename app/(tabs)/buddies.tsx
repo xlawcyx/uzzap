@@ -101,10 +101,10 @@ export default function BuddiesScreen() {
             </Text>
           </View>
           <View style={styles.buddyActions}>
-            <TouchableOpacity style={styles.actionIcon} onPress={() => handleStartDirectChat(item.id)}>
+            <TouchableOpacity style={[styles.actionIcon, { backgroundColor: withOpacity(colors.primary, 0.1), borderColor: withOpacity(colors.primary, 0.2) }]} onPress={() => handleStartDirectChat(item.id)}>
               <Ionicons name="chatbubble-outline" size={22} color={colors.accent} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionIcon} onPress={() => router.push(`/profile/${item.id}`)}>
+            <TouchableOpacity style={[styles.actionIcon, { backgroundColor: withOpacity(colors.primary, 0.1), borderColor: withOpacity(colors.primary, 0.2) }]} onPress={() => router.push(`/profile/${item.id}`)}>
               <Ionicons name="person-outline" size={22} color={themeColors.textSecondary} />
             </TouchableOpacity>
           </View>
@@ -170,12 +170,12 @@ export default function BuddiesScreen() {
           <Text style={[styles.summaryTitle, { color: themeColors.text }]}>Your buddy hub</Text>
           <Text style={[styles.summarySubtitle, { color: themeColors.textSecondary }]}>Manage connections, discover new people, and never miss a request.</Text>
           <View style={styles.summaryStats}>
-            <View style={styles.summaryStatItem}>
-              <Text style={styles.summaryStatValue}>{buddies?.length || 0}</Text>
+            <View style={[styles.summaryStatItem, { backgroundColor: isDark ? withOpacity(colors.primary, 0.1) : themeColors.backgroundTertiary, borderColor: isDark ? withOpacity(colors.primary, 0.2) : themeColors.border }]}>
+              <Text style={[styles.summaryStatValue, { color: colors.primary }]}>{buddies?.length || 0}</Text>
               <Text style={[styles.summaryStatLabel, { color: themeColors.textTertiary }]}>Buddies</Text>
             </View>
-            <View style={styles.summaryStatItem}>
-              <Text style={styles.summaryStatValue}>{buddyRequests?.length || 0}</Text>
+            <View style={[styles.summaryStatItem, { backgroundColor: isDark ? withOpacity(colors.primary, 0.1) : themeColors.backgroundTertiary, borderColor: isDark ? withOpacity(colors.primary, 0.2) : themeColors.border }]}>
+              <Text style={[styles.summaryStatValue, { color: colors.primary }]}>{buddyRequests?.length || 0}</Text>
               <Text style={[styles.summaryStatLabel, { color: themeColors.textTertiary }]}>Requests</Text>
             </View>
           </View>
@@ -184,21 +184,21 @@ export default function BuddiesScreen() {
         <View style={styles.tabs}>
           <TouchableOpacity
             onPress={() => setActiveTab('My Buddies')}
-            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'My Buddies' && styles.activeTab]}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'My Buddies' && [styles.activeTab, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]]}
           >
-            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'My Buddies' && styles.activeTabText]}>My Buddies</Text>
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'My Buddies' && [styles.activeTabText, { color: colors.textInverse }]]}>My Buddies</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab('Find Buddies')}
-            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Find Buddies' && styles.activeTab]}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Find Buddies' && [styles.activeTab, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]]}
           >
-            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Find Buddies' && styles.activeTabText]}>Find Buddies</Text>
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Find Buddies' && [styles.activeTabText, { color: colors.textInverse }]]}>Find Buddies</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab('Requests')}
-            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Requests' && styles.activeTab]}
+            style={[styles.tab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, activeTab === 'Requests' && [styles.activeTab, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]]}
           >
-            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Requests' && styles.activeTabText]}>Requests</Text>
+            <Text style={[styles.tabText, { color: themeColors.textTertiary }, activeTab === 'Requests' && [styles.activeTabText, { color: colors.textInverse }]]}>Requests</Text>
           </TouchableOpacity>
         </View>
 

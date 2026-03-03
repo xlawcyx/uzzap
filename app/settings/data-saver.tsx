@@ -30,7 +30,14 @@ export default function DataSaverSettingsScreen() {
             {downloadRules.map((rule) => (
               <TouchableOpacity
                 key={rule.value}
-                style={[styles.option, { borderColor: themeColors.border }, mediaDownloadRule === rule.value && styles.optionActive]}
+                style={[
+                  styles.option,
+                  { borderColor: themeColors.border },
+                  mediaDownloadRule === rule.value && {
+                    borderColor: themeColors.optionActiveText,
+                    backgroundColor: themeColors.optionActiveBackground,
+                  },
+                ]}
                 onPress={() => setMediaDownloadRule(rule.value)}
               >
                 <Text style={[styles.optionText, { color: themeColors.text }]}>{rule.label}</Text>
@@ -61,6 +68,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: spacing.sm,
   },
-  optionActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },
   optionText: { ...typography.body },
 });

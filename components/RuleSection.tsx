@@ -30,7 +30,6 @@ export function RuleSection({ title, rules }: RuleSectionProps) {
 
 const styles = StyleSheet.create({
   section: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 10,
     padding: 16,
     marginHorizontal: 16,
@@ -44,7 +43,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1C1C1E',
     marginBottom: 12,
   },
   ruleContainer: {
@@ -55,12 +53,10 @@ const styles = StyleSheet.create({
   bulletPoint: {
     fontSize: 14,
     marginRight: 8,
-    color: '#007AFF',
     top: 2,
   },
   ruleText: {
     fontSize: 14,
-    color: '#3C3C43',
     lineHeight: 20,
     flex: 1,
   },

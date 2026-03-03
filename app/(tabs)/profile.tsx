@@ -188,14 +188,14 @@ export default function ProfileScreen() {
 
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statValue, { color: colors.primary }]}>
                   {profile?.created_at ? new Date(profile.created_at).getFullYear() : '—'}
                 </Text>
                 <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Joined</Text>
               </View>
-              <View style={styles.statDivider} />
+              <View style={[styles.statDivider, { backgroundColor: withOpacity(colors.primary, 0.2) }]} />
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{user?.email?.split('@')[0]?.length || 0}</Text>
+                <Text style={[styles.statValue, { color: colors.primary }]}>{user?.email?.split('@')[0]?.length || 0}</Text>
                 <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>ID Length</Text>
               </View>
             </View>
@@ -324,9 +324,9 @@ export default function ProfileScreen() {
 
           {/* Logout */}
           <Animated.View entering={FadeInUp.delay(550).duration(500)}>
-            <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} activeOpacity={0.8}>
+            <TouchableOpacity style={[styles.logoutBtn, { borderColor: withOpacity(colors.error, 0.25), backgroundColor: withOpacity(colors.error, 0.06) }]} onPress={handleLogout} activeOpacity={0.8}>
               <Ionicons name="log-out-outline" size={20} color={colors.error} />
-              <Text style={styles.logoutText}>Logout</Text>
+              <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
             </TouchableOpacity>
           </Animated.View>
 

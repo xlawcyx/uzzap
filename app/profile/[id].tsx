@@ -77,7 +77,7 @@ export default function UserProfileScreen() {
         <View style={[styles.header, { backgroundColor: themeColors.backgroundSecondary }]}>
           <Avatar source={profile?.avatar_url ? { uri: profile.avatar_url } : undefined} size="xl" />
           <Text style={[styles.userName, { color: themeColors.text }]}>{profile?.display_name || 'Buddy'}</Text>
-          <Text style={[styles.userRegion, { color: themeColors.textSecondary }]}>{profile?.region || 'International'}</Text>
+          <Text style={[styles.userRegion, { color: colors.accent }]}>{profile?.region || 'International'}</Text>
 
           {id !== currentUserProfile?.id && (
             <View style={styles.actions}>

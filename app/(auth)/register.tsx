@@ -84,7 +84,7 @@ export default function RegisterScreen() {
           </TouchableOpacity>
 
           <LinearGradient
-            colors={[withOpacity(colors.primary, 0.2), withOpacity(colors.secondary, 0.95)]}
+            colors={[withOpacity(colors.primary, 0.2), withOpacity(themeColors.backgroundSecondary, 0.95)]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.heroCard}
@@ -154,9 +154,24 @@ export default function RegisterScreen() {
               <TouchableOpacity
                 key={r}
                 onPress={() => setRegion(r)}
-                style={[styles.regionOption, { borderColor: themeColors.border, backgroundColor: themeColors.background }, region === r && styles.regionOptionActive]}
+                style={[
+                  styles.regionOption,
+                  { borderColor: themeColors.border, backgroundColor: themeColors.background },
+                  region === r && {
+                    backgroundColor: themeColors.optionActiveBackground,
+                    borderColor: themeColors.optionActiveText,
+                  },
+                ]}
               >
-                <Text style={[styles.regionOptionText, { color: themeColors.textSecondary }, region === r && [styles.regionOptionTextActive, { color: themeColors.text }]]}>{r}</Text>
+                <Text
+                  style={[
+                    styles.regionOptionText,
+                    { color: themeColors.textSecondary },
+                    region === r && { color: themeColors.optionActiveText, fontWeight: '700' },
+                  ]}
+                >
+                  {r}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -176,7 +191,7 @@ export default function RegisterScreen() {
           <View style={styles.footer}>
             <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Already have an account? </Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/login' as any)}>
-              <Text style={styles.loginLink}>Sign in</Text>
+              <Text style={[styles.loginLink, { color: themeColors.optionActiveText }]}>Sign in</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -299,6 +314,5 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     ...typography.bodyBold,
-    color: colors.accent,
   },
 });

@@ -67,9 +67,24 @@ export default function LocationSetupScreen() {
                 setRegion(item);
                 setProvince(PH_REGIONS[item][0]);
               }}
-              style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === region && { backgroundColor: colors.primary, borderColor: colors.primary }]}
+              style={[
+                styles.option,
+                { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary },
+                item === region && {
+                  backgroundColor: themeColors.optionActiveBackground,
+                  borderColor: themeColors.optionActiveText,
+                },
+              ]}
             >
-              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === region && { color: themeColors.textInverse, fontWeight: '700' }]}>{item}</Text>
+              <Text
+                style={[
+                  styles.optionText,
+                  { color: themeColors.textSecondary },
+                  item === region && { color: themeColors.optionActiveText, fontWeight: '700' },
+                ]}
+              >
+                {item}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -77,8 +92,27 @@ export default function LocationSetupScreen() {
         <Text style={[styles.label, { color: themeColors.text }]}>Province / Area</Text>
         <View style={styles.optionsWrap}>
           {provinces.map((item) => (
-            <TouchableOpacity key={item} onPress={() => setProvince(item)} style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === province && { backgroundColor: colors.primary, borderColor: colors.primary }]}>
-              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === province && { color: themeColors.textInverse, fontWeight: '700' }]}>{item}</Text>
+            <TouchableOpacity
+              key={item}
+              onPress={() => setProvince(item)}
+              style={[
+                styles.option,
+                { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary },
+                item === province && {
+                  backgroundColor: themeColors.optionActiveBackground,
+                  borderColor: themeColors.optionActiveText,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.optionText,
+                  { color: themeColors.textSecondary },
+                  item === province && { color: themeColors.optionActiveText, fontWeight: '700' },
+                ]}
+              >
+                {item}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>

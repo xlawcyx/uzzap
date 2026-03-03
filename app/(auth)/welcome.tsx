@@ -46,7 +46,7 @@ export default function WelcomeScreen() {
         {/* Icon area */}
         <Animated.View key={index} entering={FadeIn.duration(500)} style={styles.iconSection}>
           <LinearGradient
-            colors={[withOpacity(colors.primary, 0.18), withOpacity(colors.primary, 0.04)]}
+            colors={[withOpacity(themeColors.bubbleMe, 0.18), withOpacity(themeColors.bubbleMe, 0.04)]}
             style={styles.heroIconWrap}
           >
             <Ionicons name={slide.icon as any} size={52} color={colors.primary} />

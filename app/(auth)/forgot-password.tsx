@@ -47,13 +47,13 @@ export default function ForgotPasswordScreen() {
           </TouchableOpacity>
 
           <LinearGradient
-            colors={[withOpacity(colors.primary, 0.22), withOpacity(colors.secondary, 0.95)]}
+            colors={[withOpacity(colors.primary, 0.22), withOpacity(themeColors.backgroundSecondary, 0.95)]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.heroCard}
           >
             <View style={styles.iconBadge}>
-              <Ionicons name="key-outline" size={24} color={colors.primaryLight} />
+              <Ionicons name="key-outline" size={24} color={colors.primary} />
             </View>
             <Text style={[styles.title, { color: themeColors.text }]}>Forgot your password?</Text>
             <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>No worries. We&apos;ll send a reset link so you can securely get back in.</Text>

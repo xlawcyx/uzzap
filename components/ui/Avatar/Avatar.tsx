@@ -44,7 +44,8 @@ import {
   Platform,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { colors, typography, avatarSize } from '@/constants/design';
+import { colors, spacing, typography, borderRadius, avatarSize } from '@/constants/design';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import type { AvatarProps, AvatarSize } from './Avatar.types';
 
 export function Avatar({
@@ -58,6 +59,7 @@ export function Avatar({
   style,
 }: AvatarProps) {
   const [imageError, setImageError] = useState(false);
+  const { colors: themeColors, isDark } = useAppTheme();
 
   const handlePress = () => {
     if (Platform.OS !== 'web') {
@@ -83,7 +85,7 @@ export function Avatar({
           source={source}
           style={[
             styles.image,
-            { width: avatarDimension, height: avatarDimension, borderRadius: avatarDimension / 2 },
+            { width: avatarDimension, height: avatarDimension, borderRadius: avatarDimension / 2, backgroundColor: themeColors.backgroundSecondary },
           ]}
           onError={() => setImageError(true)}
         />
@@ -91,17 +93,17 @@ export function Avatar({
         <View
           style={[
             styles.initialsContainer,
-            { width: avatarDimension, height: avatarDimension, borderRadius: avatarDimension / 2 },
+            { width: avatarDimension, height: avatarDimension, borderRadius: avatarDimension / 2, backgroundColor: isDark ? colors.primaryTint : themeColors.backgroundTertiary },
           ]}
         >
-          <Text style={[styles.initials, styles[`initials_${size}`]]}>
+          <Text style={[styles.initials, styles[`initials_${size}`], { color: isDark ? colors.white : themeColors.text }]}>
             {initials}
           </Text>
         </View>
       )}
 
       {badge && (
-        <View style={[styles.badge, getBadgePosition(size)]}>
+        <View style={[styles.badge, getBadgePosition(size), { backgroundColor: themeColors.background, borderColor: themeColors.background }]}>
           {badge}
         </View>
       )}
@@ -157,17 +159,14 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    backgroundColor: colors.backgroundSecondary,
   },
 
   initialsContainer: {
-    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   initials: {
-    color: colors.white,
     fontWeight: '600',
   },
 
@@ -204,9 +203,7 @@ const styles = StyleSheet.create({
 
   badge: {
     position: 'absolute',
-    backgroundColor: colors.background,
     borderWidth: 2,
-    borderColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },

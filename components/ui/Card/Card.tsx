@@ -35,7 +35,7 @@ export function Card({
   testID,
 }: CardProps) {
   const scale = useSharedValue(1);
-  const { colors: themeColors } = useAppTheme();
+  const { colors: themeColors, isDark } = useAppTheme();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -60,18 +60,14 @@ export function Card({
     onPress?.();
   };
 
-  const variantStyle =
-    variant === 'flat'
-      ? { backgroundColor: themeColors.backgroundSecondary }
-      : variant === 'outlined'
-        ? { backgroundColor: themeColors.background, borderWidth: 1, borderColor: themeColors.border }
-        : { backgroundColor: themeColors.background, ...shadows.md };
-
   const cardContent = (
     <View
       style={[
         styles.card,
-        variantStyle,
+        { backgroundColor: themeColors.backgroundCard },
+        variant === 'elevated' && { ...shadows.md, shadowColor: isDark ? '#000' : 'rgba(0,0,0,0.1)' },
+        variant === 'outlined' && { borderWidth: 1, borderColor: themeColors.border },
+        variant === 'flat' && { backgroundColor: themeColors.backgroundSecondary },
         style,
       ]}
       testID={testID}
@@ -126,24 +122,34 @@ function CardFooter({ children, style }: CardFooterProps) {
 Card.Footer = CardFooter;
 
 const styles = StyleSheet.create({
+  // Base card styles
   card: {
     borderRadius: borderRadius.lg,
     overflow: 'hidden',
   },
+
+  // Header
   header: {
     padding: spacing.lg,
     paddingBottom: spacing.md,
   },
+
+  // Image
   image: {
     width: '100%',
   },
+
   imageRounded: {
     borderTopLeftRadius: borderRadius.lg,
     borderTopRightRadius: borderRadius.lg,
   },
+
+  // Content
   content: {
     padding: spacing.lg,
   },
+
+  // Footer
   footer: {
     padding: spacing.lg,
     paddingTop: spacing.md,

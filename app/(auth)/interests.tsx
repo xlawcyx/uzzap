@@ -35,11 +35,28 @@ export default function InterestsScreen() {
             return (
               <TouchableOpacity
                 key={interest}
-                style={[styles.tag, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, active && { backgroundColor: colors.primary, borderColor: withOpacity(colors.primary, 0.8) }]}
+                style={[
+                  styles.tag,
+                  { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary },
+                  active && {
+                    backgroundColor: themeColors.optionActiveBackground,
+                    borderColor: themeColors.optionActiveText,
+                  },
+                ]}
                 onPress={() => toggleInterest(interest)}
               >
-                <Text style={[styles.tagText, { color: themeColors.textSecondary }, active && { color: themeColors.textInverse, fontWeight: '700' }]}>{interest}</Text>
-                {active ? <Ionicons name="checkmark-circle" size={16} color={themeColors.textInverse} /> : null}
+                <Text
+                  style={[
+                    styles.tagText,
+                    { color: themeColors.textSecondary },
+                    active && { color: themeColors.optionActiveText, fontWeight: '700' },
+                  ]}
+                >
+                  {interest}
+                </Text>
+                {active ? (
+                  <Ionicons name="checkmark-circle" size={16} color={themeColors.optionActiveText} />
+                ) : null}
               </TouchableOpacity>
             );
           })}

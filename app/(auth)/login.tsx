@@ -107,7 +107,7 @@ export default function LoginScreen() {
             style={styles.forgotPassword}
             onPress={() => router.push('/(auth)/forgot-password' as any)}
           >
-            <Text style={styles.forgotPasswordText}>Forgot password?</Text>
+            <Text style={[styles.forgotPasswordText, { color: themeColors.optionActiveText }]}>Forgot password?</Text>
           </TouchableOpacity>
 
           <Button
@@ -129,7 +129,7 @@ export default function LoginScreen() {
           <View style={styles.footer}>
             <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Don&apos;t have an account? </Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/register' as any)}>
-              <Text style={styles.registerLink}>Create one →</Text>
+              <Text style={[styles.registerLink, { color: themeColors.optionActiveText }]}>Create one →</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: spacing.xs,
   },
-  forgotPasswordText: { ...typography.captionBold, color: colors.primary },
+  forgotPasswordText: { ...typography.captionBold },
   loginButton: { width: '100%' },
   divider: {
     flexDirection: 'row',
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   footer: { flexDirection: 'row', justifyContent: 'center' },
   footerText: { ...typography.body },
-  registerLink: { ...typography.bodyBold, color: colors.primary },
+  registerLink: { ...typography.bodyBold },
 
   // Onboarding link
   onboardingLink: {

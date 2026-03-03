@@ -22,7 +22,14 @@ export default function LanguageSettingsScreen() {
             {languages.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.background }, language === item && styles.optionActive]}
+                style={[
+                  styles.option,
+                  { borderColor: themeColors.border, backgroundColor: themeColors.background },
+                  language === item && {
+                    borderColor: themeColors.optionActiveText,
+                    backgroundColor: themeColors.optionActiveBackground,
+                  },
+                ]}
                 onPress={() => setLanguage(item)}
               >
                 <Text style={[styles.optionText, { color: themeColors.text }]}>{item}</Text>
@@ -46,6 +53,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: spacing.sm,
   },
-  optionActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },
   optionText: { ...typography.body },
 });

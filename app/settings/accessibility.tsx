@@ -22,7 +22,14 @@ export default function AccessibilitySettingsScreen() {
             {fontScaleOptions.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={[styles.option, { borderColor: themeColors.border }, fontScale === item && styles.optionActive]}
+                style={[
+                  styles.option,
+                  { borderColor: themeColors.border },
+                  fontScale === item && {
+                    borderColor: themeColors.optionActiveText,
+                    backgroundColor: themeColors.optionActiveBackground,
+                  },
+                ]}
                 onPress={() => setFontScale(item)}
               >
                 <Text style={[styles.optionText, { color: themeColors.text }]}>{item.toFixed(1)}x</Text>
@@ -55,7 +62,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: spacing.sm,
   },
-  optionActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },
   optionText: { ...typography.body },
   row: {
     flexDirection: 'row',

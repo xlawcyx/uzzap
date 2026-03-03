@@ -250,21 +250,104 @@ export default function ChatroomListScreen() {
     ensureProvinceChatroom(province, region);
   };
 
+  const dynamicStyles = {
+    container: { backgroundColor: themeColors.background },
+    header: {
+      backgroundColor: themeColors.background,
+      borderBottomColor: themeColors.border,
+    },
+    hero: {
+      backgroundColor: themeColors.backgroundCard,
+      borderColor: withOpacity(colors.primary, 0.2),
+    },
+    heroTitle: { color: themeColors.text },
+    heroSubtitle: { color: themeColors.textSecondary },
+    statCard: {
+      borderColor: isDark ? withOpacity(colors.primary, 0.15) : themeColors.border,
+      backgroundColor: isDark ? withOpacity(colors.primary, 0.06) : themeColors.backgroundSecondary,
+    },
+    statLabel: { color: themeColors.textTertiary },
+    resultsPill: {
+      borderColor: themeColors.border,
+      backgroundColor: themeColors.backgroundSecondary,
+    },
+    resultsPillText: { color: themeColors.textSecondary },
+    resetBtn: {
+      borderColor: themeColors.border,
+    },
+    resetBtnText: { color: themeColors.textSecondary },
+    regionTab: {
+      borderColor: themeColors.border,
+      backgroundColor: themeColors.backgroundCard,
+    },
+    regionTabText: { color: themeColors.textTertiary },
+    filterBtn: {
+      borderColor: themeColors.border,
+      backgroundColor: themeColors.backgroundSecondary,
+    },
+    filterLabel: { color: themeColors.textTertiary },
+    filterValue: { color: themeColors.text },
+    quickJoinWrap: { borderTopColor: themeColors.border },
+    quickJoinTitle: { color: themeColors.text },
+    quickJoinHint: { color: themeColors.textSecondary },
+    activeFilterChip: {
+      borderColor: withOpacity(colors.primary, 0.35),
+      backgroundColor: withOpacity(colors.primary, 0.1),
+    },
+    activeFilterText: { color: colors.primary },
+    roomCard: {
+      backgroundColor: themeColors.backgroundCard,
+      borderColor: themeColors.border,
+    },
+    roomName: { color: themeColors.text },
+    roomDescription: { color: themeColors.textTertiary },
+    emptyTitle: { color: themeColors.text },
+    emptySubtitle: { color: themeColors.textSecondary },
+    modalContent: {
+      backgroundColor: themeColors.backgroundSecondary,
+    },
+    modalTitle: { color: themeColors.text },
+    label: { color: themeColors.textSecondary },
+    regionOption: {
+      borderColor: themeColors.border,
+      backgroundColor: themeColors.background,
+    },
+    regionOptionText: { color: themeColors.textSecondary },
+    provinceOption: {
+      borderColor: themeColors.border,
+      backgroundColor: themeColors.background,
+    },
+    provinceOptionText: { color: themeColors.textSecondary },
+    pickerContent: {
+      backgroundColor: themeColors.backgroundSecondary,
+      borderColor: themeColors.border,
+    },
+    pickerTitle: { color: themeColors.text },
+    pickerItem: {
+      borderBottomColor: themeColors.border,
+    },
+    pickerText: { color: themeColors.text },
+  };
+
   const renderChatroom = ({ item, index }: { item: ChatroomItem; index: number }) => {
     const location = parseRoomLocation(item);
 
     return (
       <Animated.View entering={FadeInUp.delay(index * 80).duration(450)}>
-        <Card variant="elevated" onPress={() => router.push(`/chatroom/${item.id}`)} style={StyleSheet.flatten([styles.roomCard, { backgroundColor: themeColors.backgroundCard, borderColor: themeColors.border }])}>
+        <Card
+          variant="elevated"
+          onPress={() => router.push(`/chatroom/${item.id}`)}
+          style={[styles.roomCard, dynamicStyles.roomCard]}
+        >
           <Card.Content style={styles.roomContent}>
             <View style={styles.roomIcon}>
               <Ionicons name="location" size={20} color={colors.accent} />
             </View>
 
             <View style={styles.roomInfo}>
-              <Text style={[styles.roomName, { color: themeColors.text }]}>{item.name}</Text>
+              <Text style={[styles.roomName, dynamicStyles.roomName]}>{item.name}</Text>
               <Text style={styles.roomLocation}>{location.province} • {location.region}</Text>
-              <Text style={[styles.roomDescription, { color: themeColors.textTertiary }]} numberOfLines={1}>
+              <Text style={[styles.roomDescription, dynamicStyles.roomDescription]} numberOfLines={1}>
                 {item.description || 'Provincial community chatroom'}
               </Text>
             </View>
@@ -277,33 +360,33 @@ export default function ChatroomListScreen() {
   };
 
   return (
-    <Container style={StyleSheet.flatten([styles.container, { backgroundColor: themeColors.background }])}>
-      <View style={[styles.header, { backgroundColor: themeColors.background, borderBottomColor: themeColors.border }]}>
-        <View style={[styles.hero, { backgroundColor: themeColors.backgroundCard }]}>
-          <Text style={[styles.heroTitle, { color: themeColors.text }]}>Philippines Chatrooms</Text>
-          <Text style={[styles.heroSubtitle, { color: themeColors.textSecondary }]}>Choose a region, pick a province, and join local conversations faster.</Text>
+    <Container style={[styles.container, dynamicStyles.container]}>
+      <View style={[styles.header, dynamicStyles.header]}>
+        <View style={[styles.hero, dynamicStyles.hero]}>
+          <Text style={[styles.heroTitle, dynamicStyles.heroTitle]}>Philippines Chatrooms</Text>
+          <Text style={[styles.heroSubtitle, dynamicStyles.heroSubtitle]}>Choose a region, pick a province, and join local conversations faster.</Text>
           <View style={styles.heroStats}>
-            <View style={styles.statCard}>
+            <View style={[styles.statCard, dynamicStyles.statCard]}>
               <Text style={styles.statValue}>{Object.keys(PHILIPPINES_REGIONS).length}</Text>
-              <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Regions</Text>
+              <Text style={[styles.statLabel, dynamicStyles.statLabel]}>Regions</Text>
             </View>
-            <View style={styles.statCard}>
+            <View style={[styles.statCard, dynamicStyles.statCard]}>
               <Text style={styles.statValue}>{filteredChatrooms.length}</Text>
-              <Text style={[styles.statLabel, { color: themeColors.textTertiary }]}>Matching rooms</Text>
+              <Text style={[styles.statLabel, dynamicStyles.statLabel]}>Matching rooms</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.searchWrap}>
           <View style={styles.filterSummaryRow}>
-            <View style={[styles.resultsPill, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }]}>
+            <View style={[styles.resultsPill, dynamicStyles.resultsPill]}>
               <Ionicons name="layers-outline" size={14} color={colors.accent} />
-              <Text style={[styles.resultsPillText, { color: themeColors.textSecondary }]}>{filteredChatrooms.length} rooms shown</Text>
+              <Text style={[styles.resultsPillText, dynamicStyles.resultsPillText]}>{filteredChatrooms.length} rooms shown</Text>
             </View>
             {hasActiveFilters ? (
-              <TouchableOpacity style={[styles.resetBtn, { borderColor: themeColors.border }]} onPress={clearAllFilters}>
+              <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={clearAllFilters}>
                 <Ionicons name="refresh-outline" size={13} color={themeColors.textSecondary} />
-                <Text style={[styles.resetBtnText, { color: themeColors.textSecondary }]}>Reset filters</Text>
+                <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Reset filters</Text>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -322,17 +405,29 @@ export default function ChatroomListScreen() {
             <TouchableOpacity
               key={region}
               onPress={() => applyRegion(region)}
-              style={[styles.regionTab, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundCard }, selectedRegion === region && styles.regionTabActive]}
+              style={[
+                styles.regionTab,
+                dynamicStyles.regionTab,
+                selectedRegion === region && styles.regionTabActive,
+              ]}
             >
-              <Text style={[styles.regionTabText, { color: themeColors.textTertiary }, selectedRegion === region && [styles.regionTabTextActive, { color: themeColors.textInverse }]]}>{region}</Text>
+              <Text
+                style={[
+                  styles.regionTabText,
+                  dynamicStyles.regionTabText,
+                  selectedRegion === region && [styles.regionTabTextActive, { color: themeColors.textInverse }],
+                ]}
+              >
+                {region}
+              </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
 
-        <View style={styles.quickJoinWrap}>
-          <Text style={[styles.quickJoinTitle, { color: themeColors.text }]}>Quick join a province</Text>
+        <View style={[styles.quickJoinWrap, dynamicStyles.quickJoinWrap]}>
+          <Text style={[styles.quickJoinTitle, dynamicStyles.quickJoinTitle]}>Quick join a province</Text>
           {selectedRegion === 'All Regions' ? (
-            <Text style={[styles.quickJoinHint, { color: themeColors.textSecondary }]}>Select a region first, then tap a province to join instantly.</Text>
+            <Text style={[styles.quickJoinHint, dynamicStyles.quickJoinHint]}>Select a region first, then tap a province to join instantly.</Text>
           ) : (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickJoinRow}>
               {quickJoinProvinces.map((province) => (
@@ -342,7 +437,7 @@ export default function ChatroomListScreen() {
                   onPress={() => handleProvinceSelect(province)}
                   disabled={joiningProvince !== null}
                 >
-                  <Text style={styles.quickJoinChipText}>{province}</Text>
+                  <Text style={[styles.quickJoinChipText, { color: colors.white }]}>{province}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -350,18 +445,22 @@ export default function ChatroomListScreen() {
         </View>
 
         <View style={styles.filterRow}>
-          <TouchableOpacity style={[styles.filterBtn, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }]} onPress={() => openPicker('region')}>
-            <Text style={[styles.filterLabel, { color: themeColors.textTertiary }]}>Region</Text>
-            <Text style={[styles.filterValue, { color: themeColors.text }]} numberOfLines={1}>{selectedRegion}</Text>
+          <TouchableOpacity style={[styles.filterBtn, dynamicStyles.filterBtn]} onPress={() => openPicker('region')}>
+            <Text style={[styles.filterLabel, dynamicStyles.filterLabel]}>Region</Text>
+            <Text style={[styles.filterValue, dynamicStyles.filterValue]} numberOfLines={1}>{selectedRegion}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterBtn, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, selectedRegion === 'All Regions' && styles.filterBtnDisabled]}
+            style={[
+              styles.filterBtn,
+              dynamicStyles.filterBtn,
+              selectedRegion === 'All Regions' && styles.filterBtnDisabled,
+            ]}
             onPress={() => openPicker('province')}
             disabled={selectedRegion === 'All Regions'}
           >
-            <Text style={[styles.filterLabel, { color: themeColors.textTertiary }]}>Province</Text>
-            <Text style={[styles.filterValue, { color: themeColors.text }]} numberOfLines={1}>{selectedProvince}</Text>
+            <Text style={[styles.filterLabel, dynamicStyles.filterLabel]}>Province</Text>
+            <Text style={[styles.filterValue, dynamicStyles.filterValue]} numberOfLines={1}>{selectedProvince}</Text>
           </TouchableOpacity>
         </View>
 
@@ -381,20 +480,20 @@ export default function ChatroomListScreen() {
         {hasActiveFilters ? (
           <View style={styles.activeFilterRow}>
             {selectedRegion !== 'All Regions' ? (
-              <View style={styles.activeFilterChip}>
-                <Text style={styles.activeFilterText}>{selectedRegion}</Text>
+              <View style={[styles.activeFilterChip, dynamicStyles.activeFilterChip]}>
+                <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>{selectedRegion}</Text>
               </View>
             ) : null}
 
             {selectedProvince !== 'All Provinces' ? (
-              <View style={styles.activeFilterChip}>
-                <Text style={styles.activeFilterText}>{selectedProvince}</Text>
+              <View style={[styles.activeFilterChip, dynamicStyles.activeFilterChip]}>
+                <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>{selectedProvince}</Text>
               </View>
             ) : null}
 
             {normalizedSearch.length > 0 ? (
-              <View style={styles.activeFilterChip}>
-                <Text style={styles.activeFilterText}>“{searchQuery.trim()}”</Text>
+              <View style={[styles.activeFilterChip, dynamicStyles.activeFilterChip]}>
+                <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>“{searchQuery.trim()}”</Text>
               </View>
             ) : null}
           </View>
@@ -411,8 +510,8 @@ export default function ChatroomListScreen() {
           !isLoading ? (
             <View style={styles.emptyContainer}>
               <Ionicons name="map-outline" size={76} color={themeColors.border} />
-              <Text style={[styles.emptyTitle, { color: themeColors.text }]}>No rooms in this filter yet</Text>
-              <Text style={[styles.emptySubtitle, { color: themeColors.textSecondary }]}>Try another province to auto-create and join its chatroom.</Text>
+              <Text style={[styles.emptyTitle, dynamicStyles.emptyTitle]}>No rooms in this filter yet</Text>
+              <Text style={[styles.emptySubtitle, dynamicStyles.emptySubtitle]}>Try another province to auto-create and join its chatroom.</Text>
               {hasActiveFilters ? (
                 <Button variant="ghost" onPress={clearAllFilters} style={styles.emptyGhostButton}>
                   Clear Filters
@@ -425,8 +524,8 @@ export default function ChatroomListScreen() {
 
       <Modal visible={pickerModalVisible} animationType="fade" transparent onRequestClose={() => setPickerModalVisible(false)}>
         <View style={styles.pickerOverlay}>
-          <View style={[styles.pickerContent, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
-            <Text style={[styles.pickerTitle, { color: themeColors.text }]}>{pickerType === 'region' ? 'Choose Region' : 'Choose Province'}</Text>
+          <View style={[styles.pickerContent, dynamicStyles.pickerContent]}>
+            <Text style={[styles.pickerTitle, dynamicStyles.pickerTitle]}>{pickerType === 'region' ? 'Choose Region' : 'Choose Province'}</Text>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.pickerList}>
               {(pickerType === 'region' ? REGION_OPTIONS : regionProvinces).map((option) => (
                 <TouchableOpacity
@@ -438,9 +537,9 @@ export default function ChatroomListScreen() {
                       handleProvinceSelect(option);
                     }
                   }}
-                  style={[styles.pickerItem, { borderBottomColor: themeColors.border }]}
+                  style={[styles.pickerItem, dynamicStyles.pickerItem]}
                 >
-                  <Text style={[styles.pickerText, { color: themeColors.text }]}>{option}</Text>
+                  <Text style={[styles.pickerText, dynamicStyles.pickerText]}>{option}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
