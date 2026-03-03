@@ -42,16 +42,45 @@ export const messageService = {
   async markAsRead(messageId: string, userId: string): Promise<MessageRead | null> {
     const { data, error } = await supabase
       .from('message_reads')
-      .upsert([{ message_id: messageId, user_id: userId, read_at: new Date().toISOString() }])
+      .upsert(
+        { message_id: messageId, user_id: userId, read_at: new Date().toISOString() },
+        { onConflict: 'message_id,user_id', ignoreDuplicates: true }
+      )
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
+      // 23505 is the error code for unique constraint violation in Postgres/Supabase
+      // If the duplicate error persists despite ignoreDuplicates: true, we handle it gracefully here
+      if (error.code === '23505') {
+        return null;
+      }
       console.error('Error marking message as read:', error);
       return null;
     }
 
     return data;
+  },
+
+  async markMultipleAsRead(messageIds: string[], userId: string): Promise<void> {
+    if (!messageIds.length) return;
+    
+    const records = messageIds.map(id => ({
+      message_id: id,
+      user_id: userId,
+      read_at: new Date().toISOString()
+    }));
+
+    const { error } = await supabase
+      .from('message_reads')
+      .upsert(records, { onConflict: 'message_id,user_id', ignoreDuplicates: true });
+
+    if (error) {
+      if (error.code === '23505') {
+        return;
+      }
+      console.error('Error marking multiple messages as read:', error);
+    }
   },
 
   async deleteMessage(messageId: string) {

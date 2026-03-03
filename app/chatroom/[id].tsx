@@ -35,6 +35,7 @@ export default function ChatroomScreen() {
   const [replyTo, setReplyTo] = useState<any>(null);
   const flatListRef = useRef<FlashListRef<any>>(null);
   const typingTimeoutRef = useRef<any>(null);
+  const markedReadRef = useRef<Set<string>>(new Set());
   const draftKey = `draft:${id}`;
 
   const messages = useMemo(() => chatroomMessages[id as string] || [], [chatroomMessages, id]);
@@ -94,10 +95,16 @@ export default function ChatroomScreen() {
 
   useEffect(() => {
     if (!profile || !messages.length) return;
-    messages
-      .filter((m) => m.sender_id !== profile.id)
-      .slice(-20)
-      .forEach((m) => messageService.markAsRead(m.id, profile.id));
+    const toMark = messages
+      .filter((m) => m.sender_id !== profile.id && !markedReadRef.current.has(m.id))
+      .slice(-20);
+    
+    if (toMark.length > 0) {
+      toMark.forEach((m) => {
+        markedReadRef.current.add(m.id);
+        messageService.markAsRead(m.id, profile.id);
+      });
+    }
   }, [messages, profile]);
 
   const handleTyping = (nextValue: string) => {
