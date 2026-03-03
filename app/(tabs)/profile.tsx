@@ -170,7 +170,7 @@ export default function ProfileScreen() {
 
             <Text style={[styles.userName, { color: themeColors.text }]}>{profile?.display_name || 'Buddy'}</Text>
             {profile?.status_message ? (
-              <Text style={[styles.userStatus, { color: themeColors.textSecondary }]}>"{profile.status_message}"</Text>
+              <Text style={[styles.userStatus, { color: themeColors.textSecondary }]}>&ldquo;{profile.status_message}&rdquo;</Text>
             ) : null}
 
             <View style={styles.userMeta}>

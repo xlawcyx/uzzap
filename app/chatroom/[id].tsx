@@ -253,7 +253,6 @@ export default function ChatroomScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.messageList}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-          estimatedItemSize={80}
           ListHeaderComponent={
             <View style={[styles.detailCard, { borderColor: themeColors.borderAccent }]}>
               <LinearGradient
