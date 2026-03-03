@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { colors } from '@/constants/design';
@@ -34,11 +34,15 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 16,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
+    ...(Platform.OS === 'web'
+      ? { boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.1)' }
+      : {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 1,
+          elevation: 1,
+        }),
   },
   sectionTitle: {
     fontSize: 18,

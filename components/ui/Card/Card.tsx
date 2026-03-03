@@ -65,7 +65,10 @@ export function Card({
       style={[
         styles.card,
         { backgroundColor: themeColors.backgroundCard },
-        variant === 'elevated' && { ...shadows.md, shadowColor: isDark ? '#000' : 'rgba(0,0,0,0.1)' },
+        variant === 'elevated' && [
+          shadows.md,
+          Platform.OS !== 'web' && { shadowColor: isDark ? '#000' : 'rgba(0,0,0,0.1)' },
+        ],
         variant === 'outlined' && { borderWidth: 1, borderColor: themeColors.border },
         variant === 'flat' && { backgroundColor: themeColors.backgroundSecondary },
         style,

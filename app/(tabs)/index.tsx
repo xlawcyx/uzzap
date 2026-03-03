@@ -68,6 +68,13 @@ const PROVINCE_TO_REGION = Object.entries(PHILIPPINES_REGIONS).reduce<Record<str
   return acc;
 }, {});
 
+const PROVINCE_NAME_BY_NORMALIZED = Object.values(PHILIPPINES_REGIONS)
+  .flat()
+  .reduce<Record<string, string>>((acc, province) => {
+    acc[province.toLowerCase()] = province;
+    return acc;
+  }, {});
+
 const parseRoomLocation = (room: ChatroomItem) => {
   const description = room.description || '';
   const match = description.match(/^(.+?)\s*>\s*(.+?)(?::\s*|$)/);
@@ -94,7 +101,10 @@ const parseRoomLocation = (room: ChatroomItem) => {
   );
 
   if (matchingProvince) {
-    return { region: PROVINCE_TO_REGION[matchingProvince], province: matchingProvince };
+    return {
+      region: PROVINCE_TO_REGION[matchingProvince],
+      province: PROVINCE_NAME_BY_NORMALIZED[matchingProvince] ?? matchingProvince,
+    };
   }
 
   return { region: 'Uncategorized', province: 'Unspecified Province' };

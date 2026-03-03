@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 /**
  * Design Token System — Uzzap
  *
@@ -209,63 +211,38 @@ export const typography = {
 // SHADOWS
 // ============================================================================
 
+const createShadow = (
+  x: number,
+  y: number,
+  blur: number,
+  color: string,
+  opacity: number,
+  elevation: number,
+) => {
+  if (Platform.OS === 'web') {
+    return {
+      boxShadow: `${x}px ${y}px ${blur}px rgba(${color}, ${opacity})`,
+    };
+  }
+
+  return {
+    shadowColor: `rgb(${color})`,
+    shadowOffset: { width: x, height: y },
+    shadowOpacity: opacity,
+    shadowRadius: blur,
+    elevation,
+  };
+};
+
 export const shadows = {
-  none: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  xs: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.12,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  sm: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.18,
-    shadowRadius: 5,
-    elevation: 2,
-  },
-  md: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  lg: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 14,
-    elevation: 8,
-  },
-  xl: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.35,
-    shadowRadius: 20,
-    elevation: 12,
-  },
-  xxl: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.4,
-    shadowRadius: 28,
-    elevation: 20,
-  },
-  glow: {
-    shadowColor: '#3ECF8E',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 6,
-  },
+  none: Platform.OS === 'web' ? { boxShadow: 'none' } : { elevation: 0 },
+  xs: createShadow(0, 1, 3, '0, 0, 0', 0.12, 1),
+  sm: createShadow(0, 2, 5, '0, 0, 0', 0.18, 2),
+  md: createShadow(0, 4, 8, '0, 0, 0', 0.25, 4),
+  lg: createShadow(0, 8, 14, '0, 0, 0', 0.3, 8),
+  xl: createShadow(0, 12, 20, '0, 0, 0', 0.35, 12),
+  xxl: createShadow(0, 20, 28, '0, 0, 0', 0.4, 20),
+  glow: createShadow(0, 0, 12, '62, 207, 142', 0.5, 6),
 };
 
 // ============================================================================
