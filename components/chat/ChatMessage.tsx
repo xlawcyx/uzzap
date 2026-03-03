@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { Avatar } from '@/components/ui';
 import { colors, spacing, typography, borderRadius, withOpacity } from '@/constants/design';
-import Animated, { FadeInUp, FadeOut, Layout } from 'react-native-reanimated';
+import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 
 interface ChatMessageProps {
   item: any;

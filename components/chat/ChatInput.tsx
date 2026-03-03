@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, typography, borderRadius, shadows } from '@/constants/design';
-import { withOpacity } from '@/constants/design';
 
 interface ChatInputProps {
   message: string;

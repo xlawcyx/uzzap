@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Alert } from 'react-native';
 import { Container, Card, Button } from '@/components/ui';
-import { colors, spacing, typography, borderRadius } from '@/constants/design';
+import { spacing, typography, borderRadius } from '@/constants/design';
 import { useAppSettingsStore } from '@/store/useAppSettingsStore';
 import { useAppTheme } from '@/hooks/useAppTheme';
 

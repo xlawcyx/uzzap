@@ -44,7 +44,7 @@ import {
   Platform,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { colors, spacing, typography, borderRadius, avatarSize } from '@/constants/design';
+import { colors, typography, avatarSize } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import type { AvatarProps, AvatarSize } from './Avatar.types';
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { colors, spacing, typography, borderRadius, withOpacity } from '@/constants/design';
+import { colors, spacing, typography, withOpacity } from '@/constants/design';
 
 interface ChatHeaderProps {
   room: any;

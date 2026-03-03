@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import { colors, spacing, typography, borderRadius, withOpacity, shadows } from '@/constants/design';
+import { colors, spacing, typography, borderRadius, withOpacity } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { Card, Avatar, Container, Button, Input } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
