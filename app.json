@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Uzzap Mobile",
-    "slug": "uzzap-mobile",
+    "name": "UZZ-APP",
+    "slug": "uzz-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "uzzapmobile",
+    "scheme": "uzzapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -18,14 +18,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.blink.expostarter"
+      "bundleIdentifier": "com.uzz.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.blink.expostarter"
+      "package": "com.uzz.app"
     },
     "web": {
       "bundler": "metro",
