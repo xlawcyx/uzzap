@@ -10,6 +10,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { useChatStore } from '@/store/useChatStore';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type ChatroomItem = {
   id: string;
@@ -250,556 +251,275 @@ export default function ChatroomListScreen() {
     ensureProvinceChatroom(province, region);
   };
 
-  const dynamicStyles = {
-    container: { backgroundColor: themeColors.background },
-    header: {
-      backgroundColor: themeColors.background,
-      borderBottomColor: themeColors.border,
-    },
-    hero: {
-      backgroundColor: themeColors.backgroundCard,
-      borderColor: withOpacity(colors.primary, 0.2),
-    },
-    heroTitle: { color: themeColors.text },
-    heroSubtitle: { color: themeColors.textSecondary },
-    statCard: {
-      borderColor: isDark ? withOpacity(colors.primary, 0.15) : themeColors.border,
-      backgroundColor: isDark ? withOpacity(colors.primary, 0.06) : themeColors.backgroundSecondary,
-    },
-    statLabel: { color: themeColors.textTertiary },
-    resultsPill: {
-      borderColor: themeColors.border,
-      backgroundColor: themeColors.backgroundSecondary,
-    },
-    resultsPillText: { color: themeColors.textSecondary },
-    resetBtn: {
-      borderColor: themeColors.border,
-    },
-    resetBtnText: { color: themeColors.textSecondary },
-    regionTab: {
-      borderColor: themeColors.border,
-      backgroundColor: themeColors.backgroundCard,
-    },
-    regionTabText: { color: themeColors.textTertiary },
-    filterBtn: {
-      borderColor: themeColors.border,
-      backgroundColor: themeColors.backgroundSecondary,
-    },
-    filterLabel: { color: themeColors.textTertiary },
-    filterValue: { color: themeColors.text },
-    quickJoinWrap: { borderTopColor: themeColors.border },
-    quickJoinTitle: { color: themeColors.text },
-    quickJoinHint: { color: themeColors.textSecondary },
-    activeFilterChip: {
-      borderColor: withOpacity(colors.primary, 0.35),
-      backgroundColor: withOpacity(colors.primary, 0.1),
-    },
-    activeFilterText: { color: colors.primary },
-    roomCard: {
-      backgroundColor: themeColors.backgroundCard,
-      borderColor: themeColors.border,
-    },
-    roomName: { color: themeColors.text },
-    roomDescription: { color: themeColors.textTertiary },
-    emptyTitle: { color: themeColors.text },
-    emptySubtitle: { color: themeColors.textSecondary },
-    modalContent: {
-      backgroundColor: themeColors.backgroundSecondary,
-    },
-    modalTitle: { color: themeColors.text },
-    label: { color: themeColors.textSecondary },
-    regionOption: {
-      borderColor: themeColors.border,
-      backgroundColor: themeColors.background,
-    },
-    regionOptionText: { color: themeColors.textSecondary },
-    provinceOption: {
-      borderColor: themeColors.border,
-      backgroundColor: themeColors.background,
-    },
-    provinceOptionText: { color: themeColors.textSecondary },
-    pickerContent: {
-      backgroundColor: themeColors.backgroundSecondary,
-      borderColor: themeColors.border,
-    },
-    pickerTitle: { color: themeColors.text },
-    pickerItem: {
-      borderBottomColor: themeColors.border,
-    },
-    pickerText: { color: themeColors.text },
-  };
-
   const renderChatroom = ({ item, index }: { item: ChatroomItem; index: number }) => {
-    const location = parseRoomLocation(item);
-
     return (
-      <Animated.View entering={FadeInUp.delay(index * 80).duration(450)}>
-        <Card
-          variant="elevated"
+      <Animated.View entering={FadeInUp.delay(index * 50).duration(500)}>
+        <DiscoveryRoomCard
+          room={item as any}
           onPress={() => router.push(`/chatroom/${item.id}`)}
-          style={[styles.roomCard, dynamicStyles.roomCard]}
-        >
-          <Card.Content style={styles.roomContent}>
-            <View style={styles.roomIcon}>
-              <Ionicons name="location" size={20} color={colors.accent} />
-            </View>
-
-            <View style={styles.roomInfo}>
-              <Text style={[styles.roomName, dynamicStyles.roomName]}>{item.name}</Text>
-              <Text style={styles.roomLocation}>{location.province} • {location.region}</Text>
-              <Text style={[styles.roomDescription, dynamicStyles.roomDescription]} numberOfLines={1}>
-                {item.description || 'Provincial community chatroom'}
-              </Text>
-            </View>
-
-            <Ionicons name="chevron-forward" size={18} color={themeColors.textTertiary} />
-          </Card.Content>
-        </Card>
+        />
       </Animated.View>
     );
   };
 
   return (
-    <Container style={[styles.container, dynamicStyles.container]}>
-      <View style={[styles.header, dynamicStyles.header]}>
-        <View style={[styles.hero, dynamicStyles.hero]}>
-          <Text style={[styles.heroTitle, dynamicStyles.heroTitle]}>Philippines Chatrooms</Text>
-          <Text style={[styles.heroSubtitle, dynamicStyles.heroSubtitle]}>Choose a region, pick a province, and join local conversations faster.</Text>
-          <View style={styles.heroStats}>
-            <View style={[styles.statCard, dynamicStyles.statCard]}>
-              <Text style={styles.statValue}>{Object.keys(PHILIPPINES_REGIONS).length}</Text>
-              <Text style={[styles.statLabel, dynamicStyles.statLabel]}>Regions</Text>
-            </View>
-            <View style={[styles.statCard, dynamicStyles.statCard]}>
-              <Text style={styles.statValue}>{filteredChatrooms.length}</Text>
-              <Text style={[styles.statLabel, dynamicStyles.statLabel]}>Matching rooms</Text>
-            </View>
-          </View>
+    <Container style={styles.container} safeArea edges={['top']}>
+      <LinearGradient
+        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
+        style={StyleSheet.absoluteFillObject}
+      />
+
+      <View style={styles.header}>
+        <View>
+          <Text style={[styles.greeting, { color: themeColors.textSecondary }]}>Hello, Buddy!</Text>
+          <Text style={[styles.title, { color: themeColors.text }]}>Chatrooms</Text>
         </View>
+        <TouchableOpacity
+          style={[styles.profileBtn, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundElevated }]}
+          onPress={() => router.push('/(tabs)/profile')}
+        >
+          <Ionicons name="person-outline" size={20} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
 
-        <View style={styles.searchWrap}>
-          <View style={styles.filterSummaryRow}>
-            <View style={[styles.resultsPill, dynamicStyles.resultsPill]}>
-              <Ionicons name="layers-outline" size={14} color={colors.accent} />
-              <Text style={[styles.resultsPillText, dynamicStyles.resultsPillText]}>{filteredChatrooms.length} rooms shown</Text>
-            </View>
-            {hasActiveFilters ? (
-              <TouchableOpacity style={[styles.resetBtn, dynamicStyles.resetBtn]} onPress={clearAllFilters}>
-                <Ionicons name="refresh-outline" size={13} color={themeColors.textSecondary} />
-                <Text style={[styles.resetBtnText, dynamicStyles.resetBtnText]}>Reset filters</Text>
-              </TouchableOpacity>
-            ) : null}
-          </View>
+      <View style={styles.searchSection}>
+        <Input
+          placeholder="Find a community..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          leftIcon={<Ionicons name="search" size={20} color={colors.primary} />}
+          clearable
+          containerStyle={styles.searchInput}
+        />
 
-          <Input
-            placeholder="Search by room, region, or province"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            leftIcon={<Ionicons name="search" size={18} color={themeColors.textTertiary} />}
-            clearable
-          />
-        </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.regionsContainer}>
-          {REGION_OPTIONS.map((region) => (
-            <TouchableOpacity
-              key={region}
-              onPress={() => applyRegion(region)}
-              style={[
-                styles.regionTab,
-                dynamicStyles.regionTab,
-                selectedRegion === region && styles.regionTabActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.regionTabText,
-                  dynamicStyles.regionTabText,
-                  selectedRegion === region && [styles.regionTabTextActive, { color: themeColors.textInverse }],
-                ]}
-              >
-                {region}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <View style={[styles.quickJoinWrap, dynamicStyles.quickJoinWrap]}>
-          <Text style={[styles.quickJoinTitle, dynamicStyles.quickJoinTitle]}>Quick join a province</Text>
-          {selectedRegion === 'All Regions' ? (
-            <Text style={[styles.quickJoinHint, dynamicStyles.quickJoinHint]}>Select a region first, then tap a province to join instantly.</Text>
-          ) : (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickJoinRow}>
-              {quickJoinProvinces.map((province) => (
-                <TouchableOpacity
-                  key={province}
-                  style={styles.quickJoinChip}
-                  onPress={() => handleProvinceSelect(province)}
-                  disabled={joiningProvince !== null}
-                >
-                  <Text style={[styles.quickJoinChipText, { color: colors.white }]}>{province}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
-        </View>
-
-        <View style={styles.filterRow}>
-          <TouchableOpacity style={[styles.filterBtn, dynamicStyles.filterBtn]} onPress={() => openPicker('region')}>
-            <Text style={[styles.filterLabel, dynamicStyles.filterLabel]}>Region</Text>
-            <Text style={[styles.filterValue, dynamicStyles.filterValue]} numberOfLines={1}>{selectedRegion}</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+          <TouchableOpacity
+            style={[
+              styles.filterChip,
+              { backgroundColor: themeColors.backgroundElevated, borderColor: themeColors.border },
+              selectedRegion !== 'All Regions' && styles.filterChipActive
+            ]}
+            onPress={() => openPicker('region')}
+          >
+            <Text style={[styles.filterChipText, { color: themeColors.textSecondary }, selectedRegion !== 'All Regions' && { color: colors.primary }]}>
+              {selectedRegion === 'All Regions' ? 'Region' : selectedRegion}
+            </Text>
+            <Ionicons name="chevron-down" size={14} color={selectedRegion !== 'All Regions' ? colors.primary : themeColors.textTertiary} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[
-              styles.filterBtn,
-              dynamicStyles.filterBtn,
-              selectedRegion === 'All Regions' && styles.filterBtnDisabled,
+              styles.filterChip,
+              { backgroundColor: themeColors.backgroundElevated, borderColor: themeColors.border },
+              selectedProvince !== 'All Provinces' && styles.filterChipActive,
+              selectedRegion === 'All Regions' && styles.filterChipDisabled
             ]}
-            onPress={() => openPicker('province')}
             disabled={selectedRegion === 'All Regions'}
+            onPress={() => openPicker('province')}
           >
-            <Text style={[styles.filterLabel, dynamicStyles.filterLabel]}>Province</Text>
-            <Text style={[styles.filterValue, dynamicStyles.filterValue]} numberOfLines={1}>{selectedProvince}</Text>
+            <Text style={[styles.filterChipText, { color: themeColors.textSecondary }, selectedProvince !== 'All Provinces' && { color: colors.primary }]}>
+              {selectedProvince === 'All Provinces' ? 'Province' : selectedProvince}
+            </Text>
+            <Ionicons name="chevron-down" size={14} color={selectedProvince !== 'All Provinces' ? colors.primary : themeColors.textTertiary} />
           </TouchableOpacity>
-        </View>
 
-
-        {selectedProvince !== 'All Provinces' ? (
-          <View style={styles.joinActionWrap}>
-            <Button
-              variant="primary"
-              onPress={() => ensureProvinceChatroom(selectedProvince, selectedRegion === 'All Regions' ? undefined : selectedRegion)}
-              disabled={joiningProvince !== null}
-            >
-              {joiningProvince === selectedProvince ? 'Joining province...' : `Join ${selectedProvince}`}
-            </Button>
-          </View>
-        ) : null}
-
-        {hasActiveFilters ? (
-          <View style={styles.activeFilterRow}>
-            {selectedRegion !== 'All Regions' ? (
-              <View style={[styles.activeFilterChip, dynamicStyles.activeFilterChip]}>
-                <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>{selectedRegion}</Text>
-              </View>
-            ) : null}
-
-            {selectedProvince !== 'All Provinces' ? (
-              <View style={[styles.activeFilterChip, dynamicStyles.activeFilterChip]}>
-                <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>{selectedProvince}</Text>
-              </View>
-            ) : null}
-
-            {normalizedSearch.length > 0 ? (
-              <View style={[styles.activeFilterChip, dynamicStyles.activeFilterChip]}>
-                <Text style={[styles.activeFilterText, dynamicStyles.activeFilterText]}>“{searchQuery.trim()}”</Text>
-              </View>
-            ) : null}
-          </View>
-        ) : null}
+          {hasActiveFilters && (
+            <TouchableOpacity style={styles.clearBtn} onPress={clearAllFilters}>
+              <Text style={{ color: colors.error, ...typography.smallBold }}>Clear</Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </View>
 
       <FlashList
         data={filteredChatrooms}
         renderItem={renderChatroom}
-        keyExtractor={(item) => item.id}
+        estimatedItemSize={180}
         contentContainerStyle={styles.listContent}
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={fetchChatrooms} tintColor={colors.accent} />}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          !isLoading ? (
-            <View style={styles.emptyContainer}>
-              <Ionicons name="map-outline" size={76} color={themeColors.border} />
-              <Text style={[styles.emptyTitle, dynamicStyles.emptyTitle]}>No rooms in this filter yet</Text>
-              <Text style={[styles.emptySubtitle, dynamicStyles.emptySubtitle]}>Try another province to auto-create and join its chatroom.</Text>
-              {hasActiveFilters ? (
-                <Button variant="ghost" onPress={clearAllFilters} style={styles.emptyGhostButton}>
-                  Clear Filters
-                </Button>
-              ) : null}
-            </View>
-          ) : null
+          <View style={styles.emptyContainer}>
+            <Ionicons name="search-outline" size={64} color={themeColors.textDisabled} />
+            <Text style={[styles.emptyTitle, { color: themeColors.text }]}>No rooms found</Text>
+            <Text style={[styles.emptySubtitle, { color: themeColors.textSecondary }]}>Try adjusting your filters or search query</Text>
+            <Button variant="outline" size="sm" onPress={clearAllFilters} style={{ marginTop: spacing.md }}>
+              Reset Filters
+            </Button>
+          </View>
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={fetchChatrooms}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
         }
       />
 
-      <Modal visible={pickerModalVisible} animationType="fade" transparent onRequestClose={() => setPickerModalVisible(false)}>
-        <View style={styles.pickerOverlay}>
-          <View style={[styles.pickerContent, dynamicStyles.pickerContent]}>
-            <Text style={[styles.pickerTitle, dynamicStyles.pickerTitle]}>{pickerType === 'region' ? 'Choose Region' : 'Choose Province'}</Text>
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.pickerList}>
-              {(pickerType === 'region' ? REGION_OPTIONS : regionProvinces).map((option) => (
+      {/* Picker Modal */}
+      <Modal
+        visible={pickerModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setPickerModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setPickerModalVisible(false)}
+        >
+          <View style={[styles.modalContent, { backgroundColor: themeColors.backgroundElevated }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: themeColors.text }]}>
+                Select {pickerType === 'region' ? 'Region' : 'Province'}
+              </Text>
+              <TouchableOpacity onPress={() => setPickerModalVisible(false)}>
+                <Ionicons name="close" size={24} color={themeColors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalList} showsVerticalScrollIndicator={false}>
+              {(pickerType === 'region' ? REGION_OPTIONS : regionProvinces).map((item) => (
                 <TouchableOpacity
-                  key={option}
-                  onPress={() => {
-                    if (pickerType === 'region') {
-                      applyRegion(option);
-                    } else {
-                      handleProvinceSelect(option);
-                    }
-                  }}
-                  style={[styles.pickerItem, dynamicStyles.pickerItem]}
+                  key={item}
+                  style={[styles.pickerItem, { borderBottomColor: themeColors.border }]}
+                  onPress={() => (pickerType === 'region' ? applyRegion(item) : handleProvinceSelect(item))}
                 >
-                  <Text style={[styles.pickerText, dynamicStyles.pickerText]}>{option}</Text>
+                  <Text style={[styles.pickerText, { color: themeColors.text }, (pickerType === 'region' ? selectedRegion : selectedProvince) === item && { color: colors.primary, fontWeight: '700' }]}>
+                    {item}
+                  </Text>
+                  {(pickerType === 'region' ? selectedRegion : selectedProvince) === item && (
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
+                  )}
                 </TouchableOpacity>
               ))}
             </ScrollView>
-            <Button variant="ghost" onPress={() => setPickerModalVisible(false)}>Close</Button>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
-  header: {
-    paddingTop: spacing.md,
-    paddingBottom: spacing.md,
-    backgroundColor: colors.background,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  hero: {
-    marginHorizontal: spacing.md,
-    padding: spacing.md,
-    borderRadius: borderRadius.xl,
-    backgroundColor: colors.backgroundCard,
-    borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.2),
-    marginBottom: spacing.md,
-    overflow: 'hidden',
-  },
-  heroTitle: { ...typography.h4, color: colors.text, fontWeight: '700' },
-  heroSubtitle: { ...typography.small, color: colors.textSecondary, marginTop: spacing.xs, lineHeight: 18 },
-  heroStats: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md },
-  statCard: {
+  container: {
     flex: 1,
-    padding: spacing.sm,
-    borderRadius: borderRadius.md,
-    borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.15),
-    backgroundColor: withOpacity(colors.primary, 0.06),
   },
-  statValue: { ...typography.h4, color: colors.primary },
-  statLabel: { ...typography.tiny, color: colors.textTertiary, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },
-  searchWrap: { paddingHorizontal: spacing.md, marginBottom: spacing.sm },
-  filterSummaryRow: {
-    marginBottom: spacing.sm,
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    marginBottom: spacing.lg,
   },
-  resultsPill: {
-    flexDirection: 'row',
+  greeting: {
+    ...typography.smallBold,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  title: {
+    ...typography.h1,
+  },
+  profileBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
     alignItems: 'center',
-    gap: spacing.xs,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.backgroundSecondary,
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-  },
-  resultsPillText: { ...typography.smallBold, color: colors.textSecondary },
-  resetBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-  },
-  resetBtnText: { ...typography.smallBold, color: colors.textSecondary },
-  regionsContainer: { paddingHorizontal: spacing.md, gap: spacing.sm },
-  regionTab: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.backgroundCard,
-  },
-  regionTabActive: { backgroundColor: colors.primary, borderColor: colors.primaryDark },
-  regionTabText: { ...typography.smallBold, color: colors.textTertiary },
-  regionTabTextActive: { color: colors.textInverse, fontWeight: '700' },
-  filterRow: {
-    paddingHorizontal: spacing.md,
-    marginTop: spacing.sm,
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  filterBtn: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.backgroundSecondary,
-  },
-  filterBtnDisabled: { opacity: 0.55 },
-  filterLabel: { ...typography.tiny, color: colors.textTertiary },
-  filterValue: { ...typography.smallBold, color: colors.text, marginTop: 2 },
-  quickJoinWrap: {
-    paddingHorizontal: spacing.md,
-    marginTop: spacing.sm,
-    gap: spacing.xs,
-  },
-  quickJoinTitle: { ...typography.smallBold, color: colors.text },
-  quickJoinHint: { ...typography.caption, color: colors.textSecondary },
-  quickJoinRow: { gap: spacing.sm, paddingVertical: 2 },
-  quickJoinChip: {
-    borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.3),
-    backgroundColor: withOpacity(colors.primary, 0.08),
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-  },
-  quickJoinChipText: { ...typography.smallBold, color: colors.primary },
-  joinActionWrap: {
-    paddingHorizontal: spacing.md,
-    marginTop: spacing.sm,
-  },
-  activeFilterRow: {
-    paddingHorizontal: spacing.md,
-    marginTop: spacing.sm,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  activeFilterChip: {
-    borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.35),
-    backgroundColor: withOpacity(colors.primary, 0.1),
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  activeFilterText: { ...typography.smallBold, color: colors.primary },
-  listContent: { padding: spacing.md, paddingBottom: 100 },
-  roomCard: {
-    marginBottom: spacing.sm,
-    backgroundColor: colors.backgroundCard,
-    borderColor: colors.border,
-    borderWidth: 1,
-  },
-  roomContent: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  roomIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 14,
-    backgroundColor: withOpacity(colors.primary, 0.1),
     justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.2),
+    ...shadows.sm,
   },
-  roomInfo: { flex: 1 },
-  roomName: { ...typography.captionBold, color: colors.text, fontSize: 16 },
-  roomLocation: { ...typography.small, color: colors.primary, marginTop: 2 },
-  roomDescription: { ...typography.small, color: colors.textTertiary, marginTop: 3 },
-  emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 100 },
-  emptyTitle: { ...typography.h3, color: colors.text, marginTop: spacing.lg },
+  searchSection: {
+    paddingHorizontal: spacing.lg,
+    gap: spacing.md,
+    marginBottom: spacing.lg,
+  },
+  searchInput: {
+    borderRadius: borderRadius.xl,
+    ...shadows.sm,
+  },
+  filterRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingBottom: 2,
+  },
+  filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 8,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+  },
+  filterChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: withOpacity(colors.primary, 0.1),
+  },
+  filterChipDisabled: {
+    opacity: 0.5,
+  },
+  filterChipText: {
+    ...typography.smallBold,
+  },
+  clearBtn: {
+    paddingHorizontal: spacing.sm,
+    justifyContent: 'center',
+  },
+  listContent: {
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xxl,
+  },
+  emptyContainer: {
+    paddingTop: spacing.xxxxl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+  },
+  emptyTitle: {
+    ...typography.h3,
+    marginTop: spacing.md,
+  },
   emptySubtitle: {
     ...typography.body,
-    color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing.xs,
-    paddingHorizontal: spacing.xxl,
-  },
-  emptyGhostButton: { marginTop: spacing.lg },
-  createButton: { marginTop: spacing.xl, paddingHorizontal: spacing.xl },
-  fab: {
-    position: 'absolute',
-    bottom: spacing.xl,
-    right: spacing.xl,
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...shadows.lg,
-    elevation: 10,
-    zIndex: 20,
+    opacity: 0.7,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(2, 44, 34, 0.85)',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: colors.backgroundSecondary,
-    borderTopLeftRadius: borderRadius.xxl,
-    borderTopRightRadius: borderRadius.xxl,
-    padding: spacing.xl,
-    maxHeight: '88%',
+    borderTopLeftRadius: borderRadius.xxxl,
+    borderTopRightRadius: borderRadius.xxxl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xxxl,
+    maxHeight: '80%',
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: spacing.xl,
     marginBottom: spacing.lg,
   },
-  modalTitle: { ...typography.h2, color: colors.text, flex: 1, marginRight: spacing.md },
-  modalBody: { marginBottom: spacing.md },
-  label: {
-    ...typography.smallBold,
-    color: colors.textSecondary,
-    marginBottom: spacing.sm,
-    marginTop: spacing.md,
+  modalTitle: {
+    ...typography.h3,
   },
-  regionOption: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
+  modalList: {
+    paddingHorizontal: spacing.xl,
   },
-  regionOptionActive: { backgroundColor: colors.primary, borderColor: colors.accent },
-  regionOptionText: { ...typography.caption, color: colors.textSecondary },
-  regionOptionTextActive: { color: colors.text, fontWeight: '700' },
-  provinceGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md },
-  provinceOption: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
-  },
-  provinceOptionActive: { backgroundColor: colors.backgroundTertiary, borderColor: colors.accent },
-  provinceOptionText: { ...typography.caption, color: colors.textSecondary },
-  provinceOptionTextActive: { color: colors.text, fontWeight: '700' },
-  modalCreateBtn: { marginTop: spacing.lg, marginBottom: spacing.xl },
-  pickerOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.lg,
-  },
-  pickerContent: {
-    width: '100%',
-    maxHeight: '70%',
-    backgroundColor: colors.backgroundSecondary,
-    borderRadius: borderRadius.xxl,
-    padding: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  pickerTitle: { ...typography.h4, color: colors.text, marginBottom: spacing.md },
-  pickerList: { marginBottom: spacing.md },
   pickerItem: {
-    paddingVertical: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
-  pickerText: { ...typography.body, color: colors.text },
+  pickerText: {
+    ...typography.body,
+  },
 });

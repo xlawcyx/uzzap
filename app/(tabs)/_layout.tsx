@@ -18,49 +18,58 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: themeColors.textTertiary,
         tabBarStyle: {
-          backgroundColor: isDark ? '#111111' : themeColors.backgroundSecondary,
-          borderTopColor: isDark ? colors.border : themeColors.border,
-          borderTopWidth: 1,
-          height: Platform.OS === 'ios' ? 62 + insets.bottom : 62,
-          paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 10) : 10,
-          paddingTop: compactLayout ? 8 : 10,
-          paddingHorizontal: compactLayout ? 4 : 8,
-          ...shadows.sm,
+          backgroundColor: isDark ? 'rgba(10, 10, 11, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+          borderTopColor: 'transparent',
+          height: Platform.OS === 'ios' ? 64 + insets.bottom : 70,
+          paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 12) : 12,
+          paddingTop: 12,
+          paddingHorizontal: 16,
+          position: 'absolute',
+          borderTopLeftRadius: borderRadius.xxxl,
+          borderTopRightRadius: borderRadius.xxxl,
+          ...shadows.lg,
         },
         tabBarItemStyle: {
-          borderRadius: borderRadius.lg,
-          marginHorizontal: 2,
+          borderRadius: borderRadius.xl,
+          height: 48,
         },
         tabBarLabelStyle: {
-          ...typography.smallBold,
-          fontSize: 11,
-          marginTop: -2,
+          ...typography.tinyBold,
+          textTransform: 'uppercase',
+          letterSpacing: 0.5,
+          marginTop: 2,
         },
-        tabBarActiveBackgroundColor: withOpacity(colors.primary, isDark ? 0.14 : 0.08),
+        tabBarActiveBackgroundColor: withOpacity(colors.primary, 0.1),
         tabBarHideOnKeyboard: true,
         sceneStyle: {
           backgroundColor: themeColors.background,
+          paddingBottom: Platform.OS === 'ios' ? 64 + insets.bottom : 70,
         },
         headerStyle: {
-          backgroundColor: isDark ? '#111111' : themeColors.backgroundSecondary,
-          borderBottomColor: isDark ? colors.border : themeColors.border,
+          backgroundColor: themeColors.background,
+          borderBottomColor: themeColors.border,
           borderBottomWidth: 1,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         headerTitleStyle: {
-          ...typography.h4,
+          ...typography.h3,
           color: themeColors.text,
         },
         headerTintColor: themeColors.text,
+        headerTitleAlign: 'left',
+        headerShadowVisible: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Chatrooms',
+          title: 'Explore',
+          headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? 'chatbubbles' : 'chatbubbles-outline'}
-              size={size}
+              name={focused ? 'compass' : 'compass-outline'}
+              size={26}
               color={color}
             />
           ),
@@ -73,7 +82,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'people' : 'people-outline'}
-              size={size}
+              size={26}
               color={color}
             />
           ),
@@ -85,8 +94,8 @@ export default function TabLayout() {
           title: 'Profile',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? 'person-circle' : 'person-circle-outline'}
-              size={size}
+              name={focused ? 'person' : 'person-outline'}
+              size={26}
               color={color}
             />
           ),

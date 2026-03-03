@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, Platform, Activity
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, typography, borderRadius, shadows } from '@/constants/design';
 import { withOpacity } from '@/constants/design';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useAppTheme } from '@/hooks/useAppTheme';
 
 interface ChatInputProps {
   message: string;
@@ -26,59 +28,68 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   onCancelReply,
 }) => {
   const canSend = message.trim().length > 0 && !sending;
+  const { isDark } = useAppTheme();
 
   return (
-    <View style={[styles.outerContainer, { backgroundColor: themeColors.backgroundSecondary, borderTopColor: themeColors.border }]}>
+    <View style={[styles.outerContainer, { backgroundColor: themeColors.background }]}>
       {replyTo && (
-        <View style={[styles.replyBar, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
-          <View style={styles.replyBarAccent} />
+        <Animated.View entering={FadeInUp} style={[styles.replyBar, { backgroundColor: themeColors.backgroundElevated, borderColor: themeColors.border }]}>
+          <View style={[styles.replyBarAccent, { backgroundColor: colors.primary }]} />
           <View style={{ flex: 1 }}>
-            <Text style={styles.replyLabel}>
-              Replying to {replyTo.sender?.display_name || 'message'}
+            <Text style={[styles.replyLabel, { color: colors.primary }]}>
+              Replying to {replyTo.sender?.display_name || 'Buddy'}
             </Text>
             <Text style={[styles.replySnippet, { color: themeColors.textSecondary }]} numberOfLines={1}>
               {replyTo.content}
             </Text>
           </View>
           <TouchableOpacity onPress={onCancelReply} style={styles.replyClose}>
-            <Ionicons name="close" size={16} color={themeColors.textTertiary} />
+            <Ionicons name="close-circle" size={20} color={themeColors.textTertiary} />
           </TouchableOpacity>
-        </View>
+        </Animated.View>
       )}
 
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={[styles.actionBtn, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border }]}
-          onPress={onImagePicker}
-          disabled={sending}
-        >
-          <Ionicons name="image-outline" size={22} color={sending ? themeColors.textDisabled : themeColors.textSecondary} />
-        </TouchableOpacity>
+      <View style={[styles.container, { paddingBottom: Platform.OS === 'ios' ? spacing.lg : spacing.md }]}>
+        <View style={[
+          styles.inputWrapper, 
+          { 
+            backgroundColor: themeColors.backgroundElevated, 
+            borderColor: themeColors.border 
+          }
+        ]}>
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={onImagePicker}
+            disabled={sending}
+          >
+            <Ionicons name="add-circle" size={28} color={colors.primary} />
+          </TouchableOpacity>
 
-        <TextInput
-          style={[styles.input, { backgroundColor: themeColors.backgroundTertiary, borderColor: themeColors.border, color: themeColors.text }]}
-          placeholder="Type a message..."
-          placeholderTextColor={themeColors.textTertiary}
-          value={message}
-          onChangeText={onMessageChange}
-          multiline
-          maxLength={2000}
-        />
+          <TextInput
+            style={[styles.input, { color: themeColors.text }]}
+            placeholder="Type message..."
+            placeholderTextColor={themeColors.textTertiary}
+            value={message}
+            onChangeText={onMessageChange}
+            multiline
+            maxLength={2000}
+          />
 
-        <TouchableOpacity
-          style={[
-            styles.sendButton,
-            canSend ? styles.sendButtonActive : { backgroundColor: themeColors.backgroundElevated, borderColor: themeColors.border, borderWidth: 1 }
-          ]}
-          onPress={onSend}
-          disabled={!canSend}
-        >
-          {sending ? (
-            <ActivityIndicator size="small" color={colors.white} />
-          ) : (
-            <Ionicons name="send" size={18} color={canSend ? colors.white : themeColors.textTertiary} />
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              canSend ? { backgroundColor: colors.primary } : { backgroundColor: themeColors.backgroundTertiary }
+            ]}
+            onPress={onSend}
+            disabled={!canSend}
+          >
+            {sending ? (
+              <ActivityIndicator size="small" color={colors.white} />
+            ) : (
+              <Ionicons name="arrow-up" size={22} color={canSend ? colors.white : themeColors.textDisabled} />
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -86,34 +97,34 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    borderTopWidth: 1,
     paddingTop: spacing.xs,
   },
   container: {
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.xs,
+  },
+  inputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    gap: spacing.xs,
+    borderRadius: 28,
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+    ...shadows.md,
   },
   actionBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    marginBottom: 2,
   },
   input: {
     flex: 1,
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
     paddingVertical: Platform.OS === 'ios' ? 10 : 8,
     ...typography.body,
     maxHeight: 120,
-    fontSize: 15,
+    fontSize: 16,
   },
   sendButton: {
     width: 40,
@@ -121,35 +132,30 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 2,
-  },
-  sendButtonActive: {
-    backgroundColor: colors.primary,
-    ...shadows.glow,
+    ...shadows.sm,
   },
   replyBar: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    marginHorizontal: spacing.sm,
-    marginBottom: spacing.xs,
+    marginHorizontal: spacing.md,
+    marginBottom: spacing.sm,
     borderWidth: 1,
-    borderRadius: borderRadius.md,
+    borderRadius: borderRadius.lg,
     overflow: 'hidden',
+    ...shadows.sm,
   },
   replyBarAccent: {
-    width: 3,
+    width: 4,
     alignSelf: 'stretch',
-    backgroundColor: colors.primary,
   },
   replyLabel: {
     ...typography.tinyBold,
-    color: colors.primary,
-    letterSpacing: 0.2,
+    marginTop: 4,
   },
   replySnippet: {
     ...typography.caption,
-    marginTop: 2,
+    marginBottom: 4,
   },
   replyClose: {
     padding: spacing.sm,

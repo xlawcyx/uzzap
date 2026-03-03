@@ -11,7 +11,7 @@ import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { colors: themeColors } = useAppTheme();
+  const { colors: themeColors, isDark } = useAppTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,11 +39,14 @@ export default function LoginScreen() {
 
   return (
     <Container style={styles.container} backgroundColor={themeColors.background}>
-      {/* Background gradient */}
       <LinearGradient
-        colors={[themeColors.gradientStart, themeColors.background, themeColors.background]}
+        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
         style={StyleSheet.absoluteFillObject}
       />
+      
+      {/* Decorative Blur Circles */}
+      <View style={[styles.blurCircle, { top: -100, left: -100, backgroundColor: withOpacity(colors.primary, 0.2) }]} />
+      <View style={[styles.blurCircle, { bottom: -50, right: -100, backgroundColor: withOpacity(colors.accent, 0.15) }]} />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -51,10 +54,10 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
       >
         {/* Hero */}
-        <Animated.View entering={FadeIn.duration(700)} style={styles.hero}>
+        <Animated.View entering={FadeIn.duration(800)} style={styles.hero}>
           <View style={styles.logoWrap}>
             <LinearGradient
-              colors={[withOpacity(colors.primary, 0.3), withOpacity(colors.primary, 0.1)]}
+              colors={gradients.primarySubtle}
               style={styles.logoCircle}
             >
               <Image
@@ -65,19 +68,26 @@ export default function LoginScreen() {
             </LinearGradient>
           </View>
 
-          <View style={styles.heroBadge}>
-            <View style={styles.heroBadgeDot} />
-            <Text style={styles.heroBadgeText}>Uzzap Community</Text>
-          </View>
+          <Animated.View entering={FadeInUp.delay(200)} style={[styles.heroBadge, { backgroundColor: withOpacity(colors.primary, 0.1), borderColor: withOpacity(colors.primary, 0.2) }]}>
+            <View style={[styles.heroBadgeDot, { backgroundColor: colors.primary }]} />
+            <Text style={[styles.heroBadgeText, { color: colors.primary }]}>Uzzap Community</Text>
+          </Animated.View>
 
           <Text style={[styles.title, { color: themeColors.text }]}>Welcome Back</Text>
-          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Sign in and continue chatting with your buddies</Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Connect with your buddies in real-time</Text>
         </Animated.View>
 
         {/* Form */}
-        <Animated.View entering={FadeInUp.delay(250).duration(600)} style={[styles.formCard, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
-          <Text style={[styles.formTitle, { color: themeColors.textTertiary }]}>Sign in to your account</Text>
-
+        <Animated.View 
+          entering={FadeInUp.delay(400).duration(800)} 
+          style={[
+            styles.formCard, 
+            { 
+              backgroundColor: isDark ? 'rgba(28, 28, 30, 0.6)' : 'rgba(255, 255, 255, 0.8)', 
+              borderColor: themeColors.border 
+            }
+          ]}
+        >
           <View style={styles.fieldGroup}>
             <Input
               label="Email Address"
@@ -88,7 +98,7 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoComplete="email"
               clearable
-              leftIcon={<Ionicons name="mail-outline" size={18} color={themeColors.textTertiary} />}
+              leftIcon={<Ionicons name="mail-outline" size={20} color={colors.primary} />}
             />
 
             <View style={styles.fieldSpacer} />
@@ -99,7 +109,7 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              leftIcon={<Ionicons name="lock-closed-outline" size={18} color={themeColors.textTertiary} />}
+              leftIcon={<Ionicons name="lock-closed-outline" size={20} color={colors.primary} />}
             />
           </View>
 
@@ -107,7 +117,7 @@ export default function LoginScreen() {
             style={styles.forgotPassword}
             onPress={() => router.push('/(auth)/forgot-password' as any)}
           >
-            <Text style={[styles.forgotPasswordText, { color: themeColors.optionActiveText }]}>Forgot password?</Text>
+            <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>Forgot password?</Text>
           </TouchableOpacity>
 
           <Button
@@ -127,20 +137,20 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.footer}>
-            <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Don&apos;t have an account? </Text>
+            <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Don't have an account? </Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/register' as any)}>
-              <Text style={[styles.registerLink, { color: themeColors.optionActiveText }]}>Create one →</Text>
+              <Text style={[styles.registerLink, { color: colors.primary }]}>Create one</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(450).duration(600)}>
+        <Animated.View entering={FadeInUp.delay(600).duration(800)}>
           <TouchableOpacity
             style={styles.onboardingLink}
             onPress={() => router.push('/(auth)/welcome' as any)}
           >
-            <Ionicons name="sparkles-outline" size={14} color={themeColors.textTertiary} />
-            <Text style={[styles.onboardingLinkText, { color: themeColors.textTertiary }]}>New here? Take the guided setup</Text>
+            <Ionicons name="sparkles-outline" size={16} color={themeColors.textTertiary} />
+            <Text style={[styles.onboardingLinkText, { color: themeColors.textTertiary }]}>New here? Guided setup</Text>
           </TouchableOpacity>
         </Animated.View>
       </ScrollView>
@@ -149,102 +159,102 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
+  blurCircle: {
+    position: 'absolute',
+    width: 350,
+    height: 350,
+    borderRadius: 175,
+    opacity: 0.4,
+  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xxl,
+    paddingTop: spacing.xxxl,
     paddingBottom: spacing.xl,
-    gap: spacing.lg,
+    gap: spacing.xl,
   },
 
-  // Hero
-  hero: { alignItems: 'center', paddingTop: spacing.md },
-  logoWrap: { marginBottom: spacing.md },
+  hero: { alignItems: 'center', marginBottom: spacing.md },
+  logoWrap: { marginBottom: spacing.lg },
   logoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: withOpacity(colors.primary, 0.4),
     ...shadows.glow,
   },
-  logoImage: { width: 60, height: 60 },
+  logoImage: { width: 70, height: 70 },
   heroBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: withOpacity(colors.primary, 0.1),
+    gap: 8,
     borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 5,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: 6,
     borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.25),
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   heroBadgeDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.primary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
-  heroBadgeText: { ...typography.smallBold, color: colors.primary },
-  title: { ...typography.h2, textAlign: 'center' },
+  heroBadgeText: { ...typography.smallBold, letterSpacing: 0.5 },
+  title: { ...typography.h1, textAlign: 'center' },
   subtitle: {
-    ...typography.caption,
+    ...typography.body,
     marginTop: spacing.xs,
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 22,
   },
 
-  // Form
   formCard: {
     borderWidth: 1,
-    borderRadius: borderRadius.xxl,
-    padding: spacing.lg,
-    ...shadows.md,
-  },
-  formTitle: {
-    ...typography.captionBold,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    marginBottom: spacing.lg,
+    borderRadius: borderRadius.xxxl,
+    padding: spacing.xl,
+    ...shadows.lg,
   },
   fieldGroup: { gap: 0 },
-  fieldSpacer: { height: spacing.md },
+  fieldSpacer: { height: spacing.lg },
   forgotPassword: {
     alignSelf: 'flex-end',
-    marginTop: spacing.sm,
-    marginBottom: spacing.lg,
+    marginTop: spacing.md,
+    marginBottom: spacing.xl,
     paddingVertical: 4,
-    paddingHorizontal: spacing.xs,
   },
   forgotPasswordText: { ...typography.captionBold },
-  loginButton: { width: '100%' },
+  loginButton: { 
+    width: '100%',
+    height: 56,
+    borderRadius: borderRadius.xl,
+  },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: spacing.lg,
+    marginVertical: spacing.xl,
   },
   dividerLine: { flex: 1, height: 1 },
   dividerText: {
     ...typography.tinyBold,
-    marginHorizontal: spacing.md,
-    letterSpacing: 1,
+    marginHorizontal: spacing.lg,
+    letterSpacing: 2,
   },
-  footer: { flexDirection: 'row', justifyContent: 'center' },
+  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
   footerText: { ...typography.body },
   registerLink: { ...typography.bodyBold },
 
-  // Onboarding link
   onboardingLink: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs,
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.md,
   },
   onboardingLinkText: { ...typography.captionBold },
 });

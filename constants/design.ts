@@ -10,23 +10,23 @@
 // ============================================================================
 
 export const colors = {
-  // Brand — Emerald signature
-  primary: '#3ECF8E',
-  primaryDark: '#2BAE73',
-  primaryLight: '#5DDBA3',
-  primaryTint: '#0F3D2D',
-  primaryGlow: 'rgba(62, 207, 142, 0.25)',
+  // Brand — Electric Violet signature
+  primary: '#8B5CF6',
+  primaryDark: '#7C3AED',
+  primaryLight: '#A78BFA',
+  primaryTint: '#2E1065',
+  primaryGlow: 'rgba(139, 92, 246, 0.35)',
 
-  secondary: '#1C1C1C',
-  secondaryDark: '#111111',
-  secondaryLight: '#2A2A2A',
-  secondaryTint: '#3A3A3A',
+  secondary: '#1C1C1E',
+  secondaryDark: '#121214',
+  secondaryLight: '#2C2C2E',
+  secondaryTint: '#3A3A3C',
 
-  // Accent — slightly different from primary for highlights
-  accent: '#3ECF8E',
-  accentDark: '#2BAE73',
-  accentLight: '#5DDBA3',
-  accentTint: '#0F3D2D',
+  // Accent — Cyan for contrast
+  accent: '#06B6D4',
+  accentDark: '#0891B2',
+  accentLight: '#22D3EE',
+  accentTint: '#083344',
 
   // Subtle gold accent for special elements
   gold: '#F59E0B',
@@ -34,63 +34,63 @@ export const colors = {
   goldLight: '#FBBF24',
   goldTint: 'rgba(245, 158, 11, 0.12)',
 
-  // Background hierarchy — deep dark
-  background: '#0E0E0E',
-  backgroundSecondary: '#161616',
-  backgroundTertiary: '#1F1F1F',
-  backgroundElevated: '#252525',
-  backgroundCard: '#1A1A1A',
+  // Background hierarchy — OLED dark
+  background: '#000000',
+  backgroundSecondary: '#0A0A0B',
+  backgroundTertiary: '#121214',
+  backgroundElevated: '#1C1C1E',
+  backgroundCard: '#0F0F11',
 
   // Dark mode aliases
-  backgroundDark: '#0E0E0E',
-  backgroundDarkSecondary: '#161616',
-  backgroundDarkTertiary: '#1F1F1F',
+  backgroundDark: '#000000',
+  backgroundDarkSecondary: '#0A0A0B',
+  backgroundDarkTertiary: '#121214',
 
   // Text — crisp on dark
-  text: '#F0F0F0',
-  textSecondary: '#909090',
-  textTertiary: '#585858',
-  textDisabled: '#3A3A3A',
-  textInverse: '#0E0E0E',
+  text: '#FFFFFF',
+  textSecondary: '#A1A1AA',
+  textTertiary: '#71717A',
+  textDisabled: '#3F3F46',
+  textInverse: '#000000',
 
-  textDark: '#F0F0F0',
-  textDarkSecondary: '#909090',
-  textDarkTertiary: '#585858',
+  textDark: '#FFFFFF',
+  textDarkSecondary: '#A1A1AA',
+  textDarkTertiary: '#71717A',
 
   // Semantic
-  success: '#3ECF8E',
-  successDark: '#2BAE73',
-  successLight: '#5DDBA3',
-  successTint: '#0F3D2D',
+  success: '#10B981',
+  successDark: '#059669',
+  successLight: '#34D399',
+  successTint: '#064E3B',
 
-  error: '#F04F5B',
+  error: '#EF4444',
   errorDark: '#DC2626',
   errorLight: '#F87171',
-  errorTint: 'rgba(240, 79, 91, 0.12)',
+  errorTint: 'rgba(239, 68, 68, 0.12)',
 
   warning: '#F59E0B',
   warningDark: '#D97706',
   warningLight: '#FBBF24',
   warningTint: 'rgba(245, 158, 11, 0.12)',
 
-  info: '#60A5FA',
-  infoDark: '#3B82F6',
-  infoLight: '#93C5FD',
-  infoTint: 'rgba(96, 165, 250, 0.12)',
+  info: '#3B82F6',
+  infoDark: '#2563EB',
+  infoLight: '#60A5FA',
+  infoTint: 'rgba(59, 130, 246, 0.12)',
 
-  // Borders — subtle
-  border: '#282828',
-  borderMuted: '#202020',
-  borderDark: '#333333',
-  borderAccent: 'rgba(62, 207, 142, 0.3)',
+  // Borders — subtle glass style
+  border: '#1F1F23',
+  borderMuted: '#16161A',
+  borderDark: '#2D2D33',
+  borderAccent: 'rgba(139, 92, 246, 0.3)',
 
-  borderDarkMode: '#282828',
-  borderDarkModeLight: '#333333',
+  borderDarkMode: '#1F1F23',
+  borderDarkModeLight: '#2D2D33',
 
   // Overlay
-  overlay: 'rgba(0, 0, 0, 0.65)',
-  overlayLight: 'rgba(0, 0, 0, 0.4)',
-  overlayDark: 'rgba(0, 0, 0, 0.8)',
+  overlay: 'rgba(0, 0, 0, 0.8)',
+  overlayLight: 'rgba(0, 0, 0, 0.5)',
+  overlayDark: 'rgba(0, 0, 0, 0.9)',
 
   // Utility
   white: '#FFFFFF',
@@ -98,10 +98,10 @@ export const colors = {
   transparent: 'transparent',
 
   // Chat bubble specific
-  bubbleMe: '#1D5C3E',
-  bubbleMeText: '#F0F0F0',
-  bubbleThem: '#202020',
-  bubbleThemText: '#F0F0F0',
+  bubbleMe: '#8B5CF6',
+  bubbleMeText: '#FFFFFF',
+  bubbleThem: '#1C1C1E',
+  bubbleThemText: '#F4F4F5',
 };
 
 // ============================================================================
@@ -126,33 +126,33 @@ export const spacing = {
 
 export const typography = {
   display: {
-    fontSize: 40,
-    fontWeight: '700' as const,
-    lineHeight: 48,
-    letterSpacing: -0.5,
+    fontSize: 42,
+    fontWeight: '800' as const,
+    lineHeight: 52,
+    letterSpacing: -1,
   },
   h1: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: '700' as const,
-    lineHeight: 40,
-    letterSpacing: -0.4,
+    lineHeight: 42,
+    letterSpacing: -0.6,
   },
   h2: {
-    fontSize: 24,
-    fontWeight: '600' as const,
-    lineHeight: 32,
-    letterSpacing: -0.3,
+    fontSize: 26,
+    fontWeight: '700' as const,
+    lineHeight: 34,
+    letterSpacing: -0.4,
   },
   h3: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600' as const,
-    lineHeight: 28,
+    lineHeight: 30,
     letterSpacing: -0.2,
   },
   h4: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '600' as const,
-    lineHeight: 24,
+    lineHeight: 26,
     letterSpacing: -0.1,
   },
   body: {
@@ -220,51 +220,51 @@ export const shadows = {
   xs: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 1,
   },
   sm: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.18,
-    shadowRadius: 5,
-    elevation: 2,
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 3,
   },
   md: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 6,
   },
   lg: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 14,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.5,
+    shadowRadius: 18,
+    elevation: 10,
   },
   xl: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.35,
-    shadowRadius: 20,
-    elevation: 12,
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.6,
+    shadowRadius: 25,
+    elevation: 16,
   },
   xxl: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.4,
-    shadowRadius: 28,
-    elevation: 20,
+    shadowOffset: { width: 0, height: 30 },
+    shadowOpacity: 0.7,
+    shadowRadius: 35,
+    elevation: 24,
   },
   glow: {
-    shadowColor: '#3ECF8E',
+    shadowColor: '#8B5CF6',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowOpacity: 0.6,
+    shadowRadius: 15,
+    elevation: 10,
   },
 };
 
@@ -274,13 +274,13 @@ export const shadows = {
 
 export const borderRadius = {
   none: 0,
-  xs: 2,
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
-  xxl: 24,
-  xxxl: 32,
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  xxl: 28,
+  xxxl: 36,
   full: 9999,
 };
 
@@ -299,12 +299,12 @@ export const touchTargets = {
 // ============================================================================
 
 export const opacity = {
-  disabled: 0.38,
-  pressed: 0.72,
-  hover: 0.85,
-  overlay: 0.5,
-  overlayLight: 0.3,
-  overlayDark: 0.7,
+  disabled: 0.3,
+  pressed: 0.6,
+  hover: 0.8,
+  overlay: 0.7,
+  overlayLight: 0.4,
+  overlayDark: 0.85,
 };
 
 // ============================================================================
@@ -354,11 +354,11 @@ export const avatarSize = {
 // ============================================================================
 
 export const gradients = {
-  primary: ['#3ECF8E', '#2BAE73'] as const,
-  primarySubtle: ['rgba(62, 207, 142, 0.18)', 'rgba(62, 207, 142, 0.04)'] as const,
-  darkHero: ['#1A2E23', '#0E0E0E'] as const,
-  card: ['#1A1A1A', '#141414'] as const,
-  profileHeader: ['#1A2E23', '#121E19', '#0E0E0E'] as const,
+  primary: ['#8B5CF6', '#6D28D9'] as const,
+  primarySubtle: ['rgba(139, 92, 246, 0.25)', 'rgba(139, 92, 246, 0.05)'] as const,
+  darkHero: ['#1E1B4B', '#000000'] as const,
+  card: ['#0F0F11', '#050505'] as const,
+  profileHeader: ['#2E1065', '#1E1B4B', '#000000'] as const,
 };
 
 // ============================================================================

@@ -13,7 +13,7 @@ const REGIONS = ['Metro Manila', 'Luzon', 'Visayas', 'Mindanao', 'International'
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const { colors: themeColors } = useAppTheme();
+  const { colors: themeColors, isDark } = useAppTheme();
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -76,122 +76,137 @@ export default function RegisterScreen() {
 
   return (
     <Container style={styles.container} backgroundColor={themeColors.background}>
+      <LinearGradient
+        colors={isDark ? ['#1E1B4B', '#000000'] : ['#F5F3FF', '#FFFFFF']}
+        style={StyleSheet.absoluteFillObject}
+      />
+      
+      {/* Decorative Blur Circles */}
+      <View style={[styles.blurCircle, { top: -150, right: -100, backgroundColor: withOpacity(colors.primary, 0.2) }]} />
+      <View style={[styles.blurCircle, { bottom: 200, left: -150, backgroundColor: withOpacity(colors.accent, 0.1) }]} />
+
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Animated.View entering={FadeInUp.delay(150).duration(700)} style={styles.headerWrap}>
-          <TouchableOpacity style={[styles.backButton, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]} onPress={() => router.back()}>
+        <Animated.View entering={FadeInUp.delay(100).duration(800)} style={styles.headerWrap}>
+          <TouchableOpacity 
+            style={[styles.backButton, { backgroundColor: withOpacity(themeColors.backgroundSecondary, 0.5), borderColor: themeColors.border }]} 
+            onPress={() => router.back()}
+          >
             <Ionicons name="arrow-back" size={22} color={themeColors.text} />
-            <Text style={[styles.backText, { color: themeColors.text }]}>Back</Text>
           </TouchableOpacity>
 
-          <LinearGradient
-            colors={[withOpacity(colors.primary, 0.2), withOpacity(themeColors.backgroundSecondary, 0.95)]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.heroCard}
-          >
-            <View style={styles.logoCircle}>
-              <Image source={require('@/assets/images/icon.png')} style={styles.logoImage} resizeMode="contain" />
-            </View>
-            <Text style={[styles.title, { color: themeColors.text }]}>Create your account</Text>
-            <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Set up your profile and join the Uzzap community.</Text>
-          </LinearGradient>
+          <Text style={[styles.title, { color: themeColors.text }]}>Create Account</Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>Join our community and meet new people</Text>
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(300).duration(700)} style={[styles.formCard, { backgroundColor: themeColors.backgroundSecondary, borderColor: themeColors.border }]}>
-          <Input
-            label="Username"
-            placeholder="Unique username"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-            leftIcon={<Ionicons name="at-outline" size={20} color={themeColors.textSecondary} />}
-          />
-          <View style={styles.fieldSpacer} />
+        <Animated.View 
+          entering={FadeInUp.delay(300).duration(800)} 
+          style={[
+            styles.formCard, 
+            { 
+              backgroundColor: isDark ? 'rgba(28, 28, 30, 0.6)' : 'rgba(255, 255, 255, 0.8)', 
+              borderColor: themeColors.border 
+            }
+          ]}
+        >
+          <View style={styles.formSection}>
+            <Text style={[styles.sectionTitle, { color: colors.primary }]}>Public Profile</Text>
+            <Input
+              label="Username"
+              placeholder="unique_username"
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+              leftIcon={<Ionicons name="at-outline" size={20} color={colors.primary} />}
+            />
+            <View style={styles.fieldSpacer} />
+            <Input
+              label="Display Name"
+              placeholder="Your full name"
+              value={displayName}
+              onChangeText={setDisplayName}
+              leftIcon={<Ionicons name="person-outline" size={20} color={colors.primary} />}
+            />
+          </View>
 
-          <Input
-            label="Display Name"
-            placeholder="What should we call you?"
-            value={displayName}
-            onChangeText={setDisplayName}
-            leftIcon={<Ionicons name="person-outline" size={20} color={themeColors.textSecondary} />}
-          />
-          <View style={styles.fieldSpacer} />
+          <View style={styles.divider} />
 
-          <Input
-            label="Email Address"
-            placeholder="name@example.com"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            clearable
-            leftIcon={<Ionicons name="mail-outline" size={20} color={themeColors.textSecondary} />}
-          />
-          <View style={styles.fieldSpacer} />
+          <View style={styles.formSection}>
+            <Text style={[styles.sectionTitle, { color: colors.primary }]}>Account Security</Text>
+            <Input
+              label="Email Address"
+              placeholder="name@example.com"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              leftIcon={<Ionicons name="mail-outline" size={20} color={colors.primary} />}
+            />
+            <View style={styles.fieldSpacer} />
+            <Input
+              label="Password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              leftIcon={<Ionicons name="lock-closed-outline" size={20} color={colors.primary} />}
+            />
+            <View style={styles.fieldSpacer} />
+            <Input
+              label="Confirm Password"
+              placeholder="Repeat your password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              leftIcon={<Ionicons name="shield-checkmark-outline" size={20} color={colors.primary} />}
+            />
+          </View>
 
-          <Input
-            label="Password"
-            placeholder="At least 8 characters"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            leftIcon={<Ionicons name="lock-closed-outline" size={20} color={themeColors.textSecondary} />}
-          />
-          <View style={styles.fieldSpacer} />
+          <View style={styles.divider} />
 
-          <Input
-            label="Confirm Password"
-            placeholder="Re-enter your password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            leftIcon={<Ionicons name="shield-checkmark-outline" size={20} color={themeColors.textSecondary} />}
-          />
-
-          <Text style={[styles.label, { color: themeColors.textSecondary }]}>Region</Text>
-          <View style={styles.regionsGrid}>
-            {REGIONS.map((r) => (
-              <TouchableOpacity
-                key={r}
-                onPress={() => setRegion(r)}
-                style={[
-                  styles.regionOption,
-                  { borderColor: themeColors.border, backgroundColor: themeColors.background },
-                  region === r && {
-                    backgroundColor: themeColors.optionActiveBackground,
-                    borderColor: themeColors.optionActiveText,
-                  },
-                ]}
-              >
-                <Text
+          <View style={styles.formSection}>
+            <Text style={[styles.sectionTitle, { color: colors.primary }]}>Location</Text>
+            <View style={styles.regionsGrid}>
+              {REGIONS.map((r) => (
+                <TouchableOpacity
+                  key={r}
+                  onPress={() => setRegion(r)}
                   style={[
-                    styles.regionOptionText,
-                    { color: themeColors.textSecondary },
-                    region === r && { color: themeColors.optionActiveText, fontWeight: '700' },
+                    styles.regionOption,
+                    { borderColor: themeColors.border, backgroundColor: themeColors.backgroundTertiary },
+                    region === r && {
+                      backgroundColor: withOpacity(colors.primary, 0.15),
+                      borderColor: colors.primary,
+                    },
                   ]}
                 >
-                  {r}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={[
+                      styles.regionOptionText,
+                      { color: themeColors.textSecondary },
+                      region === r && { color: colors.primary, fontWeight: '700' },
+                    ]}
+                  >
+                    {r}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
-          <Text style={[styles.helperText, { color: themeColors.textTertiary }]}>By creating an account, you agree to keep conversations respectful and authentic.</Text>
-
-          <TouchableOpacity style={styles.guidedSetupLink} onPress={() => router.push('/(auth)/welcome' as any)}>
-            <Text style={[styles.guidedSetupText, { color: themeColors.textTertiary }]}>Prefer step-by-step setup? Open onboarding wizard</Text>
-          </TouchableOpacity>
-
-          <View style={styles.registerButton}>
-            <Button variant="primary" size="lg" onPress={handleRegister} loading={loading}>
-              Create Account
-            </Button>
-          </View>
+          <Button 
+            variant="primary" 
+            size="lg" 
+            onPress={handleRegister} 
+            loading={loading}
+            style={styles.registerButton}
+          >
+            Create Account
+          </Button>
 
           <View style={styles.footer}>
             <Text style={[styles.footerText, { color: themeColors.textSecondary }]}>Already have an account? </Text>
             <TouchableOpacity onPress={() => router.push('/(auth)/login' as any)}>
-              <Text style={[styles.loginLink, { color: themeColors.optionActiveText }]}>Sign in</Text>
+              <Text style={[styles.loginLink, { color: colors.primary }]}>Sign in</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -201,113 +216,96 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
+  blurCircle: {
+    position: 'absolute',
+    width: 400,
+    height: 400,
+    borderRadius: 200,
+    opacity: 0.3,
+  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.xl,
-    gap: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.xxl,
   },
   headerWrap: {
-    gap: spacing.md,
+    marginBottom: spacing.xl,
+    alignItems: 'center',
   },
   backButton: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
-    gap: spacing.xs,
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderWidth: 1,
-  },
-  backText: {
-    ...typography.captionBold,
-  },
-  heroCard: {
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    borderColor: withOpacity(colors.primary, 0.2),
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-  },
-  logoCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: withOpacity(colors.primary, 0.25),
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  logoImage: {
-    width: 58,
-    height: 58,
+    borderWidth: 1,
   },
   title: {
-    ...typography.h2,
+    ...typography.h1,
+    textAlign: 'center',
+    marginTop: spacing.xl,
   },
   subtitle: {
     ...typography.body,
+    textAlign: 'center',
     marginTop: spacing.xs,
+    opacity: 0.8,
   },
   formCard: {
-    width: '100%',
+    borderRadius: borderRadius.xxxl,
+    padding: spacing.xl,
     borderWidth: 1,
-    borderRadius: borderRadius.xl,
-    padding: spacing.lg,
-    ...shadows.sm,
+    ...shadows.lg,
+  },
+  formSection: {
+    gap: spacing.md,
+  },
+  sectionTitle: {
+    ...typography.captionBold,
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    marginBottom: spacing.xs,
   },
   fieldSpacer: {
-    height: spacing.md,
+    height: spacing.xs,
   },
-  label: {
-    ...typography.smallBold,
-    marginBottom: spacing.sm,
-    marginTop: spacing.md,
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: spacing.xl,
+    opacity: 0.5,
   },
   regionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
-    marginBottom: spacing.md,
   },
   regionOption: {
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    paddingVertical: spacing.sm,
     borderRadius: borderRadius.lg,
     borderWidth: 1,
-  },
-  regionOptionActive: {
-    backgroundColor: withOpacity(colors.primary, 0.2),
-    borderColor: colors.accent,
   },
   regionOptionText: {
     ...typography.caption,
   },
-  regionOptionTextActive: {
-    fontWeight: '700',
-  },
-  helperText: {
-    ...typography.small,
-    marginBottom: spacing.md,
-  },
-  guidedSetupLink: {
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  guidedSetupText: {
-    ...typography.captionBold,
-  },
   registerButton: {
-    width: '100%',
-    borderRadius: borderRadius.lg,
+    marginTop: spacing.xxl,
+    height: 56,
+    borderRadius: borderRadius.xl,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: spacing.lg,
+    alignItems: 'center',
+    marginTop: spacing.xl,
   },
   footerText: {
     ...typography.body,
