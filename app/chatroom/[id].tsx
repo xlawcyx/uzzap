@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert } from 'react-native';
+import {
+  StyleSheet, View, Text, TextInput, TouchableOpacity,
+  KeyboardAvoidingView, Platform, ActivityIndicator, Alert,
+} from 'react-native';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
-import { colors, spacing, typography, borderRadius, shadows } from '@/constants/design';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors, spacing, typography, borderRadius, shadows, gradients, withOpacity } from '@/constants/design';
 import { Container, Avatar } from '@/components/ui';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
@@ -42,30 +46,19 @@ export default function ChatroomScreen() {
       setRoomLoading(true);
       try {
         await markRoomVisited(id as string);
-
-        // Try to join — if it fails, still try to load the room
-        // (user might already be a member but RLS filtered the upsert result)
         const joined = await chatroomService.joinChatroom(id as string, profile.id);
-        if (!joined) {
-          console.warn('joinChatroom returned null — attempting to load room anyway');
-        }
+        if (!joined) console.warn('joinChatroom returned null — attempting to load room anyway');
 
         const roomData = await chatroomService.getChatroomById(id as string);
         if (!roomData) throw new Error('Unable to load chatroom details.');
-
         if (!isMounted) return;
         setRoom(roomData);
 
         await fetchMessages(id as string);
 
         const savedDraft = await AsyncStorage.getItem(draftKey);
-        if (isMounted && savedDraft) {
-          setMessage(savedDraft);
-        }
-
-        if (isMounted) {
-          unsubscribe = subscribeToChatroom(id as string);
-        }
+        if (isMounted && savedDraft) setMessage(savedDraft);
+        if (isMounted) unsubscribe = subscribeToChatroom(id as string);
       } catch (error) {
         console.error('Error setting up chatroom:', error);
         if (isMounted) {
@@ -73,9 +66,7 @@ export default function ChatroomScreen() {
           router.back();
         }
       } finally {
-        if (isMounted) {
-          setRoomLoading(false);
-        }
+        if (isMounted) setRoomLoading(false);
       }
     };
 
@@ -84,9 +75,7 @@ export default function ChatroomScreen() {
 
     return () => {
       isMounted = false;
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       setTyping(id as string, profile.id, false);
       unsubscribe?.();
       setActiveChatroom(null);
@@ -98,21 +87,17 @@ export default function ChatroomScreen() {
     AsyncStorage.setItem(draftKey, message);
   }, [draftKey, id, message]);
 
-
   useEffect(() => {
     if (!profile || !messages.length) return;
     messages
       .filter((m) => m.sender_id !== profile.id)
       .slice(-20)
-      .forEach((m) => {
-        messageService.markAsRead(m.id, profile.id);
-      });
+      .forEach((m) => messageService.markAsRead(m.id, profile.id));
   }, [messages, profile]);
 
   const handleTyping = (nextValue: string) => {
     setMessage(nextValue);
     if (!profile || !id) return;
-
     setTyping(id as string, profile.id, !!nextValue.trim());
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     typingTimeoutRef.current = setTimeout(() => {
@@ -133,10 +118,7 @@ export default function ChatroomScreen() {
         reply_to: replyTo?.id || null,
       });
 
-      if (!sentMessage) {
-        throw new Error('Unable to send message right now.');
-      }
-
+      if (!sentMessage) throw new Error('Unable to send message right now.');
       setMessage('');
       setReplyTo(null);
       await AsyncStorage.removeItem(draftKey);
@@ -197,7 +179,6 @@ export default function ChatroomScreen() {
 
   const handleLeaveRoom = async () => {
     if (!profile || !id) return;
-
     Alert.alert('Leave Chatroom', 'Are you sure you want to leave this chatroom?', [
       { text: 'Cancel', style: 'cancel' },
       {
@@ -215,6 +196,9 @@ export default function ChatroomScreen() {
     ]);
   };
 
+  const formatTime = (iso: string) =>
+    new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   const renderMessage = ({ item }: { item: any }) => {
     const isMe = item.sender_id === profile?.id;
 
@@ -222,22 +206,40 @@ export default function ChatroomScreen() {
       <TouchableOpacity
         style={[styles.messageWrapper, isMe ? styles.myMessageWrapper : styles.theirMessageWrapper]}
         onLongPress={() => isMe && handleDeleteMessage(item.id)}
-        onPress={() => setReplyTo(item)}
+        onPress={() => !item.is_deleted && setReplyTo(item)}
         delayLongPress={300}
+        activeOpacity={0.85}
       >
-        {!isMe && <Avatar source={item.sender?.avatar_url ? { uri: item.sender.avatar_url } : undefined} size="sm" style={styles.messageAvatar} />}
+        {!isMe && (
+          <Avatar
+            source={item.sender?.avatar_url ? { uri: item.sender.avatar_url } : undefined}
+            size="sm"
+            style={styles.messageAvatar}
+          />
+        )}
         <View style={[styles.messageBubble, isMe ? styles.myMessageBubble : styles.theirMessageBubble]}>
-          {!isMe && <Text style={styles.messageUser}>{item.sender?.display_name || 'Anonymous'}</Text>}
-          {item.is_deleted ? (
-            <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>Message deleted</Text>
-          ) : item.type === 'image' && item.metadata?.imageUrl ? (
-            <Image source={{ uri: item.metadata.imageUrl }} style={styles.messageImage} contentFit="cover" />
-          ) : (
-            <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>{item.content}</Text>
+          {!isMe && (
+            <Text style={styles.messageUser}>{item.sender?.display_name || 'Anonymous'}</Text>
           )}
-          <Text style={styles.messageTime}>
-            {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </Text>
+          {item.is_deleted ? (
+            <Text style={styles.deletedText}>This message was deleted</Text>
+          ) : item.type === 'image' && item.metadata?.imageUrl ? (
+            <View>
+              <Image source={{ uri: item.metadata.imageUrl }} style={styles.messageImage} contentFit="cover" />
+              <Text style={[styles.messageTime, isMe ? styles.myMessageTime : styles.theirMessageTime]}>
+                {formatTime(item.created_at)}
+              </Text>
+            </View>
+          ) : (
+            <>
+              <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>
+                {item.content}
+              </Text>
+              <Text style={[styles.messageTime, isMe ? styles.myMessageTime : styles.theirMessageTime]}>
+                {formatTime(item.created_at)}
+              </Text>
+            </>
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -247,27 +249,44 @@ export default function ChatroomScreen() {
     return (
       <Container style={styles.centered}>
         <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loadingText}>Loading chatroom...</Text>
       </Container>
     );
   }
+
+  const canSend = message.trim().length > 0 && !sending;
 
   return (
     <Container style={styles.container}>
       <Stack.Screen
         options={{
           headerShown: true,
-          title: room?.name || 'Chatroom',
+          title: '',
           headerBackTitle: 'Back',
           headerStyle: { backgroundColor: colors.backgroundSecondary },
-          headerTitleStyle: { ...typography.h4, color: colors.text },
+          headerTintColor: colors.text,
           headerRight: () => (
-            <View style={{ flexDirection: 'row', gap: spacing.md }}>
-              <TouchableOpacity onPress={() => Alert.alert('Room Info', room?.description)}>
-                <Ionicons name="information-circle-outline" size={24} color={colors.text} />
+            <View style={{ flexDirection: 'row', gap: spacing.md, alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={() => Alert.alert(room?.name, room?.description || 'No description')}
+                style={styles.headerIconBtn}
+              >
+                <Ionicons name="information-circle-outline" size={22} color={colors.textSecondary} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleLeaveRoom}>
-                <Ionicons name="log-out-outline" size={24} color={colors.error} />
+              <TouchableOpacity onPress={handleLeaveRoom} style={styles.headerIconBtn}>
+                <Ionicons name="log-out-outline" size={22} color={colors.error} />
               </TouchableOpacity>
+            </View>
+          ),
+          headerTitle: () => (
+            <View style={styles.headerTitleContainer}>
+              <View style={styles.headerRoomIcon}>
+                <Ionicons name="location" size={14} color={colors.primary} />
+              </View>
+              <View>
+                <Text style={styles.headerRoomName} numberOfLines={1}>{room?.name}</Text>
+                <Text style={styles.headerRoomMeta}>{room?.member_count || 0} members • #{roomRegion}</Text>
+              </View>
             </View>
           ),
         }}
@@ -283,43 +302,76 @@ export default function ChatroomScreen() {
           renderItem={renderMessage}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.messageList}
-          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: false })}
           ListHeaderComponent={
             <View style={styles.detailCard}>
-              <Text style={styles.detailTitle}>{room?.name}</Text>
-              <Text style={styles.roomMetaText}>#{roomRegion} • {room?.member_count || 0} members • {messages.length} messages</Text>
-              <Text style={styles.detailAbout}>{room?.description || 'No room description yet.'}</Text>
-              <Text style={styles.detailAdmins}>Language: {room?.language || 'Not specified'}</Text>
+              <LinearGradient
+                colors={['rgba(62,207,142,0.12)', 'rgba(62,207,142,0.02)']}
+                style={styles.detailCardGradient}
+              >
+                <View style={styles.detailRoomIcon}>
+                  <Ionicons name="location-sharp" size={18} color={colors.primary} />
+                </View>
+                <Text style={styles.detailTitle}>{room?.name}</Text>
+                <Text style={styles.roomMetaText}>
+                  #{roomRegion} • {room?.member_count || 0} members
+                </Text>
+                {room?.description ? (
+                  <Text style={styles.detailAbout}>{room.description}</Text>
+                ) : null}
+                {room?.language ? (
+                  <View style={styles.langBadge}>
+                    <Ionicons name="globe-outline" size={12} color={colors.primary} />
+                    <Text style={styles.langBadgeText}>{room.language}</Text>
+                  </View>
+                ) : null}
+              </LinearGradient>
             </View>
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="chatbubble-ellipses-outline" size={44} color={colors.border} />
+              <View style={styles.emptyIconWrap}>
+                <Ionicons name="chatbubble-ellipses-outline" size={36} color={colors.primary} />
+              </View>
               <Text style={styles.emptyStateTitle}>No messages yet</Text>
-              <Text style={styles.emptyStateSub}>Start the conversation and break the ice 👋</Text>
+              <Text style={styles.emptyStateSub}>Be the first to break the ice! 👋</Text>
             </View>
           }
         />
 
         {activeTyping.length > 0 && (
-          <Text style={styles.typingText}>Someone is typing...</Text>
+          <View style={styles.typingWrap}>
+            <View style={styles.typingDots}>
+              <View style={[styles.typingDot, styles.typingDot1]} />
+              <View style={[styles.typingDot, styles.typingDot2]} />
+              <View style={[styles.typingDot, styles.typingDot3]} />
+            </View>
+            <Text style={styles.typingText}>Someone is typing...</Text>
+          </View>
         )}
 
         {replyTo && (
           <View style={styles.replyBar}>
+            <View style={styles.replyBarAccent} />
             <View style={{ flex: 1 }}>
-              <Text style={styles.replyLabel}>Replying to {replyTo.sender?.display_name || 'message'}</Text>
+              <Text style={styles.replyLabel}>
+                Replying to {replyTo.sender?.display_name || 'message'}
+              </Text>
               <Text style={styles.replySnippet} numberOfLines={1}>{replyTo.content}</Text>
             </View>
-            <TouchableOpacity onPress={() => setReplyTo(null)}>
-              <Ionicons name="close" size={20} color={colors.textSecondary} />
+            <TouchableOpacity onPress={() => setReplyTo(null)} style={styles.replyClose}>
+              <Ionicons name="close" size={16} color={colors.textTertiary} />
             </TouchableOpacity>
           </View>
         )}
 
         <View style={styles.inputContainer}>
-          <TouchableOpacity style={styles.mediaBtn} onPress={handleSendImage}>
-            <Ionicons name="image-outline" size={22} color={colors.textSecondary} />
+          <TouchableOpacity
+            style={styles.mediaBtn}
+            onPress={handleSendImage}
+            disabled={sending}
+          >
+            <Ionicons name="image-outline" size={22} color={sending ? colors.textDisabled : colors.textSecondary} />
           </TouchableOpacity>
           <TextInput
             style={styles.input}
@@ -328,13 +380,17 @@ export default function ChatroomScreen() {
             value={message}
             onChangeText={handleTyping}
             multiline
+            maxLength={2000}
           />
           <TouchableOpacity
-            style={[styles.sendButton, !message.trim() && styles.sendButtonDisabled]}
+            style={[styles.sendButton, canSend ? styles.sendButtonActive : styles.sendButtonDisabled]}
             onPress={handleSendMessage}
-            disabled={!message.trim() || sending}
+            disabled={!canSend}
           >
-            {sending ? <ActivityIndicator size="small" color={colors.white} /> : <Ionicons name="send" size={20} color={colors.white} />}
+            {sending
+              ? <ActivityIndicator size="small" color={colors.white} />
+              : <Ionicons name="send" size={18} color={canSend ? colors.white : colors.textTertiary} />
+            }
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -344,57 +400,173 @@ export default function ChatroomScreen() {
 
 const styles = StyleSheet.create({
   container: { backgroundColor: colors.background },
-  centered: { justifyContent: 'center', alignItems: 'center' },
-  messageList: { padding: spacing.md, paddingBottom: spacing.xl },
+  centered: { justifyContent: 'center', alignItems: 'center', gap: spacing.sm },
+  loadingText: { ...typography.caption, color: colors.textSecondary },
 
-  detailCard: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.lg,
-    backgroundColor: colors.backgroundSecondary,
-    padding: spacing.md,
-    marginBottom: spacing.md,
+  // Header
+  headerTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
-  detailTitle: { ...typography.h4, color: colors.text },
-  detailAbout: { ...typography.caption, color: colors.textSecondary, marginTop: spacing.xs },
-  detailRule: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  detailAdmins: { ...typography.smallBold, color: colors.accent, marginTop: spacing.sm },
+  headerRoomIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: withOpacity(colors.primary, 0.15),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerRoomName: {
+    ...typography.smallBold,
+    color: colors.text,
+    fontSize: 15,
+    maxWidth: 180,
+  },
+  headerRoomMeta: {
+    ...typography.tiny,
+    color: colors.textTertiary,
+    marginTop: 1,
+  },
+  headerIconBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.backgroundTertiary,
+  },
+
+  // Message list
+  messageList: { padding: spacing.md, paddingBottom: spacing.lg },
+
+  // Detail card at top of chat
+  detailCard: {
+    marginBottom: spacing.lg,
+    borderRadius: borderRadius.xl,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.borderAccent,
+  },
+  detailCardGradient: {
+    padding: spacing.md,
+    alignItems: 'center',
+  },
+  detailRoomIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: withOpacity(colors.primary, 0.15),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  detailTitle: { ...typography.h4, color: colors.text, textAlign: 'center' },
   roomMetaText: {
     ...typography.small,
     color: colors.textTertiary,
-    marginBottom: spacing.md,
+    marginTop: 4,
     textAlign: 'center',
   },
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.xxxl,
-    gap: spacing.xs,
-  },
-  emptyStateTitle: {
-    ...typography.h4,
-    color: colors.text,
-    marginTop: spacing.sm,
-  },
-  emptyStateSub: {
+  detailAbout: {
     ...typography.caption,
     color: colors.textSecondary,
+    marginTop: spacing.sm,
     textAlign: 'center',
+    lineHeight: 20,
   },
-  messageWrapper: { flexDirection: 'row', marginBottom: spacing.md, maxWidth: '80%' },
+  langBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: spacing.sm,
+    backgroundColor: withOpacity(colors.primary, 0.1),
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.25),
+  },
+  langBadgeText: { ...typography.tinyBold, color: colors.primary, textTransform: 'uppercase' },
+
+  // Empty state
+  emptyState: {
+    alignItems: 'center',
+    marginTop: spacing.xxxl,
+    gap: spacing.sm,
+  },
+  emptyIconWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: withOpacity(colors.primary, 0.1),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyStateTitle: { ...typography.h4, color: colors.text, marginTop: spacing.sm },
+  emptyStateSub: { ...typography.caption, color: colors.textSecondary, textAlign: 'center' },
+
+  // Message bubbles
+  messageWrapper: { flexDirection: 'row', marginBottom: spacing.sm, maxWidth: '82%' },
   myMessageWrapper: { alignSelf: 'flex-end', flexDirection: 'row-reverse' },
   theirMessageWrapper: { alignSelf: 'flex-start' },
-  messageAvatar: { marginRight: spacing.xs, marginTop: spacing.xs },
-  messageBubble: { padding: spacing.sm, paddingHorizontal: spacing.md, borderRadius: borderRadius.lg, ...shadows.xs },
-  myMessageBubble: { backgroundColor: colors.primary, borderBottomRightRadius: 2 },
-  theirMessageBubble: { backgroundColor: colors.backgroundTertiary, borderBottomLeftRadius: 2, marginLeft: spacing.xs },
-  messageUser: { ...typography.tiny, color: colors.accent, fontWeight: '700', marginBottom: 2 },
-  messageText: { ...typography.body, fontSize: 15 },
-  myMessageText: { color: colors.white },
-  theirMessageText: { color: colors.text },
-  messageTime: { ...typography.tiny, color: 'rgba(255,255,255,0.5)', alignSelf: 'flex-end', marginTop: 2 },
-  messageImage: { width: 180, height: 180, borderRadius: borderRadius.md },
-  typingText: { ...typography.caption, color: colors.textSecondary, marginLeft: spacing.md, marginBottom: spacing.xs },
+  messageAvatar: { marginRight: spacing.xs, alignSelf: 'flex-end', marginBottom: 2 },
+  messageBubble: {
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: borderRadius.xl,
+    maxWidth: '100%',
+  },
+  myMessageBubble: {
+    backgroundColor: colors.bubbleMe,
+    borderBottomRightRadius: 4,
+    borderWidth: 1,
+    borderColor: withOpacity(colors.primary, 0.2),
+  },
+  theirMessageBubble: {
+    backgroundColor: colors.bubbleThem,
+    borderBottomLeftRadius: 4,
+    marginLeft: spacing.xs,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  messageUser: {
+    ...typography.tinyBold,
+    color: colors.primary,
+    marginBottom: 3,
+    letterSpacing: 0.2,
+  },
+  messageText: { ...typography.body, fontSize: 15, lineHeight: 22 },
+  myMessageText: { color: colors.bubbleMeText },
+  theirMessageText: { color: colors.bubbleThemText },
+  messageTime: { ...typography.tiny, marginTop: 4, alignSelf: 'flex-end' },
+  myMessageTime: { color: withOpacity(colors.primary, 0.6) },
+  theirMessageTime: { color: colors.textTertiary },
+  deletedText: { ...typography.caption, color: colors.textTertiary, fontStyle: 'italic' },
+  messageImage: { width: 200, height: 200, borderRadius: borderRadius.lg },
+
+  // Typing indicator
+  typingWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.xs,
+  },
+  typingDots: { flexDirection: 'row', gap: 4 },
+  typingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.primary,
+    opacity: 0.7,
+  },
+  typingDot1: {},
+  typingDot2: { opacity: 0.5 },
+  typingDot3: { opacity: 0.3 },
+  typingText: { ...typography.small, color: colors.textTertiary },
+
+  // Reply bar
   replyBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -405,44 +577,69 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: borderRadius.md,
+    overflow: 'hidden',
+  },
+  replyBarAccent: {
+    width: 3,
+    alignSelf: 'stretch',
+    backgroundColor: colors.primary,
+  },
+  replyLabel: { ...typography.tinyBold, color: colors.primary, letterSpacing: 0.2 },
+  replySnippet: { ...typography.caption, color: colors.textSecondary, marginTop: 2 },
+  replyClose: {
     padding: spacing.sm,
   },
-  replyLabel: { ...typography.tiny, color: colors.accent },
-  replySnippet: { ...typography.caption, color: colors.textSecondary },
+
+  // Input bar
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: spacing.sm,
+    alignItems: 'flex-end',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
     backgroundColor: colors.backgroundSecondary,
     borderTopWidth: 1,
     borderTopColor: colors.border,
     gap: spacing.xs,
   },
   mediaBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.backgroundTertiary,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 2,
   },
   input: {
     flex: 1,
-    backgroundColor: colors.background,
-    borderRadius: borderRadius.full,
+    backgroundColor: colors.backgroundTertiary,
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
     paddingHorizontal: spacing.md,
     paddingVertical: Platform.OS === 'ios' ? 10 : 8,
     color: colors.text,
     ...typography.body,
-    maxHeight: 100,
+    maxHeight: 120,
+    fontSize: 15,
   },
   sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.primary,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: spacing.sm,
+    marginBottom: 2,
   },
-  sendButtonDisabled: { opacity: 0.5 },
+  sendButtonActive: {
+    backgroundColor: colors.primary,
+    ...shadows.glow,
+  },
+  sendButtonDisabled: {
+    backgroundColor: colors.backgroundElevated,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
 });

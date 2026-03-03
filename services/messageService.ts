@@ -66,23 +66,38 @@ export const messageService = {
   },
 
   async uploadMessageImage(uri: string, userId: string): Promise<string | null> {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const filename = `${userId}-${Date.now()}.jpg`;
-    
-    const { data, error } = await supabase.storage
-      .from('message-images')
-      .upload(filename, blob);
+    try {
+      // Detect extension from URI
+      const uriParts = uri.split('.');
+      const rawExt = uriParts[uriParts.length - 1]?.toLowerCase().split('?')[0] || 'jpg';
+      const ext = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(rawExt) ? rawExt : 'jpg';
+      const mimeMap: Record<string, string> = {
+        jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+        gif: 'image/gif', webp: 'image/webp', heic: 'image/heic', heif: 'image/heif',
+      };
+      const contentType = mimeMap[ext] || 'image/jpeg';
+      const filename = `${userId}-${Date.now()}.${ext === 'heic' || ext === 'heif' ? 'jpg' : ext}`;
 
-    if (error) {
-      console.error('Error uploading image:', error);
+      const response = await fetch(uri);
+      const arrayBuffer = await response.arrayBuffer();
+
+      const { data, error } = await supabase.storage
+        .from('message-images')
+        .upload(filename, arrayBuffer, { contentType, upsert: false });
+
+      if (error) {
+        console.error('Error uploading message image:', error);
+        return null;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('message-images')
+        .getPublicUrl(data.path);
+
+      return publicUrl;
+    } catch (err) {
+      console.error('Unexpected error uploading message image:', err);
       return null;
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('message-images')
-      .getPublicUrl(data.path);
-
-    return publicUrl;
   }
 };

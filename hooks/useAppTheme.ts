@@ -3,11 +3,14 @@ import { colors } from '@/constants/design';
 import { useAppSettingsStore } from '@/store/useAppSettingsStore';
 
 const lightColors = {
-  background: '#F8FAFC',
+  background: '#F5F7FA',
   backgroundSecondary: '#FFFFFF',
+  backgroundTertiary: '#EAEEF3',
   text: '#0F172A',
   textSecondary: '#475569',
-  border: '#CBD5E1',
+  textTertiary: '#94A3B8',
+  border: '#DDE2EA',
+  borderAccent: 'rgba(62, 207, 142, 0.4)',
   optionActiveBackground: '#D1FAE5',
   optionActiveText: '#065F46',
 };
@@ -15,11 +18,14 @@ const lightColors = {
 const darkColors = {
   background: colors.background,
   backgroundSecondary: colors.backgroundSecondary,
+  backgroundTertiary: colors.backgroundTertiary,
   text: colors.text,
   textSecondary: colors.textSecondary,
+  textTertiary: colors.textTertiary,
   border: colors.border,
-  optionActiveBackground: '#0F3D2D',
-  optionActiveText: colors.text,
+  borderAccent: colors.borderAccent,
+  optionActiveBackground: colors.primaryTint,
+  optionActiveText: colors.primary,
 };
 
 export function useAppTheme() {

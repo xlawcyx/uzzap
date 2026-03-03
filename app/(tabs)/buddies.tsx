@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import { colors, spacing, typography, borderRadius } from '@/constants/design';
+import { colors, spacing, typography, borderRadius, withOpacity, shadows } from '@/constants/design';
 import { Card, Avatar, Container, Button, Input } from '@/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -267,18 +267,19 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     padding: spacing.md,
     borderRadius: borderRadius.xl,
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: colors.backgroundCard,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: withOpacity(colors.primary, 0.2),
   },
   summaryTitle: {
     ...typography.h4,
     color: colors.text,
   },
   summarySubtitle: {
-    ...typography.caption,
+    ...typography.small,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+    lineHeight: 18,
   },
   summaryStats: {
     flexDirection: 'row',
@@ -287,25 +288,27 @@ const styles = StyleSheet.create({
   },
   summaryStatItem: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: withOpacity(colors.primary, 0.06),
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: withOpacity(colors.primary, 0.15),
     borderRadius: borderRadius.md,
     padding: spacing.sm,
   },
   summaryStatValue: {
     ...typography.h4,
-    color: colors.accent,
+    color: colors.primary,
   },
   summaryStatLabel: {
-    ...typography.small,
-    color: colors.textSecondary,
+    ...typography.tiny,
+    color: colors.textTertiary,
     marginTop: 2,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   tabs: {
     flexDirection: 'row',
-    padding: spacing.sm,
-    paddingTop: 0,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
     gap: spacing.xs,
   },
   tab: {
@@ -313,9 +316,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: spacing.sm,
     borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.backgroundCard,
   },
   activeTab: {
     backgroundColor: colors.primary,
+    borderColor: colors.primaryDark,
   },
   tabText: {
     ...typography.smallBold,
@@ -323,7 +330,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   activeTabText: {
-    color: colors.text,
+    color: colors.textInverse,
   },
   searchBar: {
     padding: spacing.md,
@@ -333,8 +340,10 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   buddyCard: {
-    marginBottom: spacing.md,
-    backgroundColor: colors.backgroundSecondary,
+    marginBottom: spacing.sm,
+    backgroundColor: colors.backgroundCard,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   buddyContent: {
     flexDirection: 'row',
@@ -364,11 +373,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.backgroundTertiary,
+    backgroundColor: withOpacity(colors.primary, 0.1),
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: withOpacity(colors.primary, 0.2),
   },
   addBtn: {
     paddingHorizontal: spacing.md,

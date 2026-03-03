@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, typography, borderRadius, withOpacity } from '@/constants/design';
+import { colors, typography, borderRadius, withOpacity, shadows } from '@/constants/design';
 import { Platform, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '@/hooks/useAppTheme';
@@ -15,36 +15,39 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: isDark ? colors.accent : colors.primary,
-        tabBarInactiveTintColor: themeColors.textSecondary,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: themeColors.textTertiary,
         tabBarStyle: {
-          backgroundColor: themeColors.backgroundSecondary,
-          borderTopColor: withOpacity(colors.primary, isDark ? 0.2 : 0.12),
+          backgroundColor: isDark ? '#111111' : themeColors.backgroundSecondary,
+          borderTopColor: isDark ? colors.border : themeColors.border,
           borderTopWidth: 1,
-          height: Platform.OS === 'ios' ? 64 + insets.bottom : 64,
-          paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 12) : 12,
+          height: Platform.OS === 'ios' ? 62 + insets.bottom : 62,
+          paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 10) : 10,
           paddingTop: compactLayout ? 8 : 10,
-          paddingHorizontal: compactLayout ? 6 : 10,
+          paddingHorizontal: compactLayout ? 4 : 8,
+          ...shadows.sm,
         },
         tabBarItemStyle: {
           borderRadius: borderRadius.lg,
+          marginHorizontal: 2,
         },
         tabBarLabelStyle: {
           ...typography.smallBold,
-          marginTop: compactLayout ? -1 : -2,
+          fontSize: 11,
+          marginTop: -2,
         },
-        tabBarActiveBackgroundColor: withOpacity(colors.primary, isDark ? 0.16 : 0.1),
+        tabBarActiveBackgroundColor: withOpacity(colors.primary, isDark ? 0.14 : 0.08),
         tabBarHideOnKeyboard: true,
         sceneStyle: {
           backgroundColor: themeColors.background,
         },
         headerStyle: {
-          backgroundColor: themeColors.background,
-          borderBottomColor: themeColors.border,
+          backgroundColor: isDark ? '#111111' : themeColors.backgroundSecondary,
+          borderBottomColor: isDark ? colors.border : themeColors.border,
           borderBottomWidth: 1,
         },
         headerTitleStyle: {
-          ...typography.h3,
+          ...typography.h4,
           color: themeColors.text,
         },
         headerTintColor: themeColors.text,
@@ -54,8 +57,12 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Chatrooms',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'chatbubbles' : 'chatbubbles-outline'}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -63,8 +70,12 @@ export default function TabLayout() {
         name="buddies"
         options={{
           title: 'Buddies',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'people' : 'people-outline'}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -72,8 +83,12 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'person-circle' : 'person-circle-outline'}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />

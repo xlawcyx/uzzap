@@ -1,20 +1,8 @@
 /**
- * Design Token System
+ * Design Token System — Uzzap
  *
- * Centralized design tokens for consistent theming across the app.
- * Based on competitive analysis of v0 and Rork mobile patterns.
- *
- * USAGE:
- * import { colors, spacing, typography, shadows, borderRadius } from '@/constants/design';
- *
- * const styles = StyleSheet.create({
- *   container: {
- *     backgroundColor: colors.background,
- *     padding: spacing.md,
- *     borderRadius: borderRadius.lg,
- *     ...shadows.md,
- *   },
- * });
+ * Deep dark theme with Emerald Green as the signature brand color.
+ * Inspired by Supabase's palette but crafted for mobile chat experience.
  */
 
 // ============================================================================
@@ -22,92 +10,104 @@
 // ============================================================================
 
 export const colors = {
-  // Brand Colors (Supabase Theme)
-  primary: '#3ECF8E',      // Emerald
-  primaryDark: '#059669',
-  primaryLight: '#6EE7B7',
-  primaryTint: '#D1FAE5',
+  // Brand — Emerald signature
+  primary: '#3ECF8E',
+  primaryDark: '#2BAE73',
+  primaryLight: '#5DDBA3',
+  primaryTint: '#0F3D2D',
+  primaryGlow: 'rgba(62, 207, 142, 0.25)',
 
-  secondary: '#1C1C1C',    // Slate Dark
+  secondary: '#1C1C1C',
   secondaryDark: '#111111',
-  secondaryLight: '#2E2E2E',
-  secondaryTint: '#3E3E3E',
+  secondaryLight: '#2A2A2A',
+  secondaryTint: '#3A3A3A',
 
+  // Accent — slightly different from primary for highlights
   accent: '#3ECF8E',
-  accentDark: '#059669',
-  accentLight: '#6EE7B7',
-  accentTint: '#D1FAE5',
+  accentDark: '#2BAE73',
+  accentLight: '#5DDBA3',
+  accentTint: '#0F3D2D',
 
-  // Background Colors
-  background: '#1C1C1C',
-  backgroundSecondary: '#111111',
-  backgroundTertiary: '#2E2E2E',
+  // Subtle gold accent for special elements
+  gold: '#F59E0B',
+  goldDark: '#D97706',
+  goldLight: '#FBBF24',
+  goldTint: 'rgba(245, 158, 11, 0.12)',
 
-  // Dark Mode Backgrounds (Same as Supabase is inherently dark)
-  backgroundDark: '#1C1C1C',
-  backgroundDarkSecondary: '#111111',
-  backgroundDarkTertiary: '#2E2E2E',
+  // Background hierarchy — deep dark
+  background: '#0E0E0E',
+  backgroundSecondary: '#161616',
+  backgroundTertiary: '#1F1F1F',
+  backgroundElevated: '#252525',
+  backgroundCard: '#1A1A1A',
 
-  // Text Colors
-  text: '#FFFFFF',
-  textSecondary: '#A1A1AA',
-  textTertiary: '#71717A',
-  textDisabled: '#3F3F46',
+  // Dark mode aliases
+  backgroundDark: '#0E0E0E',
+  backgroundDarkSecondary: '#161616',
+  backgroundDarkTertiary: '#1F1F1F',
 
-  // Dark Mode Text
-  textDark: '#FFFFFF',
-  textDarkSecondary: '#A1A1AA',
-  textDarkTertiary: '#71717A',
+  // Text — crisp on dark
+  text: '#F0F0F0',
+  textSecondary: '#909090',
+  textTertiary: '#585858',
+  textDisabled: '#3A3A3A',
+  textInverse: '#0E0E0E',
 
-  // Semantic Colors
+  textDark: '#F0F0F0',
+  textDarkSecondary: '#909090',
+  textDarkTertiary: '#585858',
+
+  // Semantic
   success: '#3ECF8E',
-  successDark: '#059669',
-  successLight: '#6EE7B7',
-  successTint: '#D1FAE5',
+  successDark: '#2BAE73',
+  successLight: '#5DDBA3',
+  successTint: '#0F3D2D',
 
-  error: '#EF4444',
+  error: '#F04F5B',
   errorDark: '#DC2626',
   errorLight: '#F87171',
-  errorTint: '#FEE2E2',
+  errorTint: 'rgba(240, 79, 91, 0.12)',
 
   warning: '#F59E0B',
   warningDark: '#D97706',
   warningLight: '#FBBF24',
-  warningTint: '#FEF3C7',
+  warningTint: 'rgba(245, 158, 11, 0.12)',
 
-  info: '#3ECF8E',
-  infoDark: '#059669',
-  infoLight: '#6EE7B7',
-  infoTint: '#D1FAE5',
+  info: '#60A5FA',
+  infoDark: '#3B82F6',
+  infoLight: '#93C5FD',
+  infoTint: 'rgba(96, 165, 250, 0.12)',
 
-  // Border Colors
-  border: '#2E2E2E',
-  borderDark: '#3E3E3E',
-  borderLight: '#111111',
+  // Borders — subtle
+  border: '#282828',
+  borderMuted: '#202020',
+  borderDark: '#333333',
+  borderAccent: 'rgba(62, 207, 142, 0.3)',
 
-  // Dark Mode Borders
-  borderDarkMode: '#2E2E2E',
-  borderDarkModeLight: '#3E3E3E',
+  borderDarkMode: '#282828',
+  borderDarkModeLight: '#333333',
 
-  // Overlay Colors
-  overlay: 'rgba(0, 0, 0, 0.5)',
-  overlayLight: 'rgba(0, 0, 0, 0.3)',
-  overlayDark: 'rgba(0, 0, 0, 0.7)',
+  // Overlay
+  overlay: 'rgba(0, 0, 0, 0.65)',
+  overlayLight: 'rgba(0, 0, 0, 0.4)',
+  overlayDark: 'rgba(0, 0, 0, 0.8)',
 
-  // Special Colors
+  // Utility
   white: '#FFFFFF',
   black: '#000000',
   transparent: 'transparent',
+
+  // Chat bubble specific
+  bubbleMe: '#1D5C3E',
+  bubbleMeText: '#F0F0F0',
+  bubbleThem: '#202020',
+  bubbleThemText: '#F0F0F0',
 };
 
 // ============================================================================
 // SPACING
 // ============================================================================
 
-/**
- * Spacing scale based on 8pt grid
- * Use for padding, margin, gap
- */
 export const spacing = {
   none: 0,
   xs: 4,
@@ -124,10 +124,6 @@ export const spacing = {
 // TYPOGRAPHY
 // ============================================================================
 
-/**
- * Typography presets
- * Use with spread operator: { ...typography.h1 }
- */
 export const typography = {
   display: {
     fontSize: 40,
@@ -198,8 +194,14 @@ export const typography = {
   tiny: {
     fontSize: 10,
     fontWeight: '400' as const,
-    lineHeight: 12,
+    lineHeight: 14,
     letterSpacing: 0,
+  },
+  tinyBold: {
+    fontSize: 10,
+    fontWeight: '600' as const,
+    lineHeight: 14,
+    letterSpacing: 0.2,
   },
 };
 
@@ -207,11 +209,6 @@ export const typography = {
 // SHADOWS
 // ============================================================================
 
-/**
- * Shadow presets for iOS (shadowColor, shadowOffset, etc.)
- * and Android (elevation)
- * Use with spread operator: { ...shadows.md }
- */
 export const shadows = {
   none: {
     shadowColor: '#000',
@@ -223,44 +220,51 @@ export const shadows = {
   xs: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
     elevation: 1,
   },
   sm: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowOpacity: 0.18,
+    shadowRadius: 5,
     elevation: 2,
   },
   md: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
     elevation: 4,
   },
   lg: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
+    shadowOpacity: 0.3,
+    shadowRadius: 14,
     elevation: 8,
   },
   xl: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
     elevation: 12,
   },
   xxl: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.3,
-    shadowRadius: 24,
+    shadowOpacity: 0.4,
+    shadowRadius: 28,
     elevation: 20,
+  },
+  glow: {
+    shadowColor: '#3ECF8E',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 6,
   },
 };
 
@@ -268,10 +272,6 @@ export const shadows = {
 // BORDER RADIUS
 // ============================================================================
 
-/**
- * Border radius scale
- * Use for consistent rounded corners
- */
 export const borderRadius = {
   none: 0,
   xs: 2,
@@ -288,28 +288,20 @@ export const borderRadius = {
 // TOUCH TARGETS
 // ============================================================================
 
-/**
- * Minimum touch target sizes
- * iOS HIG: 44x44 points
- * Android Material: 48x48dp
- */
 export const touchTargets = {
-  minimum: 44,      // iOS HIG minimum
-  comfortable: 48,  // Android Material minimum
-  large: 56,        // Large touch targets for primary actions
+  minimum: 44,
+  comfortable: 48,
+  large: 56,
 };
 
 // ============================================================================
 // OPACITY
 // ============================================================================
 
-/**
- * Opacity values for different states
- */
 export const opacity = {
-  disabled: 0.4,
-  pressed: 0.7,
-  hover: 0.8,
+  disabled: 0.38,
+  pressed: 0.72,
+  hover: 0.85,
   overlay: 0.5,
   overlayLight: 0.3,
   overlayDark: 0.7,
@@ -319,9 +311,6 @@ export const opacity = {
 // Z-INDEX
 // ============================================================================
 
-/**
- * Z-index scale for layering
- */
 export const zIndex = {
   base: 0,
   dropdown: 100,
@@ -337,9 +326,6 @@ export const zIndex = {
 // ICON SIZES
 // ============================================================================
 
-/**
- * Standard icon sizes
- */
 export const iconSize = {
   xs: 12,
   sm: 16,
@@ -354,9 +340,6 @@ export const iconSize = {
 // AVATAR SIZES
 // ============================================================================
 
-/**
- * Standard avatar sizes
- */
 export const avatarSize = {
   xs: 24,
   sm: 32,
@@ -367,33 +350,33 @@ export const avatarSize = {
 };
 
 // ============================================================================
+// GRADIENTS
+// ============================================================================
+
+export const gradients = {
+  primary: ['#3ECF8E', '#2BAE73'] as const,
+  primarySubtle: ['rgba(62, 207, 142, 0.18)', 'rgba(62, 207, 142, 0.04)'] as const,
+  darkHero: ['#1A2E23', '#0E0E0E'] as const,
+  card: ['#1A1A1A', '#141414'] as const,
+  profileHeader: ['#1A2E23', '#121E19', '#0E0E0E'] as const,
+};
+
+// ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 
-/**
- * Get color with opacity
- * @param color - Hex color (e.g., '#2563EB')
- * @param opacity - Opacity value 0-1 (e.g., 0.5)
- */
-export const withOpacity = (color: string, opacity: number): string => {
-  // Convert hex to rgba
+export const withOpacity = (color: string, opacityValue: number): string => {
   const hex = color.replace('#', '');
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  return `rgba(${r}, ${g}, ${b}, ${opacityValue})`;
 };
 
-/**
- * Get dark mode color based on current theme
- * @param lightColor - Color for light mode
- * @param darkColor - Color for dark mode
- * @param isDark - Current theme mode
- */
 export const getThemedColor = (
   lightColor: string,
   darkColor: string,
-  isDark: boolean
+  isDark: boolean,
 ): string => {
   return isDark ? darkColor : lightColor;
 };
