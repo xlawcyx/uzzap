@@ -49,6 +49,7 @@ export default function UsernameCheckScreen() {
           </Text>
         ) : null}
 
+
         <View style={styles.footer}>
           <Button variant="outline" onPress={() => router.back()}>
             Back
@@ -63,10 +64,10 @@ export default function UsernameCheckScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flex: 1, padding: spacing.lg, gap: spacing.md },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body },
   status: { ...typography.captionBold },
   footer: { marginTop: 'auto', flexDirection: 'row', gap: spacing.sm },
 });

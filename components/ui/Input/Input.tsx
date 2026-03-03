@@ -1,43 +1,5 @@
 /**
- * Input Component
- *
- * Production-quality text input with floating label, error states,
- * and smooth focus animations using Reanimated.
- *
- * Features:
- * - Floating label animation (inspired by v0)
- * - Error state with message
- * - Focus/blur border color transition
- * - Clear button when value exists
- * - Left/right icon support
- * - Multiline support (textarea)
- * - Platform-specific keyboard handling
- * - Accessibility support
- * - All design tokens (zero hardcoded values)
- *
- * @example
- * ```tsx
- * import { Input } from '@/components/ui';
- * import { Ionicons } from '@expo/vector-icons';
- *
- * <Input
- *   label="Email"
- *   value={email}
- *   onChangeText={setEmail}
- *   placeholder="Enter your email"
- *   leftIcon={<Ionicons name="mail-outline" size={20} color="#666" />}
- *   clearable
- * />
- *
- * <Input
- *   label="Message"
- *   value={message}
- *   onChangeText={setMessage}
- *   multiline
- *   numberOfLines={4}
- *   error={errors.message}
- * />
- * ```
+ * Input Component — Theme-aware
  */
 
 import React, { useState } from 'react';
@@ -58,6 +20,7 @@ import Animated, {
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, typography, borderRadius, opacity } from '@/constants/design';
 import { animationDurations, animationEasing } from '@/constants/animations';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import type { InputProps } from './Input.types';
 
 export function Input({
@@ -76,68 +39,40 @@ export function Input({
   testID,
   ...textInputProps
 }: InputProps) {
+  const { colors: themeColors } = useAppTheme();
   const [isFocused, setIsFocused] = useState(false);
   const labelPosition = useSharedValue(value ? 1 : 0);
-  const borderColor = useSharedValue(0);
+  const borderColorAnim = useSharedValue(0);
 
-  // Animate label position (floating label)
   const labelStyle = useAnimatedStyle(() => {
     const shouldFloat = isFocused || value.length > 0;
     labelPosition.value = withTiming(shouldFloat ? 1 : 0, {
       duration: animationDurations.fast,
       easing: animationEasing.easeOut,
     });
-
     return {
       transform: [
-        {
-          translateY: interpolate(
-            labelPosition.value,
-            [0, 1],
-            [0, -28]
-          ),
-        },
-        {
-          scale: interpolate(
-            labelPosition.value,
-            [0, 1],
-            [1, 0.85]
-          ),
-        },
+        { translateY: interpolate(labelPosition.value, [0, 1], [0, -28]) },
+        { scale: interpolate(labelPosition.value, [0, 1], [1, 0.85]) },
       ],
     };
   });
 
-  // Animate border color on focus
-  const containerStyle = useAnimatedStyle(() => {
-    borderColor.value = withTiming(isFocused ? 1 : 0, {
+  const containerAnimStyle = useAnimatedStyle(() => {
+    borderColorAnim.value = withTiming(isFocused ? 1 : 0, {
       duration: animationDurations.fast,
       easing: animationEasing.easeOut,
     });
-
     return {
       borderColor: error
         ? colors.error
-        : interpolateColor(
-            borderColor.value,
-            [0, 1],
-            [colors.border, colors.primary]
-          ),
+        : interpolateColor(borderColorAnim.value, [0, 1], [themeColors.border, colors.primary]),
     };
   });
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
-  const handleClear = () => {
-    onChangeText('');
-  };
-
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+  const handleClear = () => onChangeText('');
   const showClearButton = clearable && value.length > 0 && !disabled;
 
   return (
@@ -145,27 +80,25 @@ export function Input({
       <Animated.View
         style={[
           styles.container,
-          containerStyle,
+          { backgroundColor: themeColors.background },
+          containerAnimStyle,
           multiline && styles.containerMultiline,
-          disabled && styles.containerDisabled,
+          disabled && [styles.containerDisabled, { backgroundColor: themeColors.backgroundSecondary }],
           error && styles.containerError,
         ]}
       >
-        {leftIcon && (
-          <View style={styles.iconLeft}>
-            {leftIcon}
-          </View>
-        )}
+        {leftIcon && <View style={styles.iconLeft}>{leftIcon}</View>}
 
         <View style={styles.inputWrapper}>
           {label && (
             <Animated.Text
               style={[
                 styles.label,
+                { color: themeColors.textSecondary },
                 labelStyle,
                 isFocused && styles.labelFocused,
                 error && styles.labelError,
-                disabled && styles.labelDisabled,
+                disabled && { color: themeColors.textDisabled },
               ]}
             >
               {label}
@@ -178,7 +111,7 @@ export function Input({
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder={label ? (isFocused ? placeholder : undefined) : placeholder}
-            placeholderTextColor={colors.textTertiary}
+            placeholderTextColor={themeColors.textTertiary}
             editable={!disabled}
             multiline={multiline}
             numberOfLines={multiline ? numberOfLines : 1}
@@ -188,10 +121,11 @@ export function Input({
             testID={testID}
             style={[
               styles.input,
+              { color: themeColors.text },
               leftIcon && styles.inputWithLeftIcon,
               (rightIcon || showClearButton) && styles.inputWithRightIcon,
               multiline && styles.inputMultiline,
-              disabled && styles.inputDisabled,
+              disabled && { color: themeColors.textDisabled },
             ]}
             {...textInputProps}
           />
@@ -205,134 +139,64 @@ export function Input({
             accessibilityLabel="Clear input"
             accessibilityRole="button"
           >
-            <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
+            <Ionicons name="close-circle" size={18} color={themeColors.textSecondary} />
           </TouchableOpacity>
         )}
 
-        {rightIcon && !showClearButton && (
-          <View style={styles.iconRight}>
-            {rightIcon}
-          </View>
-        )}
+        {rightIcon && !showClearButton && <View style={styles.iconRight}>{rightIcon}</View>}
       </Animated.View>
 
-      {error && (
-        <Text style={styles.errorText}>
-          {error}
-        </Text>
-      )}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: '100%',
-  },
-
+  wrapper: { width: '100%' },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.background,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: borderRadius.md,
     paddingHorizontal: spacing.md,
     minHeight: 56,
   },
-
   containerMultiline: {
     minHeight: 100,
     alignItems: 'flex-start',
     paddingVertical: spacing.md,
   },
-
-  containerDisabled: {
-    backgroundColor: colors.backgroundSecondary,
-    opacity: opacity.disabled,
-  },
-
-  containerError: {
-    borderColor: colors.error,
-  },
-
-  inputWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: spacing.sm,
-  },
-
+  containerDisabled: { opacity: opacity.disabled },
+  containerError: { borderColor: colors.error },
+  inputWrapper: { flex: 1, justifyContent: 'center', paddingTop: spacing.sm },
   label: {
     ...typography.body,
-    color: colors.textSecondary,
     position: 'absolute',
     left: 0,
     top: '50%',
-    marginTop: -12, // Half of line height
+    marginTop: -12,
     transformOrigin: 'left center',
   },
-
-  labelFocused: {
-    color: colors.primary,
-  },
-
-  labelError: {
-    color: colors.error,
-  },
-
-  labelDisabled: {
-    color: colors.textDisabled,
-  },
-
+  labelFocused: { color: colors.primary },
+  labelError: { color: colors.error },
   input: {
     ...typography.body,
-    color: colors.text,
     padding: 0,
     margin: 0,
     minHeight: 24,
     paddingTop: spacing.xs,
   },
-
-  inputWithLeftIcon: {
-    // No extra padding needed, handled by iconLeft margin
-  },
-
-  inputWithRightIcon: {
-    // No extra padding needed, handled by iconRight margin
-  },
-
-  inputMultiline: {
-    minHeight: 80,
-    paddingTop: spacing.md,
-  },
-
-  inputDisabled: {
-    color: colors.textDisabled,
-  },
-
-  iconLeft: {
-    marginRight: spacing.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  iconRight: {
-    marginLeft: spacing.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
+  inputWithLeftIcon: {},
+  inputWithRightIcon: {},
+  inputMultiline: { minHeight: 80, paddingTop: spacing.md },
+  iconLeft: { marginRight: spacing.sm, justifyContent: 'center', alignItems: 'center' },
+  iconRight: { marginLeft: spacing.sm, justifyContent: 'center', alignItems: 'center' },
   clearButton: {
     marginLeft: spacing.sm,
     padding: spacing.xs,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  errorText: {
-    ...typography.caption,
-    color: colors.error,
-    marginTop: spacing.xs,
-    marginLeft: spacing.xs,
-  },
+  errorText: { ...typography.caption, color: colors.error, marginTop: spacing.xs, marginLeft: spacing.xs },
 });

@@ -28,9 +28,7 @@ export default function AboutScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-  },
+  container: {},
   content: {
     flex: 1,
     padding: spacing.xl,
@@ -39,13 +37,11 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typography.h1,
-    color: colors.text,
     textAlign: 'center',
     marginBottom: spacing.md,
   },
   description: {
     ...typography.body,
-    color: colors.textSecondary,
     textAlign: 'center',
     maxWidth: 460,
     marginBottom: spacing.xl,
@@ -56,14 +52,11 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.lg,
     paddingHorizontal: spacing.md,
     borderRadius: 16,
-    backgroundColor: colors.backgroundSecondary,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.border,
   },
   creatorLabel: {
     ...typography.caption,
-    color: colors.textTertiary,
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: spacing.xs,

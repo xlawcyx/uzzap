@@ -45,24 +45,23 @@ export default function BackupExportScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
+  card: {},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: spacing.md,
   },
-  label: { ...typography.body, color: colors.text },
-  subHeader: { ...typography.captionBold, color: colors.textSecondary, marginBottom: spacing.sm },
+  label: { ...typography.body },
+  subHeader: { ...typography.captionBold, marginBottom: spacing.sm },
   option: {
     padding: spacing.md,
     borderRadius: borderRadius.md,
     borderWidth: 1,
-    borderColor: colors.border,
     marginBottom: spacing.sm,
   },
   optionActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },
-  optionText: { ...typography.body, color: colors.text },
+  optionText: { ...typography.body },
 });

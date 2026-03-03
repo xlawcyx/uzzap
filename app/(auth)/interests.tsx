@@ -35,11 +35,11 @@ export default function InterestsScreen() {
             return (
               <TouchableOpacity
                 key={interest}
-                style={[styles.tag, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, active && styles.tagActive]}
+                style={[styles.tag, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, active && { backgroundColor: colors.primary, borderColor: withOpacity(colors.primary, 0.8) }]}
                 onPress={() => toggleInterest(interest)}
               >
-                <Text style={[styles.tagText, { color: themeColors.textSecondary }, active && styles.tagTextActive]}>{interest}</Text>
-                {active ? <Ionicons name="checkmark-circle" size={16} color={themeColors.background} /> : null}
+                <Text style={[styles.tagText, { color: themeColors.textSecondary }, active && { color: themeColors.textInverse, fontWeight: '700' }]}>{interest}</Text>
+                {active ? <Ionicons name="checkmark-circle" size={16} color={themeColors.textInverse} /> : null}
               </TouchableOpacity>
             );
           })}
@@ -61,29 +61,27 @@ export default function InterestsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flexGrow: 1, padding: spacing.lg, gap: spacing.md },
   header: { gap: spacing.sm },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body },
   tagsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   tag: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: borderRadius.full,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    backgroundColor: colors.backgroundSecondary,
   },
   tagActive: {
     backgroundColor: colors.primary,
     borderColor: withOpacity(colors.primary, 0.8),
   },
-  tagText: { ...typography.captionBold, color: colors.textSecondary },
-  tagTextActive: { color: colors.backgroundSecondary },
-  helper: { ...typography.small, color: colors.textTertiary },
+  tagText: { ...typography.captionBold },
+  tagTextActive: { color: '#FFFFFF' },
+  helper: { ...typography.small },
   footer: { marginTop: 'auto', flexDirection: 'row', gap: spacing.sm },
 });

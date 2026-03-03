@@ -36,18 +36,16 @@ export default function LanguageSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
-  header: { ...typography.h4, color: colors.text, marginBottom: spacing.sm },
+  card: {},
+  header: { ...typography.h4, marginBottom: spacing.sm },
   option: {
     padding: spacing.md,
     borderRadius: borderRadius.md,
     borderWidth: 1,
-    borderColor: colors.border,
     marginBottom: spacing.sm,
-    backgroundColor: colors.background,
   },
   optionActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },
-  optionText: { ...typography.body, color: colors.text },
+  optionText: { ...typography.body },
 });

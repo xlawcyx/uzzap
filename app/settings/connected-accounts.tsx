@@ -48,21 +48,20 @@ export default function ConnectedAccountsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
+  card: {},
   accountRow: {
     paddingVertical: spacing.sm,
     borderBottomWidth: 1,
-    borderColor: colors.border,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: spacing.sm,
   },
   accountInfo: { flexShrink: 1 },
-  provider: { ...typography.bodyBold, color: colors.text },
-  meta: { ...typography.caption, color: colors.textSecondary },
+  provider: { ...typography.bodyBold },
+  meta: { ...typography.caption },
   status: { ...typography.small, color: colors.warning, marginTop: spacing.xs },
-  empty: { ...typography.body, color: colors.textSecondary },
+  empty: { ...typography.body },
 });

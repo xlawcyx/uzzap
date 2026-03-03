@@ -35,7 +35,7 @@ export function DiscoveryRoomCard({ room, onPress, onSave, saved }: Props) {
         )}
       </View>
 
-      <Text style={styles.meta}>
+      <Text style={[styles.meta, { color: themeColors.textTertiary }]}>
         #{room.category || 'General'} • {room.region || 'Unknown region'} • {room.type}
       </Text>
       <Text style={[styles.about, { color: themeColors.textSecondary }]} numberOfLines={2}>{about}</Text>
@@ -43,7 +43,7 @@ export function DiscoveryRoomCard({ room, onPress, onSave, saved }: Props) {
       <View style={styles.footer}>
         <View style={styles.membersBadge}>
           <Ionicons name="people-outline" size={12} color={colors.primary} />
-          <Text style={styles.members}>{room.member_count.toLocaleString()} members</Text>
+          <Text style={[styles.members, { color: themeColors.textSecondary }]}>{room.member_count.toLocaleString()} members</Text>
         </View>
         <View style={styles.tagsRow}>
           {tags.slice(0, 2).map((tag: string) => (

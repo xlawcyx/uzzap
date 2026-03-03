@@ -1,41 +1,5 @@
 /**
- * Card Component (Compound Component Pattern)
- *
- * Production-quality card with compound sub-components to avoid prop explosion.
- * Follows React best practices for composition over configuration.
- *
- * Features:
- * - 3 variants: flat, elevated, outlined
- * - Compound components: Card.Header, Card.Image, Card.Content, Card.Footer
- * - Pressable variant with animation
- * - Flexible composition
- * - All design tokens (zero hardcoded values)
- *
- * @example
- * ```tsx
- * import { Card } from '@/components/ui';
- *
- * // Simple card
- * <Card variant="elevated">
- *   <Card.Content>
- *     <Text>Card content</Text>
- *   </Card.Content>
- * </Card>
- *
- * // Full featured card
- * <Card variant="elevated" onPress={handlePress}>
- *   <Card.Image source={{ uri: imageUrl }} />
- *   <Card.Header>
- *     <Text>Title</Text>
- *   </Card.Header>
- *   <Card.Content>
- *     <Text>Description text here</Text>
- *   </Card.Content>
- *   <Card.Footer>
- *     <Button>Action</Button>
- *   </Card.Footer>
- * </Card>
- * ```
+ * Card Component (Compound Component Pattern) — Theme-aware
  */
 
 import React from 'react';
@@ -54,6 +18,7 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { colors, spacing, shadows, borderRadius } from '@/constants/design';
 import { animationTimings } from '@/constants/animations';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import type {
   CardProps,
   CardHeaderProps,
@@ -61,10 +26,6 @@ import type {
   CardContentProps,
   CardFooterProps,
 } from './Card.types';
-
-// ============================================================================
-// Main Card Component
-// ============================================================================
 
 export function Card({
   children,
@@ -74,6 +35,7 @@ export function Card({
   testID,
 }: CardProps) {
   const scale = useSharedValue(1);
+  const { colors: themeColors } = useAppTheme();
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -98,11 +60,18 @@ export function Card({
     onPress?.();
   };
 
+  const variantStyle =
+    variant === 'flat'
+      ? { backgroundColor: themeColors.backgroundSecondary }
+      : variant === 'outlined'
+        ? { backgroundColor: themeColors.background, borderWidth: 1, borderColor: themeColors.border }
+        : { backgroundColor: themeColors.background, ...shadows.md };
+
   const cardContent = (
     <View
       style={[
         styles.card,
-        styles[`card_${variant}`],
+        variantStyle,
         style,
       ]}
       testID={testID}
@@ -130,129 +99,55 @@ export function Card({
   return cardContent;
 }
 
-// ============================================================================
-// Card.Header Sub-component
-// ============================================================================
-
 function CardHeader({ children, style }: CardHeaderProps) {
-  return (
-    <View style={[styles.header, style]}>
-      {children}
-    </View>
-  );
+  return <View style={[styles.header, style]}>{children}</View>;
 }
-
 Card.Header = CardHeader;
 
-// ============================================================================
-// Card.Image Sub-component
-// ============================================================================
-
-function CardImage({
-  source,
-  aspectRatio = 16 / 9,
-  rounded = false,
-}: CardImageProps) {
+function CardImage({ source, aspectRatio = 16 / 9, rounded = false }: CardImageProps) {
   return (
     <Image
       source={source}
-      style={[
-        styles.image,
-        { aspectRatio },
-        rounded && styles.imageRounded,
-      ]}
+      style={[styles.image, { aspectRatio }, rounded && styles.imageRounded]}
       resizeMode="cover"
     />
   );
 }
-
 Card.Image = CardImage;
 
-// ============================================================================
-// Card.Content Sub-component
-// ============================================================================
-
 function CardContent({ children, style }: CardContentProps) {
-  return (
-    <View style={[styles.content, style]}>
-      {children}
-    </View>
-  );
+  return <View style={[styles.content, style]}>{children}</View>;
 }
-
 Card.Content = CardContent;
 
-// ============================================================================
-// Card.Footer Sub-component
-// ============================================================================
-
 function CardFooter({ children, style }: CardFooterProps) {
-  return (
-    <View style={[styles.footer, style]}>
-      {children}
-    </View>
-  );
+  return <View style={[styles.footer, style]}>{children}</View>;
 }
-
 Card.Footer = CardFooter;
 
-// ============================================================================
-// Styles
-// ============================================================================
-
 const styles = StyleSheet.create({
-  // Base card styles
   card: {
-    backgroundColor: colors.background,
     borderRadius: borderRadius.lg,
     overflow: 'hidden',
   },
-
-  // Variant: Flat (no shadow, no border)
-  card_flat: {
-    backgroundColor: colors.backgroundSecondary,
-  },
-
-  // Variant: Elevated (shadow)
-  card_elevated: {
-    backgroundColor: colors.background,
-    ...shadows.md,
-  },
-
-  // Variant: Outlined (border, no shadow)
-  card_outlined: {
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-
-  // Header
   header: {
     padding: spacing.lg,
     paddingBottom: spacing.md,
   },
-
-  // Image
   image: {
     width: '100%',
-    backgroundColor: colors.backgroundSecondary,
   },
-
   imageRounded: {
     borderTopLeftRadius: borderRadius.lg,
     borderTopRightRadius: borderRadius.lg,
   },
-
-  // Content
   content: {
     padding: spacing.lg,
   },
-
-  // Footer
   footer: {
     padding: spacing.lg,
     paddingTop: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: colors.borderLight,
+    borderTopColor: colors.borderMuted,
   },
 });

@@ -259,7 +259,7 @@ export default function ChatroomScreen() {
 
   if (roomLoading) {
     return (
-      <Container style={styles.centered}>
+      <Container style={[styles.centered, { backgroundColor: themeColors.background }]}>
         <ActivityIndicator size="large" color={colors.primary} />
         <Text style={[styles.loadingText, { color: themeColors.textSecondary }]}>Loading chatroom...</Text>
       </Container>
@@ -316,7 +316,7 @@ export default function ChatroomScreen() {
           contentContainerStyle={styles.messageList}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: false })}
           ListHeaderComponent={
-            <View style={styles.detailCard}>
+            <View style={[styles.detailCard, { borderColor: themeColors.borderAccent }]}>
               <LinearGradient
                 colors={['rgba(62,207,142,0.12)', 'rgba(62,207,142,0.02)']}
                 style={styles.detailCardGradient}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Stack } from 'expo-router';
 import { View, Text, StyleSheet, Switch } from 'react-native';
 import { Container, Card } from '@/components/ui';
-import { colors, spacing, typography } from '@/constants/design';
+import { spacing, typography } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function NotificationsSettingsScreen() {
@@ -33,15 +33,15 @@ export default function NotificationsSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
+  card: {},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: spacing.sm,
   },
-  label: { ...typography.body, color: colors.text },
-  helper: { ...typography.caption, color: colors.textSecondary, marginTop: spacing.md },
+  label: { ...typography.body },
+  helper: { ...typography.caption, marginTop: spacing.md },
 });

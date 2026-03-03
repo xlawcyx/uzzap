@@ -149,7 +149,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
@@ -191,10 +191,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   heroBadgeText: { ...typography.smallBold, color: colors.primary },
-  title: { ...typography.h2, color: colors.text, textAlign: 'center' },
+  title: { ...typography.h2, textAlign: 'center' },
   subtitle: {
     ...typography.caption,
-    color: colors.textSecondary,
     marginTop: spacing.xs,
     textAlign: 'center',
     lineHeight: 20,
@@ -203,15 +202,12 @@ const styles = StyleSheet.create({
   // Form
   formCard: {
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: borderRadius.xxl,
-    backgroundColor: colors.backgroundSecondary,
     padding: spacing.lg,
     ...shadows.md,
   },
   formTitle: {
     ...typography.captionBold,
-    color: colors.textTertiary,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: spacing.lg,
@@ -232,15 +228,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: spacing.lg,
   },
-  dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
+  dividerLine: { flex: 1, height: 1 },
   dividerText: {
     ...typography.tinyBold,
-    color: colors.textTertiary,
     marginHorizontal: spacing.md,
     letterSpacing: 1,
   },
   footer: { flexDirection: 'row', justifyContent: 'center' },
-  footerText: { ...typography.body, color: colors.textSecondary },
+  footerText: { ...typography.body },
   registerLink: { ...typography.bodyBold, color: colors.primary },
 
   // Onboarding link
@@ -251,5 +246,5 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingVertical: spacing.sm,
   },
-  onboardingLinkText: { ...typography.captionBold, color: colors.textTertiary },
+  onboardingLinkText: { ...typography.captionBold },
 });

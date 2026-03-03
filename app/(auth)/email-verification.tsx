@@ -36,7 +36,7 @@ export default function EmailVerificationPendingScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flex: 1, padding: spacing.lg, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
   iconWrap: {
     width: 84,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary, textAlign: 'center' },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body, textAlign: 'center' },
   ctaWrap: { width: '100%', gap: spacing.sm, marginTop: spacing.sm },
 });

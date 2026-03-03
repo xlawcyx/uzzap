@@ -46,11 +46,11 @@ export default function AccountRecoveryStatusScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flex: 1, padding: spacing.lg, gap: spacing.md },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary },
-  card: { backgroundColor: colors.backgroundSecondary },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body },
+  card: {},
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
-  rowText: { ...typography.caption, color: colors.text },
+  rowText: { ...typography.caption },
 });

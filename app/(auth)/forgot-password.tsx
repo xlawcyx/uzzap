@@ -89,9 +89,7 @@ export default function ForgotPasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-  },
+  container: {},
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
@@ -110,13 +108,10 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    backgroundColor: colors.backgroundSecondary,
     borderWidth: 1,
-    borderColor: colors.border,
   },
   backText: {
     ...typography.captionBold,
-    color: colors.text,
   },
   heroCard: {
     borderRadius: borderRadius.xl,
@@ -137,21 +132,17 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typography.h2,
-    color: colors.text,
     textAlign: 'center',
   },
   subtitle: {
     ...typography.body,
-    color: colors.textSecondary,
     marginTop: spacing.xs,
     textAlign: 'center',
   },
   formCard: {
     width: '100%',
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: borderRadius.xl,
-    backgroundColor: colors.backgroundSecondary,
     padding: spacing.lg,
     ...shadows.sm,
   },
@@ -164,7 +155,6 @@ const styles = StyleSheet.create({
   },
   tipText: {
     ...typography.small,
-    color: colors.textTertiary,
   },
   sendButton: {
     width: '100%',

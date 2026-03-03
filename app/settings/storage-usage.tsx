@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Container, Card, Button } from '@/components/ui';
-import { colors, spacing, typography } from '@/constants/design';
+import { spacing, typography } from '@/constants/design';
 import { useAppSettingsStore } from '@/store/useAppSettingsStore';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
@@ -35,10 +35,10 @@ export default function StorageUsageScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
-  label: { ...typography.captionBold, color: colors.textSecondary },
-  value: { ...typography.h2, color: colors.text, marginVertical: spacing.xs },
-  helper: { ...typography.caption, color: colors.textSecondary, marginBottom: spacing.md },
+  card: {},
+  label: { ...typography.captionBold },
+  value: { ...typography.h2, marginVertical: spacing.xs },
+  helper: { ...typography.caption, marginBottom: spacing.md },
 });

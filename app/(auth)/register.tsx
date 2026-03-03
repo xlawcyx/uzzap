@@ -156,7 +156,7 @@ export default function RegisterScreen() {
                 onPress={() => setRegion(r)}
                 style={[styles.regionOption, { borderColor: themeColors.border, backgroundColor: themeColors.background }, region === r && styles.regionOptionActive]}
               >
-                <Text style={[styles.regionOptionText, { color: themeColors.textSecondary }, region === r && styles.regionOptionTextActive]}>{r}</Text>
+                <Text style={[styles.regionOptionText, { color: themeColors.textSecondary }, region === r && [styles.regionOptionTextActive, { color: themeColors.text }]]}>{r}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -186,9 +186,7 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-  },
+  container: {},
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
@@ -207,13 +205,10 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    backgroundColor: colors.backgroundSecondary,
     borderWidth: 1,
-    borderColor: colors.border,
   },
   backText: {
     ...typography.captionBold,
-    color: colors.text,
   },
   heroCard: {
     borderRadius: borderRadius.xl,
@@ -237,19 +232,15 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typography.h2,
-    color: colors.text,
   },
   subtitle: {
     ...typography.body,
-    color: colors.textSecondary,
     marginTop: spacing.xs,
   },
   formCard: {
     width: '100%',
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: borderRadius.xl,
-    backgroundColor: colors.backgroundSecondary,
     padding: spacing.lg,
     ...shadows.sm,
   },
@@ -258,7 +249,6 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.smallBold,
-    color: colors.textSecondary,
     marginBottom: spacing.sm,
     marginTop: spacing.md,
   },
@@ -273,8 +263,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderRadius: borderRadius.lg,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
   },
   regionOptionActive: {
     backgroundColor: withOpacity(colors.primary, 0.2),
@@ -282,15 +270,12 @@ const styles = StyleSheet.create({
   },
   regionOptionText: {
     ...typography.caption,
-    color: colors.textSecondary,
   },
   regionOptionTextActive: {
-    color: colors.text,
     fontWeight: '700',
   },
   helperText: {
     ...typography.small,
-    color: colors.textTertiary,
     marginBottom: spacing.md,
   },
   guidedSetupLink: {
@@ -299,7 +284,6 @@ const styles = StyleSheet.create({
   },
   guidedSetupText: {
     ...typography.captionBold,
-    color: colors.textTertiary,
   },
   registerButton: {
     width: '100%',
@@ -312,7 +296,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     ...typography.body,
-    color: colors.textSecondary,
   },
   loginLink: {
     ...typography.bodyBold,

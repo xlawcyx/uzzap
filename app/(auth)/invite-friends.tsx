@@ -27,7 +27,7 @@ export default function InviteFriendsScreen() {
         <Card variant="elevated" style={{ ...styles.card, backgroundColor: themeColors.backgroundSecondary }}>
           <Card.Content>
             <Text style={[styles.codeLabel, { color: themeColors.textTertiary }]}>Referral code</Text>
-            <Text style={styles.codeValue}>{REFERRAL_CODE}</Text>
+            <Text style={[styles.codeValue, { color: colors.primary }]}>{REFERRAL_CODE}</Text>
           </Card.Content>
         </Card>
 
@@ -43,11 +43,11 @@ export default function InviteFriendsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flex: 1, padding: spacing.lg, gap: spacing.md },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary },
-  card: { backgroundColor: colors.backgroundSecondary },
-  codeLabel: { ...typography.caption, color: colors.textTertiary },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body },
+  card: {},
+  codeLabel: { ...typography.caption },
   codeValue: { ...typography.h3, color: colors.primary, marginTop: spacing.xs },
 });

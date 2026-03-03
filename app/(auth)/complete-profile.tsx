@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import { Button, Container, Input } from '@/components/ui';
 import { useAuthStore } from '@/store/useAuthStore';
-import { colors, spacing, typography } from '@/constants/design';
+import { spacing, typography } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function CompleteProfileWizardScreen() {
@@ -68,9 +68,9 @@ export default function CompleteProfileWizardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flexGrow: 1, padding: spacing.lg, gap: spacing.md },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body },
   footer: { marginTop: 'auto', gap: spacing.sm },
 });

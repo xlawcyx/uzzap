@@ -58,27 +58,25 @@ export default function AppControlsSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
+  card: {},
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
-    borderColor: colors.border,
   },
   lastRow: { borderBottomWidth: 0 },
   iconWrap: {
     width: 34,
     height: 34,
     borderRadius: borderRadius.md,
-    backgroundColor: colors.backgroundTertiary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   rowText: { flex: 1 },
-  title: { ...typography.bodyBold, color: colors.text },
-  subtitle: { ...typography.caption, color: colors.textSecondary },
+  title: { ...typography.bodyBold },
+  subtitle: { ...typography.caption },
 });

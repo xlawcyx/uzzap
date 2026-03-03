@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Container, Card } from '@/components/ui';
-import { colors, spacing, typography } from '@/constants/design';
+import { spacing, typography } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 type InfoScreenProps = {
@@ -39,11 +39,11 @@ export function InfoScreen({ title, subtitle, sections }: InfoScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
-  subtitle: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.md },
+  card: {},
+  subtitle: { ...typography.body, marginBottom: spacing.md },
   section: { marginBottom: spacing.md },
-  heading: { ...typography.h4, color: colors.text, marginBottom: spacing.xs },
-  body: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.xs },
+  heading: { ...typography.h4, marginBottom: spacing.xs },
+  body: { ...typography.body, marginBottom: spacing.xs },
 });

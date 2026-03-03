@@ -66,12 +66,11 @@ export default function HelpLegalTrustScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
+  card: {},
   sectionTitle: {
     ...typography.h4,
-    color: colors.text,
     marginBottom: spacing.sm,
   },
   sectionSpacing: {
@@ -93,7 +92,6 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     ...typography.body,
-    color: colors.textSecondary,
     flex: 1,
   },
 });

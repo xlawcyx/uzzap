@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
 import { Container, Card } from '@/components/ui';
-import { colors, spacing, typography } from '@/constants/design';
+import { spacing, typography } from '@/constants/design';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function PrivacySettingsScreen() {
@@ -26,9 +26,9 @@ export default function PrivacySettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { padding: spacing.md },
-  card: { backgroundColor: colors.backgroundSecondary },
-  title: { ...typography.h4, color: colors.text, marginBottom: spacing.sm },
-  item: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.xs },
+  card: {},
+  title: { ...typography.h4, marginBottom: spacing.sm },
+  item: { ...typography.body, marginBottom: spacing.xs },
 });

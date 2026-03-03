@@ -67,9 +67,9 @@ export default function LocationSetupScreen() {
                 setRegion(item);
                 setProvince(PH_REGIONS[item][0]);
               }}
-              style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === region && styles.optionActive]}
+              style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === region && { backgroundColor: colors.primary, borderColor: colors.primary }]}
             >
-              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === region && styles.optionTextActive]}>{item}</Text>
+              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === region && { color: themeColors.textInverse, fontWeight: '700' }]}>{item}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -77,8 +77,8 @@ export default function LocationSetupScreen() {
         <Text style={[styles.label, { color: themeColors.text }]}>Province / Area</Text>
         <View style={styles.optionsWrap}>
           {provinces.map((item) => (
-            <TouchableOpacity key={item} onPress={() => setProvince(item)} style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === province && styles.optionActive]}>
-              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === province && styles.optionTextActive]}>{item}</Text>
+            <TouchableOpacity key={item} onPress={() => setProvince(item)} style={[styles.option, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundSecondary }, item === province && { backgroundColor: colors.primary, borderColor: colors.primary }]}>
+              <Text style={[styles.optionText, { color: themeColors.textSecondary }, item === province && { color: themeColors.textInverse, fontWeight: '700' }]}>{item}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -97,22 +97,20 @@ export default function LocationSetupScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: { flexGrow: 1, padding: spacing.lg, gap: spacing.md },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.body, color: colors.textSecondary },
-  label: { ...typography.captionBold, color: colors.text, marginTop: spacing.sm },
+  title: { ...typography.h2 },
+  subtitle: { ...typography.body },
+  label: { ...typography.captionBold, marginTop: spacing.sm },
   optionsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
   option: {
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: borderRadius.full,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    backgroundColor: colors.backgroundSecondary,
   },
   optionActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  optionText: { ...typography.small, color: colors.textSecondary },
-  optionTextActive: { color: colors.backgroundSecondary, fontWeight: '700' },
+  optionText: { ...typography.small },
+  optionTextActive: { fontWeight: '700' },
   footer: { marginTop: 'auto', flexDirection: 'row', gap: spacing.sm },
 });

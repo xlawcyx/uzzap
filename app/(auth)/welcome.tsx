@@ -90,7 +90,7 @@ export default function WelcomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.background },
+  container: {},
   content: {
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
@@ -105,11 +105,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.sm,
     borderRadius: borderRadius.full,
-    backgroundColor: colors.backgroundTertiary,
     borderWidth: 1,
-    borderColor: colors.border,
   },
-  skipText: { ...typography.smallBold, color: colors.textTertiary },
+  skipText: { ...typography.smallBold },
 
   iconSection: {
     alignItems: 'center',
@@ -147,13 +145,11 @@ const styles = StyleSheet.create({
   textSection: { alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xl },
   title: {
     ...typography.h1,
-    color: colors.text,
     textAlign: 'center',
     letterSpacing: -0.5,
   },
   subtitle: {
     ...typography.body,
-    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 26,
     paddingHorizontal: spacing.md,
@@ -169,7 +165,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: borderRadius.full,
-    backgroundColor: colors.border,
   },
   dotActive: {
     width: 28,
@@ -183,6 +178,5 @@ const styles = StyleSheet.create({
   },
   ghostBtnText: {
     ...typography.captionBold,
-    color: colors.textTertiary,
   },
 });
