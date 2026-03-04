@@ -39,6 +39,9 @@ const lightColors = {
   gradientStart: '#D6F5E8',
   gradientMid: '#EAF7F0',
   gradientEnd: '#F5F7FA',
+
+  // Input
+  inputBackground: '#F0F2F5',
 };
 
 const darkColors = {
@@ -78,6 +81,9 @@ const darkColors = {
   gradientStart: '#1A2E23',
   gradientMid: '#121E19',
   gradientEnd: colors.background,
+
+  // Input
+  inputBackground: colors.backgroundTertiary,
 };
 
 export type ThemeColors = typeof lightColors;

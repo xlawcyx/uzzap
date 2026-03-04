@@ -107,6 +107,7 @@ export default function RootLayout() {
           <Stack.Screen name="settings/privacy-policy" />
           <Stack.Screen name="settings/community-guidelines" />
           <Stack.Screen name="settings/open-source-licenses" />
+          <Stack.Screen name="settings/about" />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style={statusBarStyle} />

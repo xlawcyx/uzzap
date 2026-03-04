@@ -246,6 +246,7 @@ export default function ChatroomScreen() {
         <FlashList
           ref={flatListRef}
           data={messages}
+          estimatedItemSize={80}
           renderItem={({ item }) => (
             <ChatMessage 
               item={item} 

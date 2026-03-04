@@ -219,13 +219,16 @@ export default function BuddiesScreen() {
         data={activeTab === 'My Buddies' ? buddies : activeTab === 'Find Buddies' ? searchResults : buddyRequests}
         renderItem={renderBuddyCard}
         keyExtractor={(item) => item.id}
+        estimatedItemSize={80}
         contentContainerStyle={styles.listContent}
         refreshControl={
-          activeTab === 'My Buddies' ? (
-            <RefreshControl refreshing={buddiesLoading} onRefresh={refetchBuddies} tintColor={colors.accent} />
-          ) : activeTab === 'Requests' ? (
-            <RefreshControl refreshing={requestsLoading} onRefresh={refetchRequests} tintColor={colors.accent} />
-          ) : undefined
+          activeTab === 'Find Buddies' ? undefined : (
+            <RefreshControl
+              refreshing={activeTab === 'My Buddies' ? buddiesLoading : requestsLoading}
+              onRefresh={activeTab === 'My Buddies' ? refetchBuddies : refetchRequests}
+              tintColor={colors.accent}
+            />
+          )
         }
         ListEmptyComponent={
           !buddiesLoading && !searchLoading && !requestsLoading ? (
