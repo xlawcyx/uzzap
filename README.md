@@ -64,6 +64,10 @@ npm run test
 - Checklist: `docs/prod-test-checklist.md`
 - Latest environment run report: `docs/prod-test-checklist-results.md`
 
+## Build failure troubleshooting
+
+- Prisma mismatch for app store submission payload: `docs/prisma-app-store-submissions-troubleshooting.md`
+
 ## Project structure (high level)
 
 - `app/` - route screens
