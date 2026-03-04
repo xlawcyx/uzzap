@@ -6,6 +6,7 @@ export type ThemePreference = 'system' | 'light' | 'dark';
 export type AppLanguage = 'English' | 'Filipino' | 'Bisaya' | 'Spanish';
 
 export type DownloadRule = 'always' | 'wifi-only' | 'never';
+export type BubbleStyle = 'modern' | 'classic' | 'minimalist' | 'playful';
 
 export type ConnectedAccount = {
   id: string;
@@ -29,6 +30,8 @@ type AppSettingsState = {
   diagnosticsMode: boolean;
   crashReports: boolean;
   connectedAccounts: ConnectedAccount[];
+  bubbleColor: string;
+  bubbleStyle: BubbleStyle;
   setTheme: (theme: ThemePreference) => void;
   setLanguage: (language: AppLanguage) => void;
   setImageAutoplay: (enabled: boolean) => void;
@@ -41,6 +44,8 @@ type AppSettingsState = {
   setBackupFrequency: (frequency: 'daily' | 'weekly' | 'monthly') => void;
   setDiagnosticsMode: (enabled: boolean) => void;
   setCrashReports: (enabled: boolean) => void;
+  setBubbleColor: (color: string) => void;
+  setBubbleStyle: (style: BubbleStyle) => void;
   disconnectAccount: (id: string) => void;
 };
 
@@ -59,6 +64,8 @@ export const useAppSettingsStore = create<AppSettingsState>()(
       backupFrequency: 'weekly',
       diagnosticsMode: false,
       crashReports: true,
+      bubbleColor: '#1D5C3E',
+      bubbleStyle: 'modern',
       connectedAccounts: [
         { id: 'google', provider: 'Google', handle: 'buddy.user@gmail.com', connectedAt: '2026-01-14', status: 'connected' },
         { id: 'apple', provider: 'Apple', handle: 'appleid@privaterelay.appleid.com', connectedAt: '2025-11-09', status: 'expiring' },
@@ -75,6 +82,8 @@ export const useAppSettingsStore = create<AppSettingsState>()(
       setBackupFrequency: (backupFrequency) => set({ backupFrequency }),
       setDiagnosticsMode: (diagnosticsMode) => set({ diagnosticsMode }),
       setCrashReports: (crashReports) => set({ crashReports }),
+      setBubbleColor: (bubbleColor) => set({ bubbleColor }),
+      setBubbleStyle: (bubbleStyle) => set({ bubbleStyle }),
       disconnectAccount: (id) =>
         set((state) => ({ connectedAccounts: state.connectedAccounts.filter((account) => account.id !== id) })),
     }),

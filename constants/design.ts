@@ -104,6 +104,18 @@ export const colors = {
   bubbleMeText: '#F0F0F0',
   bubbleThem: '#202020',
   bubbleThemText: '#F0F0F0',
+
+  // Additional Bubble Colors
+  bubbleBlue: '#1D4ED8',
+  bubbleIndigo: '#4338CA',
+  bubbleViolet: '#6D28D9',
+  bubbleFuchsia: '#A21CAF',
+  bubblePink: '#BE185D',
+  bubbleRose: '#BE123C',
+  bubbleAmber: '#B45309',
+  bubbleOrange: '#C2410C',
+  bubbleSlate: '#334155',
+  bubbleZink: '#3F3F46',
 };
 
 // ============================================================================

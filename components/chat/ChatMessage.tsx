@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { Avatar } from '@/components/ui';
 import { colors, spacing, typography, borderRadius, withOpacity } from '@/constants/design';
 import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
+import { useAppSettingsStore } from '@/store/useAppSettingsStore';
 
 interface ChatMessageProps {
   item: any;
@@ -22,6 +23,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   isDark,
   themeColors,
 }) => {
+  const { bubbleColor, bubbleStyle } = useAppSettingsStore();
+
   const formatTime = (iso: string) =>
     new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -60,7 +63,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         <View style={[
           styles.bubble,
           isMe ? styles.myBubble : styles.theirBubble,
-          { backgroundColor: isMe ? colors.bubbleMe : colors.bubbleThem },
+          isMe && styles[`bubbleStyle_${bubbleStyle}` as keyof typeof styles],
+          { backgroundColor: isMe ? bubbleColor : colors.bubbleThem },
           !isMe && { borderColor: themeColors.border, borderWidth: 1 }
         ]}>
           {!isMe && (
@@ -171,5 +175,23 @@ const styles = StyleSheet.create({
   deletedText: {
     ...typography.caption,
     fontStyle: 'italic',
+  },
+  bubbleStyle_modern: {
+    borderRadius: borderRadius.xl,
+    borderBottomRightRadius: 4,
+  },
+  bubbleStyle_classic: {
+    borderRadius: borderRadius.md,
+    borderBottomRightRadius: 0,
+  },
+  bubbleStyle_minimalist: {
+    borderRadius: 0,
+    borderBottomRightRadius: 0,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.primary,
+  },
+  bubbleStyle_playful: {
+    borderRadius: borderRadius.xxl,
+    borderBottomRightRadius: 10,
   },
 });

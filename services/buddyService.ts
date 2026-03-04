@@ -14,7 +14,30 @@ export const buddyService = {
       return [];
     }
 
-    const buddyIds = buddyRows.map((item: { buddy_id: string }) => item.buddy_id);
+    // Also check buddy_requests for mutual acceptance that might not be in buddies table yet
+    const { data: requestRows, error: requestError } = await supabase
+      .from('buddy_requests')
+      .select('sender_id, receiver_id')
+      .eq('status', 'accepted')
+      .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+
+    const buddyIdsSet = new Set<string>();
+    
+    if (buddyRows) {
+      buddyRows.forEach((item: { buddy_id: string }) => buddyIdsSet.add(item.buddy_id));
+    }
+    
+    if (!requestError && requestRows) {
+      requestRows.forEach((row: any) => {
+        if (row.sender_id === userId) {
+          buddyIdsSet.add(row.receiver_id);
+        } else {
+          buddyIdsSet.add(row.sender_id);
+        }
+      });
+    }
+
+    const buddyIds = Array.from(buddyIdsSet);
     if (buddyIds.length === 0) {
       return [];
     }
