@@ -270,7 +270,7 @@ export const chatroomService = {
       .from('chatrooms')
       .select('*')
       .eq('slug', slug)
-      .single();
+      .maybeSingle();
 
     if (existingChatroom) return existingChatroom;
 
