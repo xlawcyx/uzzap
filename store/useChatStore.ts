@@ -120,7 +120,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           filter: `chatroom_id=eq.${chatroomId}`,
         },
         async (payload) => {
-          const { data: sender } = await supabase.from('profiles').select('*').eq('id', payload.new.sender_id).single();
+          const { data: sender } = await supabase.from('profiles').select('*').eq('id', payload.new.sender_id).maybeSingle();
 
           const messageWithSender = { ...payload.new, sender };
           get().addMessage(chatroomId, messageWithSender as any);

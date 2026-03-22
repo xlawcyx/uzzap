@@ -27,6 +27,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   initialize: async () => {
     set({ isLoading: true });
 
+    // Unsubscribe from any existing listener first
+    const existingSubscription = get().authSubscription;
+    existingSubscription?.unsubscribe();
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
 
@@ -36,26 +40,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else {
         set({ user: null, profile: null });
       }
-
-      const existingSubscription = get().authSubscription;
-      existingSubscription?.unsubscribe();
-
-      const { data } = supabase.auth.onAuthStateChange(async (_, changedSession) => {
-        if (changedSession?.user) {
-          const nextProfile = await authService.getProfile(changedSession.user.id);
-          set({ user: changedSession.user, profile: nextProfile });
-        } else {
-          set({ user: null, profile: null });
-        }
-      });
-
-      set({ authSubscription: data.subscription });
     } catch (error) {
       console.error('Error initializing auth store:', error);
       set({ user: null, profile: null });
     } finally {
       set({ isLoading: false });
     }
+
+    // Set up auth state listener AFTER initial load is complete
+    const { data } = supabase.auth.onAuthStateChange(async (event, changedSession) => {
+      // Ignore the initial SIGNED_IN event during app startup (already handled above)
+      if (event === 'INITIAL_SESSION') return;
+
+      if (changedSession?.user) {
+        const nextProfile = await authService.getProfile(changedSession.user.id);
+        set({ user: changedSession.user, profile: nextProfile, isLoading: false });
+      } else {
+        set({ user: null, profile: null, isLoading: false });
+      }
+    });
+
+    set({ authSubscription: data.subscription });
   },
 
   updateProfile: async (updates) => {

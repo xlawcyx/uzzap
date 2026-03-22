@@ -58,7 +58,7 @@ export const buddyService = {
   async sendBuddyRequest(senderId: string, receiverId: string): Promise<BuddyRequest | null> {
     const { data, error } = await supabase
       .from('buddy_requests')
-      .upsert([{ sender_id: senderId, receiver_id: receiverId, status: 'pending' }])
+      .upsert([{ sender_id: senderId, receiver_id: receiverId, status: 'pending' }], { onConflict: 'sender_id,receiver_id' })
       .select()
       .single();
 
@@ -91,7 +91,7 @@ export const buddyService = {
     await supabase.from('buddies').upsert([
       { user_id: senderId, buddy_id: receiverId, status: 'accepted' },
       { user_id: receiverId, buddy_id: senderId, status: 'accepted' },
-    ]);
+    ], { onConflict: 'user_id,buddy_id' });
   },
 
   async declineBuddyRequest(requestId: string) {
